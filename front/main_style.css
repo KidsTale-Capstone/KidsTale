@@ -1,0 +1,189 @@
+/* 기본적인 스타일 설정 */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+/* 로고 섹션 */
+.logo-section {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.logo-section img {
+    max-width: 200px; /* 로고 크기 설정 */
+}
+
+/* 메뉴 바 */
+.menu-bar {
+    background-color: #9370db; /* 메뉴 바 배경 색상 */
+    padding: 15px 0;
+    margin-top: 10px;
+}
+
+.menu-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-evenly; /* 메뉴 항목 가운데 정렬 */
+}
+
+.menu-bar ul li {
+    margin: 0 20px;
+}
+
+.menu-bar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.menu-bar ul li a:hover {
+    text-decoration: underline;
+}
+
+/* 메뉴바 아래 두 섹션 */
+/* 1. 그래프 바 섹션 */
+.content-section-1 {
+    display: flex;
+    padding-left: 300px;
+    margin-top: 40px;
+}
+
+.container {
+    width: 900px;
+}
+
+/* 사용자 이름 */
+h2 {
+    font-size: 40px;
+    color: #7a6fa5;
+    margin-bottom: 6px;
+}
+
+/* 진행 목표 문구 */
+p {
+    font-size: 23px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* 프로그레스 바 컨테이너 */
+.progress-container {
+    position: relative;
+    width: 100%;
+    background-color: #d3d3d3;
+    border-radius: 30px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+/* 보라색으로 채워지는 프로그레스 바 */
+.progress-bar {
+    background-color: #9370db;
+    height: 100%;
+    border-radius: 30px;
+    width: 40%; /* 기본 값으로 40% 설정 */
+}
+
+/* 고양이 이미지 */
+#cat-img {
+    position: absolute;
+    top: -25px;
+    left: calc(40% - 40px); /* 고양이 이미지가 바의 끝에 붙도록 조정 (이미지의 절반 크기만큼 이동) */
+    transition: left 0.5s ease; /* 위치 변경 애니메이션 */
+    height: 70px;
+}
+
+/* 프로그레스 정보 (0%, 100% 등) */
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #666;
+}
+
+/* 2. 나의 책 섹션 */
+.content-section-2 {
+    display: flex;
+    padding-left: 300px;
+    margin-top: 100px;
+    margin-bottom: 80px;
+}
+
+.content-section-2 .box {
+    width: 900px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.book-container h2 {
+    font-size: 40px;
+    color: #7a6fa5;
+    margin-bottom: 15px;
+}
+
+/* 슬라이더 컨테이너 */
+.slider-container {
+    display: flex;
+    margin: 20px 50px 20px 50px;
+    align-items: center;
+    position: relative;
+}
+
+/* 책 리스트 */
+.book-list {
+    display: flex;
+    overflow: hidden;
+    transition: transform 0.5s ease;
+}
+
+/* 책 아이템 */
+.book-item {
+    height: 300px;
+    min-width: 200px;
+    margin: 25px 10px;
+    background-color: #ececec;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* 화살표 버튼 */
+
+.left-button {
+    margin-right: 10px;
+}
+
+.right-button {
+    margin-left: 10px;
+}
+
+.arrow {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.arrow.left {
+    left: -40px;
+}
+
+.arrow.right {
+    right: -40px;
+}
+
+.arrow img {
+    width: 40px;
+    height: 40px;
+}

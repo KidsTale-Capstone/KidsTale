@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Width Image with Login Form</title>
+    <link rel="stylesheet" href="style.css"> <!-- 외부 CSS 파일 연결 -->
+</head>
+<body>
+    <!-- 이미지와 회원가입 폼을 가진 페이지 구조 -->
+    <div class="container">
+        <!-- 왼쪽 이미지 섹션 -->
+        <div class="image-section">
+            <img src="img/imagine.png" alt="Whale and child">
+        </div>
+
+        <!-- 오른쪽 회원가입 폼 섹션 -->
+        <div class="signup-section">
+            <div class="signup-form">
+                <h2>회원가입을 위해<span style="line-height:200%"><br></span>정보를 입력해주세요.</h2>
+
+                <!-- 수정 부분 -->
+                <form id="signup-box" action="/register" method="POST">
+                    <input type="text" placeholder="이름" name="name" id="name" required><br><br>
+                    <input type="text" placeholder="나이" name="age" id="age" required><br><br>
+                    <input type="text" placeholder="이메일" name="email" id="email" required><br><br>
+                    <input type="password" placeholder="비밀번호" name="password" id="password" required><br><br>
+                    <input type="password" placeholder="비밀번호 확인" name="confirmPassword" id="confirm-password" required><br><br>
+                    <button type="submit">가입하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script> <!-- JavaScript 파일 연결 -->
+</body>
+</html>
+
