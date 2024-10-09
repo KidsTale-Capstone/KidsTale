@@ -17,7 +17,10 @@ app.get('/', (req, res) => {
 
 // 라우트 연결
 const registerRoutes = require('./routes/register');
-app.use('/register', registerRoutes);   // 로그인 라우트 연결
+app.use('/register', registerRoutes);   // 회원가입 라우트 연결
+
+const loginRoutes = require('./routes/login');
+app.use('/login', loginRoutes);   // 로그인 라우트 연결
 
 // 서버 실행
 app.listen(PORT, () => {

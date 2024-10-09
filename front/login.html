@@ -21,9 +21,11 @@
                 <h2>로그인</h2>
                 <p>가입한 이메일과 비밀번호를 입력해주세요.</p>
 
-                <input type="text" placeholder="이메일 주소" id="email"><br><br>
-                <input type="password" placeholder="패스워드" id="password"><br><br>
-                <button type="button" onclick="location.href='main.html'">로그인</button><br><br>
+                <form id="login-box" method="POST">
+                    <input type="text" placeholder="이메일 주소" id="email"><br><br>
+                    <input type="password" placeholder="패스워드" id="password"><br><br>
+                    <button type="submit">로그인</button><br><br>
+                </form>
 
                 <div class="social-login">
                     <hr> 간편로그인 <hr>
@@ -39,7 +41,7 @@
             </div>
         </div>
     </div>
-    <script src="script.js"></script> <!-- JavaScript 파일 연결 -->
+    <script src="script_login.js"></script> <!-- JavaScript 파일 연결 -->
 </body>
 </html>
 
