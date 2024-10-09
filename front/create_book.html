@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 책 만들기</title>
+    <link rel="stylesheet" href="create_book.css"> <!-- 외부 CSS 파일 연결 -->
+</head>
+<body>
+    <!-- 로고 섹션 -->
+    <div class="logo-section">
+        <img src="img/logo.png" alt="KidsTale Logo">
+    </div>
+
+    <!-- 메뉴 바 섹션 -->
+    <nav class="menu-bar">
+        <ul>
+            <li><a href="#">책 보관함</a></li>
+            <li><a href="create_book.html">동화 만들기</a></li>
+            <li><a href="#">마이페이지</a></li>
+        </ul>
+    </nav>
+
+    <!-- 메뉴바 아래 섹션 -->
+    <!-- 사진 업로드 페이지 -->
+    <div class="content-section-1">
+
+        <div class="container">
+            <h2>첫째, 나만의 멋진 그림을 올려주세요!</h2>
+            <!-- 이미지 업로드 박스 -->
+            <div class="upload-box">
+                <label for="image-upload" id="upload-label">그림을 업로드 해주세요</label>
+                <input type="file" id="image-upload" accept="image/*" onchange="previewImage(event)" style="display:none;">
+                <div id="preview-box">
+                    <p id="preview-text">파일 탐색</p>
+                </div>
+            </div>
+
+            <!-- 버튼 -->
+            <div class="button-group">
+                <button class="left-button">키워드만 작성하기</button>
+                <button class="right-button">다음</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script> <!-- JavaScript 파일 연결 -->
+</body>
+</html>
