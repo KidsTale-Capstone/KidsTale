@@ -31,6 +31,7 @@
 //                 return;
 //             }
 
+<<<<<<< HEAD
 //             try {
 //                 // 서버로 회원가입 데이터 전송
 //                 const response = await fetch('/register', {
@@ -94,6 +95,23 @@
 //         alert('서버와의 연결에 문제가 발생했습니다.');
 //     }
 // });
+=======
+                if (response.ok) {
+                    alert(result.message || '회원가입이 완료되었습니다.');
+                    window.location.href = 'login.html';  // 성공 시 리다이렉트
+                } else {
+                    alert(result.message || '회원가입에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error during signup:', error);
+                alert('서버와의 연결에 문제가 발생했습니다.');
+            }
+        });
+    } else {
+        console.error('signup-box 요소를 찾을 수 없습니다.');
+    }
+});
+>>>>>>> a6191f0117c47c0a09944d50f71e18d523f5d9fb
 
 
 // // 사용자 이름 및 데이터베이스로부터 불러올 값들
@@ -110,5 +128,55 @@
 // document.getElementById("progress-bar").style.width = `${progressPercentage}%`;
 // document.getElementById("progress-percentage").innerText = `${progressPercentage}%`;
 
+<<<<<<< HEAD
 // // 고양이 이미지 위치 업데이트 (진행도에 맞게, 바 끝에 고정)
 // document.getElementById("cat-img").style.left = `calc(${progressPercentage}% - 25px)`;
+=======
+// 사용자 이름 및 목표 도서 업데이트
+document.getElementById("user-name").innerText = `${userName} 작가님,`;
+document.getElementById("remaining-books").innerText = `${userGoal - userCurrent}권`;
+
+// 프로그레스 바 업데이트
+const progressPercentage = Math.floor((userCurrent / userGoal) * 100);
+document.getElementById("progress-bar").style.width = `${progressPercentage}%`;
+document.getElementById("progress-percentage").innerText = `${progressPercentage}%`;
+
+// 고양이 이미지 위치 업데이트 (진행도에 맞게, 바 끝에 고정)
+document.getElementById("cat-img").style.left = `calc(${progressPercentage}% - 25px)`;
+
+
+
+// 1. 그림 업로드 페이지
+// 사용자가 파일을 선택했을 때 이미지 미리보기
+function previewImage(event) {
+    const input = event.target;
+    const uploadLabel = document.getElementById('upload-label'); // 업로드 문구 가져오기
+    const previewBox = document.getElementById('preview-box');
+    const uploadBox = document.querySelector('.upload-box'); // 업로드 박스 가져오기
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            // "그림을 업로드 해주세요" 문구 숨기기
+            uploadLabel.style.display = 'none';
+            
+            // 배경색을 하얀색으로 변경
+            uploadBox.style.backgroundColor = 'white';
+            
+            // 이미지를 보여줌
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            previewBox.innerHTML = ''; // 기존 내용 제거
+            previewBox.appendChild(img); // 이미지 추가
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// 다음 버튼 누르면 다음 페이지로 이동하는 함수
+function goToNextPage() {
+    window.location.href = "select_keywords.html"; // 이동할 페이지 경로
+}
+>>>>>>> a6191f0117c47c0a09944d50f71e18d523f5d9fb
