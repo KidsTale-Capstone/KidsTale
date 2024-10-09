@@ -81,6 +81,49 @@ h2 {
     border-radius: 10px;
 }
 
+/* 키워드 선택 제목 */
+h3 {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* 키워드 버튼 컨테이너 */
+.keyword-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* 각 줄을 감싸는 div */
+.keyword-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    gap: 50px;
+}
+
+/* 키워드 버튼 스타일 */
+.keyword-button {
+    background-color: white;
+    border: 2px solid #7d4ac9;
+    color: #7d4ac9;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    /* transition: background-color 0.3s, color 0.3s; */
+}
+
+.keyword-button.selected {
+    background-color: #7d4ac9;
+    color: white;
+}
+
 /* 아래 버튼 2개 */
 /* 버튼 그룹 */
 .button-group {
@@ -110,3 +153,5 @@ button:hover {
 .right-button {
     background-color: #9370db;
 }
+
+
