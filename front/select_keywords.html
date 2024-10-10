@@ -27,13 +27,15 @@
 
         <div class="container">
             <h2>둘째, 키워드와 장르를 선택해주세요!</h2>
-
             <!-- 업로드된 사진 표시 -->
             <div class="uploaded-image-box">
                 <img id="uploaded-image" src="img/ex_image.jpg" alt="업로드 된 사진">
             </div>
+        </div>
 
-            <h3>장르를 선택해주세요 (최소 3개)</h3>
+        <!-- 키워드 선택 -->
+        <div class="container">
+            <h3>키워드를 선택해주세요 (3개 이상)</h3>
             <div class="keyword-row">
                 <button class="keyword-button" onclick="toggleKeyword(this)">키워드1</button>
                 <button class="keyword-button" onclick="toggleKeyword(this)">키워드2</button>
@@ -47,17 +49,36 @@
                 <button class="keyword-button" onclick="toggleKeyword(this)">키워드7</button>
                 <button class="keyword-button" onclick="toggleKeyword(this)">키워드8</button>
             </div>
+        </div>
 
-            <!-- 버튼 -->
-            <div class="button-group">
-                <button class="left-button">키워드만 작성하기</button>
-                <button class="right-button">다음</button>
+        <!-- 장르 선택 -->
+        <div class="container">
+            <h3>원하는 장르를 선택해주세요 (1개)</h3>
+            <div class="genre-row">
+                <button class="genre-button" onclick="toggleGenre(this)">모험</button>
+                <button class="genre-button" onclick="toggleGenre(this)">추리</button>
+                <button class="genre-button" onclick="toggleGenre(this)">우화</button>
+                <button class="genre-button" onclick="toggleGenre(this)">무협</button>
             </div>
 
+            <div class="genre-row">
+                <button class="genre-button" onclick="toggleGenre(this)">사랑</button>
+                <button class="genre-button" onclick="toggleGenre(this)">우정</button>
+                <button class="genre-button" onclick="toggleGenre(this)">과학</button>
+                <button class="genre-button" onclick="toggleGenre(this)">교육</button>
+            </div>
         </div>
+
+        <!-- 버튼 -->
+        <div class="container">
+            <div class="button-group">
+                <button class="submit-button" onclick="goToNextPage()">다음</button>
+            </div>
+        </div>
+
 
     </div>
 
-    <script src="script.js"></script> <!-- JavaScript 파일 연결 -->
+    <script src="script_select_keywords.js"></script> <!-- JavaScript 파일 연결 -->
 </body>
 </html>
