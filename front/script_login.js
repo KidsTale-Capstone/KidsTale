@@ -24,7 +24,9 @@ document.getElementById('login-box').addEventListener('submit', async function(e
         const result = await response.json();
 
         if (response.ok) {
-            window.location.href = 'main.html';
+            // JWT를 로컬 스토리지에 저장
+            localStorage.setItem('token', result.token);
+            window.location.href = 'main.html'; // 로그인 성공 후 이동할 페이지
         } else {
             alert(result.message);
         }

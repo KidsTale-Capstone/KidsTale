@@ -27,13 +27,8 @@ function previewImage(event) {
     }
 }
 
-// 다음 버튼 누르면 다음 페이지로 이동하는 함수
-function goToNextPage() {
-    window.location.href = "select_keywords.html"; // 이동할 페이지 경로
-}
-
 // 확인 버튼: 업로드한 사진을 서버로 전송하여 데이터베이스에 저장
-function confirmUpload() {
+async function confirmUpload() {
     const fileInput = document.getElementById('image-upload');
     const file = fileInput.files[0];
 
@@ -41,23 +36,35 @@ function confirmUpload() {
         const formData = new FormData();
         formData.append('image', file);
 
-        // 서버에 이미지 업로드 요청
-        fetch('/upload', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
+        // 로컬 스토리지에서 토큰을 제대로 가져오는지 확인
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('인증 토큰을 찾을 수 없습니다. 다시 로그인해 주세요.');
+            return;
+        }
+
+        try {
+            // 서버에 이미지 업로드 요청
+            const response = await fetch('/create_book/upload', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,  // 토큰을 헤더에 추가
+                },
+                body: formData
+            });
+            const data = await response.json();
+
             if (data.success) {
                 alert('이미지가 성공적으로 업로드되었습니다.');
             } else {
+                // userID 출력
                 alert('이미지 업로드에 실패했습니다.');
+                console.error('Error:', data.message);
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+        } catch (error) {
+            console.error('Error:', data.message);
             alert('업로드 중 오류가 발생했습니다.');
-        });
+        }
     } else {
         alert('파일을 선택하세요.');
     }
@@ -76,4 +83,9 @@ function reuploadImage() {
     // 파일 탐색창 다시 열기
     fileInput.value = '';  // 파일 선택 초기화
     fileInput.click();  // 파일 탐색창 열기
+}
+
+// 다음 버튼 누르면 다음 페이지로 이동하는 함수
+function goToNextPage() {
+    window.location.href = "select_keywords.html"; // 이동할 페이지 경로
 }
