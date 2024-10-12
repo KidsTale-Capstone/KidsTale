@@ -60,6 +60,7 @@ router.post('/', async (req, res) => {
     });
 
   } catch (error) {
+    console.log('오류', error.message);
     return res.status(500).json({ message: '로그인 처리 중 오류 발생', error: error.message });
   }
 });
