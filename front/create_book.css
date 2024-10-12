@@ -17,6 +17,18 @@ body, html {
     max-width: 200px; /* 로고 크기 설정 */
 }
 
+/* 로그아웃 */
+.logout {
+    text-align: right;
+    margin-right: 40px;
+}
+
+.logout a {
+    color: #7d4ac9;
+    text-decoration: none;
+    font-weight: bold;
+}
+
 /* 메뉴 바 */
 .menu-bar {
     background-color: #9370db; /* 메뉴 바 배경 색상 */

@@ -1,0 +1,139 @@
+/* 기본적인 스타일 설정 */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+/* 로고 섹션 */
+.logo-section {
+    text-align: center;
+    padding-top: 50px;
+    margin-bottom: 30px;
+}
+
+.logo-section img {
+    max-width: 200px; /* 로고 크기 설정 */
+}
+
+/* 로그아웃 */
+.logout {
+    text-align: right;
+    margin-right: 40px;
+}
+
+.logout a {
+    color: #7d4ac9;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* 메뉴 바 */
+.menu-bar {
+    background-color: #9370db; /* 메뉴 바 배경 색상 */
+    padding: 15px 0;
+    margin-top: 10px;
+}
+
+.menu-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-evenly; /* 메뉴 항목 가운데 정렬 */
+}
+
+.menu-bar ul li {
+    margin: 0 20px;
+}
+
+.menu-bar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.menu-bar ul li a:hover {
+    text-decoration: underline;
+}
+
+/* 메뉴바 아래 섹션 */
+.content-section-1 {
+    display: flex;
+    padding-left: 450px;
+    margin-top: 40px;
+}
+
+/* 책 컨테이너 */
+#book-container {
+    width: 600px;
+    height: auto;
+}
+
+/* 책 제목 및 저자 정보 */
+#book-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#book-author {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* 이미지 박스 스타일 */
+#image-box {
+    width: 550px;
+    height: 700px;
+    background-color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* 페이지 넘김 버튼 스타일 */
+.page-navigation {
+    display: flex;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.arrow-button {
+    background-color: transparent;
+    border: none;
+    font-size: 2em;
+    color: #7d4ac9;
+    cursor: pointer;
+}
+
+.arrow-button:hover {
+    color: #6b3c9a;
+}
+
+/* 언어 변경 버튼 스타일 */
+.language-container {
+    margin-left: 930px;
+    margin-bottom: 20px;
+    bottom: 20px;
+    right: 20px;
+}
+
+.language-button {
+    padding: 10px 20px;
+    background-color: #7d4ac9;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.language-button:hover {
+    background-color: #6b3c9a;
+}

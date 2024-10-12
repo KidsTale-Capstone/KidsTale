@@ -64,7 +64,7 @@ function goToNextPage() {
     .then(data => {
         if (data.success) {
             // 다음 페이지로 이동
-            window.location.href = 'nextpage.html';
+            window.location.href = 'book.html';
         } else {
             alert('데이터 제출에 실패했습니다.');
         }
