@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
+
 const app = express();
 const PORT = 3000;
 
@@ -32,11 +33,25 @@ app.use('/create_book', createbookRoutes);
 // Flask API 호출
 app.post('/detect', async (req, res) => {
   const imageUrl = req.body.image_url;
+
+  if (!imageUrl) {
+    return res.status(400).json({ error: '이미지 URL이 제공되지 않았습니다.' });
+  }
+
   try {
-      const response = await axios.post('http://localhost:5000/yolov5', { image_url: imageUrl });
-      res.json(response.data);
+    // Flask 서버로 이미지 URL 전송
+    const response = await axios.post('http://localhost:5000/yolov5', {
+      image_url: imageUrl
+    });
+
+    // YOLOv5 감지 결과 반환
+    res.json({
+      message: 'YOLOv5 감지가 성공적으로 완료되었습니다.',
+      detected_objects: response.data.detected_objects
+    });
   } catch (error) {
-      res.status(500).json({ error: error.message });
+    console.error('YOLOv5 감지 중 오류 발생:', error);
+    res.status(500).json({ error: 'YOLOv5 감지 중 오류 발생' });
   }
 });
 
