@@ -1,5 +1,8 @@
 .env
 .DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
 yolov5/models/
 yolov5/utils/
 yolov5/yolov5s.pt
