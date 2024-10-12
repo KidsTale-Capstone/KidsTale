@@ -32,16 +32,23 @@
             <h1 id="book-title">책 제목</h1>
             <p id="book-author">지은이: 사용자</p>
 
-            <!-- 업로드된 사진 박스 -->
+            <!-- 업로드된 사진(표지) 박스 -->
             <div id="image-box">
-                <p>업로드한 사진</p>
+                <p>업로드한 사진(표지)</p>
+            </div>
+
+            <!-- 내용 페이지 -->
+            <div id="content-page" class="book-page" style="display: none;">
+                <p id="content-text">여기에 동화의 내용이 표시됩니다.</p>
             </div>
         </div>
 
         <!-- 페이지 넘김 버튼 -->
-        <div class="page-navigation">
-            <button id="next-page" class="arrow-button" onclick="nextPage()">&#8594;</button>
+        <div class="navigation-buttons">
+            <button id="prev-page" onclick="prevPage()" style="display: none;"><img id="left" src="img/left.png" alt="왼쪽 화살표"></button>
+            <button id="next-page" onclick="nextPage()"><img id="right" src="img/right.png" alt="오른쪽 화살표"></button>
         </div>
+
     </div>
 
     <!-- 언어 변경 버튼 -->

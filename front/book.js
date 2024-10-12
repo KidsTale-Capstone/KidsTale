@@ -27,7 +27,6 @@ function displayBookInfo(bookInfo) {
     document.getElementById('book-author').innerText = `지은이: ${bookInfo.author}`;
 }
 
-
 // 책 표지 및 내용 표시 함수
 function displayPage(index) {
     const coverPage = document.getElementById('cover-page');

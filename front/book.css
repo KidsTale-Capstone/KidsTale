@@ -85,7 +85,7 @@ body, html {
     margin-bottom: 20px;
 }
 
-/* 이미지 박스 스타일 */
+/* 이미지(표지) 박스 스타일 */
 #image-box {
     width: 550px;
     height: 700px;
@@ -97,23 +97,36 @@ body, html {
     margin-bottom: 20px;
 }
 
-/* 페이지 넘김 버튼 스타일 */
-.page-navigation {
-    display: flex;
-    margin-top: 30px;
-    justify-content: center;
+#content-text {
+    font-size: 1.5em;
+    margin-top: 20px;
 }
 
-.arrow-button {
-    background-color: transparent;
+/* 페이지 넘김 버튼 */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 10px;
+    background-color: white;
+    color: white;
     border: none;
-    font-size: 2em;
-    color: #7d4ac9;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-.arrow-button:hover {
-    color: #6b3c9a;
+#left {
+    width: 40px;
+    height: 40px;
+}
+
+#right {
+    width: 40px;
+    height: 40px;
 }
 
 /* 언어 변경 버튼 스타일 */
