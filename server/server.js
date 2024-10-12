@@ -26,6 +26,10 @@ app.use('/register', registerRoutes);
 const loginRoutes = require('./routes/login');
 app.use('/login', loginRoutes);
 
+// 메인페이지 라우트
+const mainRoutes = require('./routes/main');
+app.use('/main', mainRoutes);
+
 // 이미지 업로드 라우트
 const createbookRoutes = require('./routes/create_book');
 app.use('/create_book', createbookRoutes);
