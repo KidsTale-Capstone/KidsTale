@@ -72,6 +72,11 @@ body, html {
     height: auto;
 }
 
+#book-cover {
+    width: 550px;
+    height: 700px;
+}
+
 /* 책 제목 및 저자 정보 */
 #book-title {
     font-size: 1.5em;
