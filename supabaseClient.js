@@ -11,7 +11,6 @@ const supabaseKey = process.env.SUPABASE_API_KEY;
 // Supabase 클라이언트 생성
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// auth 객체 내보내기
 const auth = supabase.auth;
 
 // 이미지 업로드 함수
@@ -47,19 +46,5 @@ async function uploadImageToSupabase(file, fileName) {
     // 파일 경로와 공용 URL을 함께 반환
     return { filePath, publicUrl };
 }
-
-// 이미지 경로 가져오기 함수
-// async function getImageUrl(filePath) {
-//     const { data, error } = await supabase
-//         .storage
-//         .from('drawing')
-//         .getPublicUrl(filePath);
-
-//     if (error) {
-//         throw new Error(`이미지 URL 가져오기 오류: ${error.message}`);
-//     }
-
-//     return data.publicUrl;
-// }
 
 module.exports = { supabase, auth, uploadImageToSupabase };

@@ -6,3 +6,4 @@
 yolov5/models/
 yolov5/utils/
 yolov5/yolov5s.pt
+app.log

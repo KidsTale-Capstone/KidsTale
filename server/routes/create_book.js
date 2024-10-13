@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const { uploadImageToSupabase, supabase } = require('../../supabaseClient');
 const jwt = require('jsonwebtoken');
 
@@ -8,6 +9,20 @@ const router = express.Router();
 
 // 메모리 저장소로 Multer 설정
 const upload = multer({ storage: multer.memoryStorage() });
+
+// 로그 파일 경로 설정
+const logFilePath = path.join(__dirname, '../../app.log');
+
+// 로그 함수 설정
+function logToFile(message) {
+    const timestamp = new Date().toISOString();
+    const logMessage = `[${timestamp}] ${message}\n`;
+    fs.appendFile(logFilePath, logMessage, (err) => {
+        if (err) {
+            console.error('로그 파일에 기록 중 오류 발생:', err);
+        }
+    });
+}
 
 // 이미지 업로드 처리
 router.post('/upload', upload.single('image'), async (req, res) => {
@@ -73,6 +88,60 @@ router.post('/upload', upload.single('image'), async (req, res) => {
     } catch (error) {
         console.error('이미지 업로드 중 오류:', error);
         res.status(500).json({ success: false, message: '이미지 업로드 실패' });
+    }
+});
+
+// 업로드된 이미지의 URL 가져오기
+router.get('/get_uploaded_image_url', async (req, res) => {
+
+    try {
+
+        // Authorization 헤더에서 JWT 토큰 추출
+        const token = req.headers.authorization?.split(' ')[1]; // 'Bearer <token>' 형식에서 토큰 부분만 추출
+        if (!token) {
+            return res.status(401).json({ success: false, message: '인증 토큰이 없습니다.' });
+        }
+
+        let userId;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET); // JWT 검증
+            userId = decoded.sub; // JWT에서 사용자 ID 추출 (sub 필드에 userId가 있다고 가정)
+            console.log('디코딩된 사용자 ID:', userId);
+        } catch (error) {
+            console.error('JWT 검증 실패:', error);
+            return res.status(401).json({ success: false, message: '유효하지 않은 토큰입니다.' });
+        }
+
+        console.log('사용자 ID로 쿼리 실행: ', userId);
+
+        const { data, error } = await supabase
+            .from('drawing')
+            .select('file_path, public_url')
+            .eq('id_user', userId)
+            .order('id_drawing', { ascending: false })
+            .limit(1);  // 필요한 데이터만 선택
+
+        console.log('쿼리 결과:', data);
+
+        if (error) {
+            logToFile(`DB 저장 중 오류: ${error.message}`);
+            throw error;
+        }
+
+        // 데이터가 없는 경우
+        if (!data || data.length === 0) {
+            logToFile(`이미지 찾기 실패 - UserID: ${userId}, 데이터가 없음`);
+            return res.status(404).json({ success: false, message: '이미지를 찾을 수 없습니다.' });
+        }
+
+        // 데이터가 있을 경우
+        logToFile(`이미지 URL 성공적으로 가져옴 - UserID: ${userId}, URL: ${data[0].public_url}`);
+        return res.status(200).json({ success: true, image_url: data[0].public_url });
+        
+
+    } catch (error) {
+        console.error('이미지 URL 가져오기 중 오류:', error);
+        res.status(500).json({ success: false, message: '이미지 URL을 가져오는 중 오류가 발생했습니다.' });
     }
 });
 

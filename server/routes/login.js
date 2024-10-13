@@ -41,22 +41,11 @@ router.post('/', async (req, res) => {
         { expiresIn: '1h' }  // 토큰 만료 시간 설정 (1시간)
     );
 
-    let userID;
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET); // JWT 검증
-            console.log('디코딩된 JWT 정보: ', decoded);  // JWT에서 디코딩된 정보 출력
-            const userID = decoded.sub; // 사용자 ID 추출
-            console.log(`JWT에서 가져온 userID: ${userID}`); // JWT에서 추출한 userID 출력
-        } catch (error) {
-            console.error('JWT 검증 실패:', error);
-            return res.status(401).json({ success: false, message: '유효하지 않은 토큰입니다.' });
-        }
-
     // 로그인 성공 시
     return res.status(200).json({ 
         message: '로그인 성공',
         token: token,
-        user: { id: user.id, email: user.email, name: user.name }
+        user: { id: user.id_user, email: user.email, name: user.name }
     });
 
   } catch (error) {

@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
+const { exec } = require('child_process');
 
 const app = express();
 const PORT = 3000;
@@ -34,28 +35,45 @@ app.use('/main', mainRoutes);
 const createbookRoutes = require('./routes/create_book');
 app.use('/create_book', createbookRoutes);
 
-// Flask API 호출
+// Flask 서버 실행 함수
+function startFlaskServer() {
+  const flaskPath = './flask/app.py'
+  exec(`python3 ${flaskPath}`, (error, stdout, stderr) => {
+      if (error) {
+          console.error(`Flask 서버 실행 중 오류: ${error.message}`);
+          return;
+      }
+      if (stderr) {
+          console.error(`Flask 서버 에러 출력: ${stderr}`);
+          return;
+      }
+      console.log(`Flask 서버 실행 결과: ${stdout}`);
+  });
+}
+
+// Node.js 서버 시작 시 Flask 서버도 함께 실행
+startFlaskServer();
+
+// Flask 서버로 이미지 요청
 app.post('/detect', async (req, res) => {
   const imageUrl = req.body.image_url;
 
   if (!imageUrl) {
-    return res.status(400).json({ error: '이미지 URL이 제공되지 않았습니다.' });
+      return res.status(400).json({ error: '이미지 URL이 제공되지 않았습니다.' });
   }
 
   try {
-    // Flask 서버로 이미지 URL 전송
-    const response = await axios.post('http://localhost:5000/yolov5', {
-      image_url: imageUrl
-    });
+      // Flask 서버로 이미지 URL POST 요청
+      const response = await axios.post('http://localhost:5001/yolov5', { image_url: imageUrl });
 
-    // YOLOv5 감지 결과 반환
-    res.json({
-      message: 'YOLOv5 감지가 성공적으로 완료되었습니다.',
-      detected_objects: response.data.detected_objects
-    });
+      // YOLOv5 감지 결과 반환
+      res.json({
+          message: 'YOLOv5 감지가 성공적으로 완료되었습니다.',
+          detected_objects: response.data.detected_objects
+      });
   } catch (error) {
-    console.error('YOLOv5 감지 중 오류 발생:', error);
-    res.status(500).json({ error: 'YOLOv5 감지 중 오류 발생' });
+      console.error('YOLOv5 감지 중 오류 발생:', error);
+      res.status(500).json({ error: 'YOLOv5 감지 중 오류 발생' });
   }
 });
 

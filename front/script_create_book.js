@@ -1,3 +1,4 @@
+
 // 1. 그림 업로드 페이지
 // 사용자가 파일을 선택했을 때 이미지 미리보기
 function previewImage(event) {
@@ -87,7 +88,10 @@ function reuploadImage() {
 
 // 다음 버튼 누르면 YOLOv5 감지 작업을 수행
 async function goToNextPage() {
-    const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오기
+    const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오
+    const userId = localStorage.getItem('userId');
+    console.log('userId:', userId); // userId 값 확인
+
     if (!token) {
         alert('인증 토큰을 찾을 수 없습니다. 다시 로그인해 주세요.');
         return;
@@ -98,39 +102,51 @@ async function goToNextPage() {
     try {
         //
         console.log('이미지 URL 가져오기 요청 중...');
-        const response = await fetch('http://localhost:5000/get_uploaded_image_url?id_user=${userId}', {
+        const userId = localStorage.getItem('userId');  // userId를 로컬 스토리지에서 가져옴
+
+        const response = await fetch(`/create_book/get_uploaded_image_url`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
 
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.log('이미지 URL 가져오기 요청 실패:', response.status, errorText);
+            throw new Error('이미지 URL을 가져오는 데 실패했습니다.');
+        }
+
         const data = await response.json();
+        console.log('서버에서 받은 데이터:', data);
         imageUrl = data.image_url;
         //
         console.log('이미지 URL 응답:', imageUrl);
 
         if (!imageUrl) {
-            console.error('이미지 URL 가져오기 중 오류 발생:', error);
-            alert('이미지 URL을 가져오는 중 오류가 발생했습니다. 1');
-            return;
+            throw new Error('이미지 URL이 존재하지 않습니다.');
         }
     } catch (error) {
         console.error('이미지 URL 가져오기 중 오류 발생:', error);
-        alert('이미지 URL을 가져오는 중 오류가 발생했습니다. 2');
+        alert('이미지 URL을 가져오는 중 오류가 발생했습니다.');
         return;
     }
 
     // 2. YOLOv5 모델 호출
     try {
-        const yolov5Response = await fetch('http://localhost:5000/yolov5', {
+        const yolov5Response = await fetch('http://localhost:5001/yolov5', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ image_url: imageUrl })
+            body: JSON.stringify({ image_url: imageUrl, id_user: userId })
         });
+
+        if (!yolov5Response.ok) {
+            throw new Error('YOLOv5 감지 요청 실패');
+        }
 
         const yolov5Data = await yolov5Response.json();
         
