@@ -3,6 +3,94 @@ let selectedKeywords = [];
 // 선택된 장르를 저장할 배열 (하나만 선택 가능)
 let selectedGenres = [];
 
+// 페이지가 로드되면 키워드를 불러오는 함수 실행
+document.addEventListener('DOMContentLoaded', function () {
+    loadImage();  // 이미지 불러오기
+    loadKeywords();
+});
+
+// 이미지 불러오는 함수
+async function loadImage() {
+    const token = localStorage.getItem('token'); // 로컬 스토리지에 저장된 JWT 토큰 가져오기
+    const drawingId = localStorage.getItem('drawingId'); // drawingId 가져오기
+
+    if (!token) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        // 서버에서 업로드된 이미지 URL을 가져옴
+        const response = await fetch(`/create_book/get_uploaded_image_url?drawing_id=${drawingId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,  // 토큰을 헤더에 추가하여 서버에 전달
+            }
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            alert('이미지를 불러오지 못했습니다.');
+            return;
+        }
+
+        // 가져온 이미지 URL을 img 태그에 설정
+        const uploadedImage = document.getElementById('uploaded-image');
+        uploadedImage.src = result.image_url;
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('이미지를 불러오는 중 오류가 발생했습니다.');
+    }
+}
+
+// 키워드 불러오는 함수
+async function loadKeywords() {
+    const token = localStorage.getItem('token'); // 로컬 스토리지에 저장된 JWT 토큰 가져오기
+    const userId = localStorage.getItem('userId');
+    console.log('userId:', userId); // userId 값 확인
+    const drawingId = localStorage.getItem('drawingId');
+    localStorage.setItem('drawingId', drawingId);
+    console.log('drawingId:', drawingId);
+
+    if (!token) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        const response = await fetch(`/select_keywords/keywords?drawing_id=${drawingId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,  // 토큰을 헤더에 추가하여 서버에 전달
+            }
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            alert('키워드를 불러오지 못했습니다.');
+            return;
+        }
+
+        // 키워드를 받아 버튼에 넣음
+        const keywordButtons = document.querySelectorAll('.keyword-button');
+
+        // 불러온 키워드를 버튼에 표시 (최대 8개)
+        result.keywords.forEach((keyword, index) => {
+            if (index < keywordButtons.length) {
+                keywordButtons[index].innerText = keyword;
+            }
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        alert('키워드를 불러오는 중 오류가 발생했습니다.');
+    }
+}
+
 // 키워드 선택/해제 함수 (3개 이상 선택 가능)
 function toggleKeyword(button) {
     const keyword = button.innerText;

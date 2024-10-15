@@ -56,6 +56,9 @@ async function confirmUpload() {
             const data = await response.json();
 
             if (data.success) {
+                const drawingId = data.drawingId;
+                localStorage.setItem('drawingId', drawingId);
+                console.log('drawingId:', drawingId);
                 alert('이미지가 성공적으로 업로드되었습니다.');
             } else {
                 // userID 출력
@@ -63,7 +66,7 @@ async function confirmUpload() {
                 console.error('Error:', data.message);
             }
         } catch (error) {
-            console.error('Error:', data.message);
+            console.error('Error:', error.message);
             alert('업로드 중 오류가 발생했습니다.');
         }
     } else {

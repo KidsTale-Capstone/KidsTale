@@ -35,6 +35,10 @@ app.use('/main', mainRoutes);
 const createbookRoutes = require('./routes/create_book');
 app.use('/create_book', createbookRoutes);
 
+// 이미지 업로드 라우트
+const selectkeywordsRoutes = require('./routes/select_keywords');
+app.use('/select_keywords', selectkeywordsRoutes);
+
 // Flask 서버 실행 함수
 function startFlaskServer() {
   const flaskPath = './flask/app.py'
