@@ -20,7 +20,7 @@ async function runYolov5(imageUrl) {
                 const yolov5Path = path.resolve(__dirname, './flask/yolov5_inference.py');
                 
                 // YOLOv5 실행
-                exec(`python ${yolov5Path} --source ${imagePath} --weights ./yolov5/yolov5s.pt`, (error, stdout, stderr) => {
+                exec(`python ${yolov5Path} --source ${imagePath} --weights ./yolov5/best.pt`, (error, stdout, stderr) => {
                     if (error) {
                         const errMessage = `YOLOv5 실행 중 오류 발생: ${error.message}`;
                         console.error(errMessage);

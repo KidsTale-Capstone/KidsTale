@@ -151,7 +151,6 @@ async function goToNextPage() {
         const yolov5Data = await yolov5Response.json();
         
         if (yolov5Data.detected_objects) {
-            alert(`감지된 객체: ${yolov5Data.detected_objects.join(', ')}`);
             window.location.href = "select_keywords.html"; // 감지 후 다음 페이지로 이동
         } else {
             alert('객체 감지에 실패했습니다.');
