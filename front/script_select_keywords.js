@@ -54,6 +54,9 @@ async function loadKeywords() {
     const drawingId = localStorage.getItem('drawingId');
     localStorage.setItem('drawingId', drawingId);
     console.log('drawingId:', drawingId);
+    const drawingKwId = localStorage.getItem('drawingKwId');
+    localStorage.setItem('drawingKwId', drawingKwId);
+    console.log('drawingKwId:', drawingKwId);
 
     if (!token) {
         alert('로그인이 필요합니다.');
@@ -129,7 +132,28 @@ function toggleGenre(button) {
 }
 
 // 다음 페이지로 이동 (3개 이상 키워드 선택 필요)
-function goToNextPage() {
+async function goToNextPage() {
+    const token = localStorage.getItem('token'); // 로컬 스토리지에 저장된 JWT 토큰 가져오기
+    const drawingId = localStorage.getItem('drawingId');
+    const drawingKwId = localStorage.getItem('drawingKwId');
+
+    console.log('drawingId:', drawingId, 'drawingKwId:', drawingKwId);
+
+    if (!token) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    if (!drawingId) {
+        alert('drawingId가 없습니다. 다시 시도해주세요.');
+        return;
+    }
+    if (!drawingKwId) {
+        alert('drawingKwId가 없습니다. 다시 시도해주세요.');
+        return;
+    }
+
     if (selectedKeywords.length < 3) {
         alert('키워드를 최소 3개 선택해야 합니다.');
         return;
@@ -140,17 +164,26 @@ function goToNextPage() {
         return;
     }
 
-    // 선택된 키워드와 장르를 서버에 전송 (예시)
-    fetch('/submit-data', {
+    // 선택된 키워드와 장르를 서버에 전송
+    fetch('/select_keywords/submit-data', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ keywords: selectedKeywords, genres: selectedGenres }),
+        body: JSON.stringify({ 
+            keywords: selectedKeywords, 
+            genres: selectedGenres, 
+            drawingId: localStorage.getItem('drawingId'), 
+            drawingKwId: localStorage.getItem('drawingKwId'),
+        }),
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            const selectKwId = data.selectKwId;
+            localStorage.setItem('selectKwId', selectKwId);
+            console.log('selectKwId:', selectKwId);
             // 다음 페이지로 이동
             window.location.href = 'book.html';
         } else {

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { supabase } = require('../../supabaseClient'); // Supabase 클라이언트 가져오기
+const gpt = require('../gpt');
 
 router.get('/get_uploaded_image_url', async (req, res) => {
     const drawingId = req.query.drawing_id;
@@ -77,6 +78,117 @@ router.get('/keywords', async (req, res) => {
     } catch (error) {
         console.error('키워드 불러오는 중 오류:', error);
         res.status(500).json({ success: false, message: '키워드를 불러오는 중 오류가 발생했습니다.', error });
+    }
+});
+
+// 선택된 키워드와 장르를 저장하는 라우트
+router.post('/submit-data', async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1]; // 'Bearer <token>' 형식에서 토큰 부분만 추출
+        if (!token) {
+            return res.status(401).json({ success: false, message: '인증 토큰이 없습니다.' });
+        }
+
+        let userId;
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET); // JWT 검증
+            userId = decoded.sub; // 사용자 ID 추출
+            console.log(`JWT에서 가져온 userID: ${userId}`);
+        } catch (error) {
+            console.error('JWT 검증 실패:', error);
+            return res.status(401).json({ success: false, message: '유효하지 않은 토큰입니다.' });
+        }
+
+        // POST 요청에서 받은 키워드와 장르 추출
+        const { keywords, genres, drawingId, drawingKwId } = req.body;
+
+        if (!drawingId || !drawingKwId) {
+            return res.status(400).json({ success: false, message: 'drawingId 또는 drawingKwId가 필요합니다.' });
+        }
+
+        // Supabase에 키워드와 장르 저장
+        const { data, error } = await supabase
+            .from('select_kw')
+            .insert([
+                {
+                    id_user: userId,
+                    id_drawing: drawingId,
+                    id_drawing_kw: drawingKwId,
+                    select_kw: keywords,
+                    genre: genres[0],
+                }
+            ])
+            .select('id_select_kw');
+
+        if (error) {
+            console.error('Supabase에 저장하는 중 오류 발생:', error);
+            return res.status(500).json({ success: false, message: '키워드 및 장르 저장 중 오류가 발생했습니다.' });
+        }
+
+        // 삽입된 레코드의 id_drawing 추출
+        const selectKwId = data[0].id_select_kw;  
+
+        // 성공적인 응답
+        res.status(200).json({ success: true, message: '키워드와 장르가 성공적으로 저장되었습니다.', selectKwId });
+    } catch (error) {
+        console.error('데이터 제출 중 오류:', error);
+        res.status(500).json({ success: false, message: '데이터 제출 중 오류가 발생했습니다.' });
+    }
+});
+
+// 동화 생성 및 결과 저장하는 엔드포인트
+router.post('/generate-story', async (req, res) => {
+    const { selectKwId, keywords, genre } = req.body;
+
+    if (!selectKwId || !keywords || !genre) {
+        return res.status(400).json({ error: '필수 데이터가 누락되었습니다.' });
+    }
+
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.sub;
+
+        // GPT API로 동화 생성
+        const storyKo = await gpt.generateStory(keywords, genre);
+        const titleKo = await gpt.generateTitle(storyKo);
+
+        // 파일 저장 (Supabase bucket이 아닌 로컬 폴더에 저장한 후 Supabase로 업로드)
+        const folderName = titleKo.replace(/\s+/g, '_').trim();
+        const koPath = gpt.saveStoryToFile(folderName, `${titleKo}_ko.txt`, storyKo);
+
+        // Supabase Storage에 파일 업로드
+        const { data: koUpload, error: koUploadError } = await supabase.storage
+            .from('book')
+            .upload(`${folderName}/${titleKo}_ko.txt`, fs.createReadStream(koPath), { upsert: true });
+
+        if (koUploadError) {
+            throw new Error(`한국어 동화 업로드 중 오류: ${koUploadError.message}`);
+        }
+
+        // DB에 저장
+        const { data, error } = await supabase
+            .from('book')
+            .insert({
+                user_id: userId,
+                select_kw_id: selectKwId,
+                title_ko: titleKo,
+                txt_ko_path: koUpload.Key,
+            })
+            .select('id_book');
+
+        if (error) {
+            throw new Error('책 데이터를 저장하는 중 오류가 발생했습니다.');
+        }
+
+        const bookId = data[0].id_book;
+
+        // 성공 응답
+        res.json({ success: true, bookId, titleKo, txtKoPath: koUpload.Key });
+
+    } catch (error) {
+        console.error('동화 생성 및 저장 중 오류:', error);
+        res.status(500).json({ error: '동화 생성 및 저장 중 오류가 발생했습니다.' });
     }
 });
 

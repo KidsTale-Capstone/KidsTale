@@ -94,6 +94,8 @@ def yolov5_inference():
         inserted_data = response.data
         # 저장된 데이터 확인
         if inserted_data:
+            drawingKwId = inserted_data[0]['id_drawing_kw']  # 새로 삽입된 id_drawing_kw 가져오기
+            app.logger.debug(f"저장된 id_drawing_kw: {drawingKwId}")
             app.logger.debug(f"키워드 저장 응답_eng: {inserted_data}")
         else:
             app.logger.error(f"DB에 키워드를 저장하는 중 오류 발생: {response}")
@@ -101,8 +103,10 @@ def yolov5_inference():
         
         # 한글 키워드가 제대로 출력되도록 수정
         return jsonify({
+            'success': True, 
             'detected_objects': detected_objects,
             'translated_objects': translated_objects,
+            'id_drawing_kw': drawingKwId,
             'message': 'Keywords saved to DB successfully!'
         })
     

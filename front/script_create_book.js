@@ -59,6 +59,7 @@ async function confirmUpload() {
                 const drawingId = data.drawingId;
                 localStorage.setItem('drawingId', drawingId);
                 console.log('drawingId:', drawingId);
+
                 alert('이미지가 성공적으로 업로드되었습니다.');
             } else {
                 // userID 출력
@@ -153,7 +154,11 @@ async function goToNextPage() {
 
         const yolov5Data = await yolov5Response.json();
         
-        if (yolov5Data.detected_objects) {
+        if (yolov5Data.success) {
+            const drawingKwId = yolov5Data.id_drawing_kw;
+            localStorage.setItem('drawingKwId', drawingKwId);
+            console.log(`drawingKwId 저장됨:`, drawingKwId);
+
             window.location.href = "select_keywords.html"; // 감지 후 다음 페이지로 이동
         } else {
             alert('객체 감지에 실패했습니다.');
@@ -162,4 +167,5 @@ async function goToNextPage() {
         console.error('YOLOv5 모델 호출 중 오류 발생:', error);
         alert('객체 감지 중 오류가 발생했습니다.');
     }
+
 }
