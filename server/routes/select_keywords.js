@@ -102,8 +102,8 @@ router.post('/submit-data', async (req, res) => {
         // POST 요청에서 받은 키워드와 장르 추출
         const { keywords, genres, drawingId, drawingKwId } = req.body;
 
-        if (!drawingId || !drawingKwId) {
-            return res.status(400).json({ success: false, message: 'drawingId 또는 drawingKwId가 필요합니다.' });
+        if (!drawingId || !drawingKwId || !keywords || !genres) {
+            return res.status(400).json({ success: false, message: '필수 데이터가 누락되었습니다.' });
         }
 
         // Supabase에 키워드와 장르 저장
@@ -136,7 +136,7 @@ router.post('/submit-data', async (req, res) => {
     }
 });
 
-// 동화 생성 및 결과 저장하는 엔드포인트
+// 동화 생성 및 저장 라우트
 router.post('/generate-story', async (req, res) => {
     const { selectKwId, keywords, genre } = req.body;
 
@@ -149,43 +149,10 @@ router.post('/generate-story', async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.sub;
 
-        // GPT API로 동화 생성
-        const storyKo = await gpt.generateStory(keywords, genre);
-        const titleKo = await gpt.generateTitle(storyKo);
-
-        // 파일 저장 (Supabase bucket이 아닌 로컬 폴더에 저장한 후 Supabase로 업로드)
-        const folderName = titleKo.replace(/\s+/g, '_').trim();
-        const koPath = gpt.saveStoryToFile(folderName, `${titleKo}_ko.txt`, storyKo);
-
-        // Supabase Storage에 파일 업로드
-        const { data: koUpload, error: koUploadError } = await supabase.storage
-            .from('book')
-            .upload(`${folderName}/${titleKo}_ko.txt`, fs.createReadStream(koPath), { upsert: true });
-
-        if (koUploadError) {
-            throw new Error(`한국어 동화 업로드 중 오류: ${koUploadError.message}`);
-        }
-
-        // DB에 저장
-        const { data, error } = await supabase
-            .from('book')
-            .insert({
-                user_id: userId,
-                select_kw_id: selectKwId,
-                title_ko: titleKo,
-                txt_ko_path: koUpload.Key,
-            })
-            .select('id_book');
-
-        if (error) {
-            throw new Error('책 데이터를 저장하는 중 오류가 발생했습니다.');
-        }
-
-        const bookId = data[0].id_book;
-
-        // 성공 응답
-        res.json({ success: true, bookId, titleKo, txtKoPath: koUpload.Key });
-
+        // GPT API로 동화 생성 및 저장
+        const bookData = await gpt.saveBookData(keywords, genre, userId, selectKwId);
+        
+        res.json({ success: true, bookData });
     } catch (error) {
         console.error('동화 생성 및 저장 중 오류:', error);
         res.status(500).json({ error: '동화 생성 및 저장 중 오류가 발생했습니다.' });

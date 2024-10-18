@@ -54,7 +54,7 @@ router.post('/upload', upload.single('image'), async (req, res) => {
         // Supabase에 이미지 업로드 및 경로와 URL을 가져옴
         const { filePath, publicUrl } = await uploadImageToSupabase(file, fileName);
 
-        // DB에 정보 저장 (drawing 테이블에 저장하는 예시)
+        // DB에 정보 저장
         const { data, error } = await supabase
             .from('drawing')
             .insert([

@@ -74,20 +74,17 @@ async function loadKeywords() {
 
         const result = await response.json();
 
-        if (!result.success) {
+        if (result.success) {
+            const keywordButtons = document.querySelectorAll('.keyword-button');
+            result.keywords.forEach((keyword, index) => {
+                if (index < keywordButtons.length) {
+                    keywordButtons[index].innerText = keyword;
+                }
+            });
+        } else {
             alert('키워드를 불러오지 못했습니다.');
-            return;
         }
-
-        // 키워드를 받아 버튼에 넣음
-        const keywordButtons = document.querySelectorAll('.keyword-button');
-
-        // 불러온 키워드를 버튼에 표시 (최대 8개)
-        result.keywords.forEach((keyword, index) => {
-            if (index < keywordButtons.length) {
-                keywordButtons[index].innerText = keyword;
-            }
-        });
+        
     } catch (error) {
         console.error('Error:', error);
         alert('키워드를 불러오는 중 오류가 발생했습니다.');
@@ -164,7 +161,7 @@ async function goToNextPage() {
         return;
     }
 
-    // 선택된 키워드와 장르를 서버에 전송
+    // 1. 선택된 키워드와 장르를 서버에 전송
     fetch('/select_keywords/submit-data', {
         method: 'POST',
         headers: {
@@ -173,7 +170,7 @@ async function goToNextPage() {
         },
         body: JSON.stringify({ 
             keywords: selectedKeywords, 
-            genres: selectedGenres, 
+            genres: selectedGenres,
             drawingId: localStorage.getItem('drawingId'), 
             drawingKwId: localStorage.getItem('drawingKwId'),
         }),
@@ -184,10 +181,34 @@ async function goToNextPage() {
             const selectKwId = data.selectKwId;
             localStorage.setItem('selectKwId', selectKwId);
             console.log('selectKwId:', selectKwId);
-            // 다음 페이지로 이동
-            window.location.href = 'book.html';
+            
+            // 2. 저장된 selectKwId를 기반으로 GPT API로 동화 생성 요청
+            return fetch('/select_keywords/generate-story', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    selectKwId: selectKwId,
+                    keywords: selectedKeywords,
+                    genre: selectedGenres[0], // 선택된 첫 번째 장르
+                    drawingId: drawingId,
+                    drawingKwId: drawingKwId
+                })
+            });
         } else {
-            alert('데이터 제출에 실패했습니다.');
+            alert('키워드 및 장르를 저장하는 데 실패했습니다.');
+            throw new Error('키워드 및 장르 저장 실패');
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('동화 생성 성공:', data);
+            window.location.href = 'book.html';  // 생성 후 book 페이지로 이동
+        } else {
+            alert('동화 생성에 실패했습니다.');
         }
     })
     .catch(error => {

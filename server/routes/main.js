@@ -22,7 +22,7 @@ router.get('/userdata', async (req, res) => {
             return res.status(401).json({ success: false, message: '유효하지 않은 토큰입니다.' });
         }
 
-        // 사용자 정보 가져오기 (예: 사용자 이름, 목표, 현재 책 수)
+        // 사용자 정보 가져오기
         const { data: userData, error } = await supabase
             .from('users')
             .select('name, goal')
