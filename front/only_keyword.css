@@ -78,101 +78,70 @@ h2 {
     margin-bottom: 20px;
 }
 
-/* 업로드된 이미지 박스 */
-.uploaded-image-box {
-    width: 100%;
-    height: 300px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.uploaded-image-box img {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 10px;
-}
-
-/* 키워드 선택 제목 */
-h3 {
-    font-size: 18px;
-    color: #666;
-    margin-bottom: 10px;
-}
-
-/* 키워드 버튼 컨테이너 */
+/* 키워드 컨테이너 */
 .keyword-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     gap: 15px;
     margin-bottom: 20px;
 }
 
-/* 각 줄을 감싸는 div */
 .keyword-row {
     display: flex;
-    justify-content: center;
     margin-top: 15px;
     margin-bottom: 15px;
-    gap: 70px;
+    gap: 10px;
 }
 
-/* 키워드 버튼 스타일 */
 .keyword-button {
+    width: 150px;
+    height: 50px;
+    margin-right: 40px;
+    padding: 10px 20px;
     background-color: white;
     border: 2px solid #7d4ac9;
+    border-radius: 20px;
     color: #7d4ac9;
-    padding: 10px 20px;
-    border-radius: 30px;
     cursor: pointer;
-    font-size: 16px;
-    /* transition: background-color 0.3s, color 0.3s; */
+    text-align: center;
+    font-size: 16px
 }
 
-.keyword-button.selected {
+.keyword-button:hover {
     background-color: #7d4ac9;
     color: white;
 }
 
-/* 각 줄을 감싸는 div */
-.genre-row {
+/* 추가하기 버튼 */
+.add-button-container {
     display: flex;
-    justify-content: center;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    gap: 70px;
+    padding-left: 350px;
+    margin-bottom: 20px;
 }
 
-/* 장르 버튼 스타일 */
-.genre-button {
+.add-button {
     background-color: white;
-    border: 2px solid #7d4ac9;
-    color: #7d4ac9;
-    padding: 10px 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-size: 16px;
-    /* transition: background-color 0.3s, color 0.3s; */
+    width: 50px;
+    height: 50px;
+    border: none;
 }
 
-.genre-button.selected {
-    background-color: #7d4ac9;
-    color: white;
+/* 추가 버튼 이미지 스타일 */
+.add-button img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
 }
 
-/* 아래 버튼 1개 */
-/* 버튼 그룹 */
-.button-group {
+/* 입력한 키워드 저장 버튼 */
+.save-button-container {
     display: flex;
     justify-content: end;
     margin-top: 20px;
     margin-right: 40px;
 }
 
-button {
+.save-button {
     background-color: #9370db;
     color: white;
     padding: 10px 20px;
@@ -182,8 +151,59 @@ button {
     font-size: 16px;
 }
 
-button:hover {
+.save-button:hover {
     background-color: #836fc5;
 }
 
+/* 각 줄을 감싸는 div */
+.genre-row {
+    display: flex;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    gap: 70px;
+}
 
+/* 장르 버튼 스타일 */
+.genre-button {
+    width: 150px;
+    height: 50px;
+    background-color: white;
+    border: 2px solid #7d4ac9;
+    color: #7d4ac9;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.genre-button:hover {
+    background-color: #7d4ac9;
+    color: white;
+}
+
+.genre-button.selected {
+    background-color: #7d4ac9;
+    color: white;
+}
+
+/* 버튼 그룹 */
+.next-button-group {
+    display: flex;
+    justify-content: end;
+    margin-top: 20px;
+    margin-right: 40px;
+}
+
+.next-button-group button {
+    background-color: #9370db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.next-button-group button:hover {
+    background-color: #836fc5;
+}
