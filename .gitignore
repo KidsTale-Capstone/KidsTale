@@ -10,6 +10,8 @@ app.log
 yolov5/
 node_modules
 yolov5/__pycache__/export.cpython-312.pyc
+flask_env/lib/python3.12/site-packages/torch/lib/libtorch_cpu.dylib
+
 flask_env/bin/activate
 flask_env/bin/activate.csh
 flask_env/bin/activate.fish
