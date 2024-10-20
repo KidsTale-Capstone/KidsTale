@@ -152,7 +152,9 @@ router.post('/generate-story', async (req, res) => {
         // GPT API로 동화 생성 및 저장
         const bookData = await gpt.saveBookData(keywords, genre, userId, selectKwId);
         
-        res.json({ success: true, bookData });
+        res.json({ success: true, id_book: bookData.id_book });
+
+
     } catch (error) {
         console.error('동화 생성 및 저장 중 오류:', error);
         res.status(500).json({ error: '동화 생성 및 저장 중 오류가 발생했습니다.' });

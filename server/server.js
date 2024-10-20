@@ -31,13 +31,17 @@ app.use('/login', loginRoutes);
 const mainRoutes = require('./routes/main');
 app.use('/main', mainRoutes);
 
-// 이미지 업로드 라우트
+// 1. 이미지 업로드 라우트
 const createbookRoutes = require('./routes/create_book');
 app.use('/create_book', createbookRoutes);
 
-// 이미지 업로드 라우트
+// 2. 키워드 선택 라우트
 const selectkeywordsRoutes = require('./routes/select_keywords');
 app.use('/select_keywords', selectkeywordsRoutes);
+
+// 3. 책 생성 라우트
+const bookRoutes = require('./routes/book');
+app.use('/book', bookRoutes);
 
 // Flask 서버 실행 함수
 function startFlaskServer() {

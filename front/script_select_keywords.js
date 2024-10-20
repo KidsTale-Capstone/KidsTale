@@ -161,29 +161,30 @@ async function goToNextPage() {
         return;
     }
 
-    // 1. 선택된 키워드와 장르를 서버에 전송
-    fetch('/select_keywords/submit-data', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ 
-            keywords: selectedKeywords, 
-            genres: selectedGenres,
-            drawingId: localStorage.getItem('drawingId'), 
-            drawingKwId: localStorage.getItem('drawingKwId'),
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const selectKwId = data.selectKwId;
+    try {
+        // 1. 선택된 키워드와 장르를 서버에 전송
+        const submitResponse = await fetch('/select_keywords/submit-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ 
+                keywords: selectedKeywords, 
+                genres: selectedGenres,
+                drawingId: drawingId, 
+                drawingKwId: drawingKwId,
+            }),
+        });
+
+        const submitResult = await submitResponse.json();
+
+        if (submitResult.success) {
+            const selectKwId = submitResult.selectKwId;
             localStorage.setItem('selectKwId', selectKwId);
-            console.log('selectKwId:', selectKwId);
-            
+
             // 2. 저장된 selectKwId를 기반으로 GPT API로 동화 생성 요청
-            return fetch('/select_keywords/generate-story', {
+            const generateResponse = await fetch('/select_keywords/generate-story', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -197,22 +198,27 @@ async function goToNextPage() {
                     drawingKwId: drawingKwId
                 })
             });
+
+            const generateResult = await generateResponse.json();
+
+            if (generateResult.success) {
+                console.log('동화 생성 성공:', generateResult);
+
+                // 동화 생성 후 반환된 id_book을 localStorage에 저장
+                const bookId = generateResult.id_book;
+                localStorage.setItem('id_book', bookId);
+                console.log('book_id: ', bookId)
+
+                // 동화 생성 후 book_ko.html 페이지로 이동
+                window.location.href = 'book_ko.html';
+            } else {
+                alert('동화 생성에 실패했습니다.');
+            }
         } else {
             alert('키워드 및 장르를 저장하는 데 실패했습니다.');
-            throw new Error('키워드 및 장르 저장 실패');
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('동화 생성 성공:', data);
-            window.location.href = 'book.html';  // 생성 후 book 페이지로 이동
-        } else {
-            alert('동화 생성에 실패했습니다.');
-        }
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error:', error);
         alert('제출 중 오류가 발생했습니다.');
-    });
+    }
 }

@@ -163,7 +163,6 @@ async function saveBookData(keywords, genre, userId, selectKwId) {
 
         // 저장
         const txtKoPath = await saveStoryToBucket(selectKwId, translatedTitle, storyKo, true);
-
         const txtEngPath = await saveStoryToBucket(selectKwId, translatedTitle, translatedStory, false);
 
         // 테이블에 저장
@@ -174,7 +173,10 @@ async function saveBookData(keywords, genre, userId, selectKwId) {
             title_eng: translatedTitle,
             txt_ko_path: txtKoPath,
             txt_eng_path: txtEngPath
-        }).select();
+        })
+        .select('id_book')
+        .single();
+
 
         if (error) {
             console.error('책 정보 저장 중 오류:', error);
