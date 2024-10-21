@@ -9,4 +9,8 @@ yolov5/yolov5s.pt
 app.log
 yolov5/
 yolov5/__pycache__/export.cpython-312.pyc
+<<<<<<< HEAD
 flask_env/
+=======
+flask_env/
+>>>>>>> 5d216147 (오류 수정)
