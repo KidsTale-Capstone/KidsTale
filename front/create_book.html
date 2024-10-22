@@ -46,8 +46,14 @@
                 <button class="left-button">키워드만 작성하기</button>
                 <button class="confirm-button" onclick="confirmUpload()">확인</button>
                 <button class="reupload-button" onclick="reuploadImage()">다시 첨부</button>
-                <button class="right-button" onclick="goToNextPage()">다음</button>
+                <button class="right-button" onclick="showLoading()">다음</button>
             </div>
+        </div>
+
+         <!-- 로딩 화면 -->
+        <div id="loading" class="loading-screen" style="display: none;">
+            <div class="loader"></div>
+            <p>잠시만 기다려 주세요...</p>
         </div>
 
     </div>

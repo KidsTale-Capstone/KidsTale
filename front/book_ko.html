@@ -39,18 +39,23 @@
             </div>
 
             <!-- 내용 페이지 -->
-            <div id="content-page" class="book-page" style="display: none;">
+            <div id="content-page" class="book-page" style="display: block;">
                 <p id="content-text">여기에 동화의 내용이 표시됩니다.</p>
             </div>
         </div>
 
         <!-- 페이지 넘김 버튼 -->
-        <div class="navigation-buttons">
-            <button id="prev-page" onclick="prevPage()" style="display: none;"><img id="left" src="img/left.png" alt="왼쪽 화살표"></button>
-            <button id="next-page" onclick="nextPage()"><img id="right" src="img/right.png" alt="오른쪽 화살표"></button>
+        <div class="navigation-left">
+            <button id="prev-page" onclick="prevPage()"><img id="left" src="img/left.png" alt="왼쪽 화살표"></button>
         </div>
 
+        <div class="navigation-right">
+            <button id="next-page" onclick="nextPage()"><img id="right" src="img/right.png" alt="오른쪽 화살표"></button>
+        </div>
     </div>
+
+    
+
 
     <!-- 언어 변경 버튼 -->
     <div class="language-container">

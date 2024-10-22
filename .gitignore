@@ -9,4 +9,3 @@ yolov5/yolov5s.pt
 app.log
 yolov5/
 yolov5/__pycache__/export.cpython-312.pyc
-flask_env/

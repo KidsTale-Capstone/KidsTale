@@ -90,8 +90,11 @@ function reuploadImage() {
     fileInput.click();  // 파일 탐색창 열기
 }
 
-// 다음 버튼 누르면 YOLOv5 감지 작업을 수행
-async function goToNextPage() {
+// 로딩 화면 표시 후 서버에서 데이터를 받아오고 다음 페이지로 이동
+async function showLoading() {
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex';  // 로딩 화면 표시
+
     const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오
     const userId = localStorage.getItem('userId');
     console.log('userId:', userId); // userId 값 확인
@@ -167,5 +170,4 @@ async function goToNextPage() {
         console.error('YOLOv5 모델 호출 중 오류 발생:', error);
         alert('객체 감지 중 오류가 발생했습니다.');
     }
-
 }

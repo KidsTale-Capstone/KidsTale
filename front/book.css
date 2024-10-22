@@ -62,19 +62,19 @@ body, html {
 /* 메뉴바 아래 섹션 */
 .content-section-1 {
     display: flex;
-    padding-left: 450px;
+    justify-content: center;
     margin-top: 40px;
 }
 
 /* 책 컨테이너 */
 #book-container {
-    width: 600px;
+    width: 450px;
     height: auto;
 }
 
 #book-cover {
-    width: 550px;
-    height: 700px;
+    width: 450px;
+    height: 550px;
 }
 
 /* 책 제목 및 저자 정보 */
@@ -92,13 +92,14 @@ body, html {
 
 /* 이미지(표지) 박스 스타일 */
 #image-box {
-    width: 550px;
-    height: 700px;
+    width: 450px;
+    height: 550px;
     background-color: #e0e0e0;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 10px;
+    margin-top: 40px;
     margin-bottom: 20px;
 }
 
@@ -108,31 +109,28 @@ body, html {
 }
 
 /* 페이지 넘김 버튼 */
-.navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    width: 200px;
-    margin-top: 20px;
+/* 왼쪽 화살표 버튼 */
+.navigation-left {
+    position: absolute;
+    left: 300px; /* 화면의 왼쪽에서 약간 떨어진 위치 */
+    top: 70%; /* 세로 가운데 정렬 */
+    transform: translateY(-50%);
 }
 
-button {
-    padding: 10px 10px;
-    background-color: white;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* 오른쪽 화살표 버튼 */
+.navigation-right {
+    position: absolute;
+    right: 300px; /* 화면의 오른쪽에서 약간 떨어진 위치 */
+    top: 70%; /* 세로 가운데 정렬 */
+    transform: translateY(-50%);
 }
 
-#left {
+/* 화살표 이미지 크기 */
+#left, #right {
     width: 40px;
     height: 40px;
 }
 
-#right {
-    width: 40px;
-    height: 40px;
-}
 
 /* 언어 변경 버튼 스타일 */
 .language-container {

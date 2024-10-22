@@ -28,8 +28,10 @@ async function fetchBookData() {
             document.getElementById('book-title').innerText = data.title;
             document.getElementById('book-author').innerText = `지은이: ${data.author}`;
             document.getElementById('book-cover').src = data.imagePath;
+
             // 텍스트 파일 경로로 책 내용 가져오기
             bookContent = await fetchTextFile(data.txtPath);
+            console.log(bookContent);
 
             // 책 내용을 페이지별로 나눔
             bookData = splitBookContent(bookContent);
@@ -53,28 +55,26 @@ async function fetchTextFile(txtPath) {
     }
 }
 
-// 책 내용을 페이지별로 나누는 함수 (기본 페이지 크기는 500글자로 설정)
-function splitBookContent(content, pageSize = 500) {
-    let pages = [];
-    for (let i = 0; i < content.length; i += pageSize) {
-        pages.push(content.substring(i, i + pageSize));
-    }
-    return pages;
+function splitBookContent(content) {
+    // 문단 단위로 텍스트를 나누기 (줄바꿈을 기준으로 분할)
+    let paragraphs = content.split(/\r?\n+/); // \n 또는 \r\n 으로 구분
+    return paragraphs;
 }
 
-// 페이지 이동 함수
 function displayPage(pageIndex) {
     const contentPage = document.getElementById('content-page');
     const prevButton = document.getElementById('prev-page');
     const nextButton = document.getElementById('next-page');
 
-    // 첫 페이지라면 이전 버튼 숨기기
+    // 이전 페이지와 다음 페이지 버튼 표시 여부 결정
     prevButton.style.display = pageIndex === 0 ? 'none' : 'block';
-    // 마지막 페이지라면 다음 버튼 숨기기
     nextButton.style.display = pageIndex === bookData.length - 1 ? 'none' : 'block';
 
-    // 페이지 내용 업데이트
+    // 페이지 내용 업데이트 (각 문단을 표시)
     document.getElementById('content-text').innerText = bookData[pageIndex];
+
+    // 페이지 컨테이너 표시
+    contentPage.style.display = 'block';
 }
 
 // 다음 페이지로 이동
