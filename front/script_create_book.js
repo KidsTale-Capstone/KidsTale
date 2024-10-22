@@ -95,7 +95,7 @@ async function showLoading() {
     const loadingScreen = document.getElementById('loading');
     loadingScreen.style.display = 'flex';  // 로딩 화면 표시
 
-    const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오
+    const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오기
     const userId = localStorage.getItem('userId');
     console.log('userId:', userId); // userId 값 확인
 

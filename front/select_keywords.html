@@ -76,10 +76,15 @@
         <!-- 버튼 -->
         <div class="container">
             <div class="button-group">
-                <button class="submit-button" onclick="goToNextPage()">다음</button>
+                <button class="submit-button" onclick="showLoading()">다음</button>
             </div>
         </div>
 
+        <!-- 로딩 화면 -->
+        <div id="loading" class="loading-screen" style="display: none;">
+            <div class="loader"></div>
+            <p>잠시만 기다려 주세요...</p>
+        </div>
 
     </div>
 
