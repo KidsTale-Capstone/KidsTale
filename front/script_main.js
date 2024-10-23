@@ -37,7 +37,17 @@ async function fetchUserData() {
 function updateUserData(userName, userGoal, userCurrent) {
     // 사용자 이름 및 목표 도서 업데이트
     document.getElementById("user-name").innerText = `${userName} 작가님,`;
-    document.getElementById("remaining-books").innerText = `${userGoal - userCurrent}권`;
+    // const remainingBooks = userGoal - userCurrent;
+    // document.getElementById("remaining-books").innerText = `${userGoal - userCurrent}권`;
+
+    // 목표 달성 여부에 따라 남은 책 수나 축하 메시지를 업데이트
+    const remainingBooksElement = document.getElementById("remaining-books");
+    if (userCurrent >= userGoal) {
+        remainingBooksElement.innerText = "축하합니다! 목표 달성에 성공했어요!";
+    } else {
+        const remainingBooks = userGoal - userCurrent;
+        remainingBooksElement.innerText = `${remainingBooks}권 남았어요!`;
+    }
 
     // 프로그레스 바 업데이트
     const progressPercentage = Math.floor((userCurrent / userGoal) * 100);
@@ -46,6 +56,7 @@ function updateUserData(userName, userGoal, userCurrent) {
 
     // 고양이 이미지 위치 업데이트 (진행도에 맞게, 바 끝에 고정)
     document.getElementById("cat-img").style.left = `calc(${progressPercentage}% - 25px)`;
+
 }
 
 // 페이지 로드 시 사용자 데이터 불러오기

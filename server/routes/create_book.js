@@ -24,6 +24,13 @@ function logToFile(message) {
     });
 }
 
+// 파일 이름을 안전하게 변환하는 함수
+function sanitizeFileName(fileName) {
+    return fileName
+        .replace(/[^a-z0-9_.-]/gi, '')  // 알파벳, 숫자, _, -, . 만 허용
+        .toLowerCase();                  // 파일 이름을 소문자로 변환
+}
+
 // 이미지 업로드 처리
 router.post('/upload', upload.single('image'), async (req, res) => {
     try {
@@ -49,17 +56,17 @@ router.post('/upload', upload.single('image'), async (req, res) => {
 
         console.log('파일 정보:', file);  // 파일 정보 출력
 
-        const fileName = `${Date.now()}_${file.originalname}`;
+        const safeFileName = sanitizeFileName(`${Date.now()}_${file.originalname}`);;
 
         // Supabase에 이미지 업로드 및 경로와 URL을 가져옴
-        const { filePath, publicUrl } = await uploadImageToSupabase(file, fileName);
+        const { filePath, publicUrl } = await uploadImageToSupabase(file, safeFileName);
 
         // DB에 정보 저장
         const { data, error } = await supabase
             .from('drawing')
             .insert([
                 { 
-                    file_name: fileName, 
+                    file_name: safeFileName, 
                     file_path: filePath,  // 파일 경로 저장
                     public_url: publicUrl, // 공용 URL 저장
                     id_user: userID
