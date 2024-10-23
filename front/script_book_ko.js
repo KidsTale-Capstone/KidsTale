@@ -120,7 +120,7 @@ function loadNextPage() {
         if (currentPage <= lastPageIndex) {
             // 문단별 데이터를 표시
             const pageText = bookData[currentPage];
-            document.getElementById('page-text').innerText = pageText; // 페이지 텍스트 표시
+            document.getElementById('content-text').innerText = pageText; // 페이지 텍스트 표시
         }
     }
 
@@ -161,6 +161,13 @@ function reuploadPageImage() {
 
 // 페이지 저장 및 다음 페이지로 이동하는 기능
 async function saveAndNextPage() {
+
+    // 첫 번째 페이지일 경우 저장하지 않고 다음 페이지로만 이동
+    if (currentPage === 0) {
+        loadNextPage(); // 다음 페이지 로드
+        return;
+    }
+
     const token = localStorage.getItem('token'); // 사용자 인증을 위한 JWT 토큰
     const bookId = localStorage.getItem('id_book');
     const currentPageIndex = currentPage; // 현재 페이지 인덱스
@@ -170,12 +177,11 @@ async function saveAndNextPage() {
     if (fileInput.files[0]) {
         formData.append('image', fileInput.files[0]); // 업로드된 사진 추가
     }
-    formData.append('pageText', bookData[currentPageIndex]); // 페이지 텍스트 추가
     formData.append('pageIndex', currentPageIndex); // 현재 페이지 인덱스
     formData.append('bookId', bookId); // 책 ID 추가
 
     try {
-        const response = await fetch('/save-page', {
+        const response = await fetch('/create_book/save-page', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`, // JWT 토큰 추가

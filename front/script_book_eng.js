@@ -5,7 +5,7 @@ let bookContent = '';
 
 // 서버에서 책 제목, 내용, 이미지 데이터를 받아오는 함수
 async function fetchBookData() {
-    const lang = 'eng'; // 영어 버전이므로 'eng' 사용
+    const lang = 'eng';
     const token = localStorage.getItem('token'); // JWT 토큰을 로컬 스토리지에서 가져옴
     const bookId = localStorage.getItem('id_book');
     const drawingId = localStorage.getItem('drawingId')
@@ -35,6 +35,7 @@ async function fetchBookData() {
 
             // 책 내용을 페이지별로 나눔
             bookData = splitBookContent(bookContent);
+            lastPageIndex = bookData.length - 1;
         } else {
             throw new Error('책 정보를 불러오는데 실패했습니다.');
         }

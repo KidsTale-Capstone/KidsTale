@@ -135,4 +135,50 @@ router.get('/get_uploaded_image_url', async (req, res) => {
     }
 });
 
+// 페이지 저장 라우트
+router.post('/save-page', upload.single('image'), async (req, res) => {
+    try {
+        const { bookId, pageIndex } = req.body;
+        const file = req.file; // 파일 업로드를 위해서 req.files.image 사용
+
+        if (!bookId || !pageIndex) {
+            return res.status(400).json({ success: false, message: '필수 데이터가 누락되었습니다.' });
+        }
+
+        // 이미지가 있는 경우 Supabase storage에 저장
+        let imagePath = null;
+        if (file) {
+            const fileName = `${bookId}_${pageIndex}.jpg`;
+            const { data, error } = await supabase
+                .storage
+                .from('pages')
+                .upload(`${bookId}/${fileName}`, file.buffer, { contentType: 'image/jpeg' });
+
+            if (error) {
+                throw new Error('이미지 저장 중 오류가 발생했습니다.');
+            }
+
+            imagePath = data.path; // 저장된 이미지의 경로
+        }
+
+        // 페이지 정보를 데이터베이스에 저장
+        const { data: insertData, error: insertError } = await supabase
+            .from('pages')
+            .insert([
+                { id_book: bookId, page_index: pageIndex, image_path: imagePath }
+            ]);
+
+        if (insertError) {
+            console.error('페이지 정보를 데이터베이스에 저장 중 오류 발생:', insertError);
+            throw new Error('페이지 정보를 데이터베이스에 저장 중 오류가 발생했습니다.');
+        }
+
+        res.json({ success: true, message: '페이지가 성공적으로 저장되었습니다.' });
+    } catch (error) {
+        console.error('페이지 저장 중 오류:', error);
+        res.status(500).json({ success: false, message: '페이지 저장 중 오류가 발생했습니다.' });
+    }
+});
+
+
 module.exports = router;
