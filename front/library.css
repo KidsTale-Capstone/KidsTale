@@ -1,0 +1,237 @@
+/* 기본적인 스타일 설정 */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+/* 로고 섹션 */
+.logo-section {
+    text-align: center;
+    padding-top: 50px;
+    margin-bottom: 30px;
+}
+
+.logo-section img {
+    max-width: 200px; /* 로고 크기 설정 */
+}
+
+/* 로그아웃 */
+.logout {
+    text-align: right;
+    margin-right: 40px;
+}
+
+.logout a {
+    color: #7d4ac9;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* 메뉴 바 */
+.menu-bar {
+    background-color: #9370db; /* 메뉴 바 배경 색상 */
+    padding: 15px 0;
+    margin-top: 10px;
+}
+
+.menu-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-evenly; /* 메뉴 항목 가운데 정렬 */
+}
+
+.menu-bar ul li {
+    margin: 0 20px;
+}
+
+.menu-bar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.menu-bar ul li a:hover {
+    text-decoration: underline;
+}
+
+/* 메뉴바 아래 섹션 */
+/* 나의 책 섹션 */
+.content-section-2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.content-section-2 .box {
+    width: 950px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.book-container h2 {
+    font-size: 40px;
+    color: #7a6fa5;
+    margin-bottom: 15px;
+}
+
+/* 슬라이더 컨테이너에 너비를 설정하고, 오버플로우를 숨김 처리 */
+.slider-container {
+    display: flex;
+    margin: 20px auto; /* 중앙 정렬 */
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    width: 810px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+}
+
+/* 책 리스트 */
+.book-list {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+/* book-item 설정 */
+.book-item {
+    width: 240px;
+    height: 300px;
+    margin: 25px 15px;
+    text-align: center;
+    border-radius: 5px;
+    flex-shrink: 0; /* 책 아이템이 줄어들지 않도록 설정 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 아이템 그림자 */
+}
+
+/*.book-item img {
+    width: 240px;
+    height: auto;
+    border-radius: 5px;
+    object-fit: fill; 
+}*/
+
+.book-item img {
+    width: 100%; /* book-item의 너비에 맞춤 */
+    height: 100%; /* book-item의 높이에 맞춤 */
+    object-fit: cover; /* 비율을 유지하면서 박스를 채우도록 설정 */
+    border-radius: 5px; /* 선택 사항: 둥근 모서리 */
+}
+
+
+
+.book-item h3, .book-item p {
+    display: none; /* 슬라이더에서는 제목, 지은이, 장르, 키워드를 숨김 */
+}
+
+/* =================== 화살표 버튼 =================== */
+.left-button {
+    margin-right: 10px;
+}
+
+.right-button {
+    margin-left: 10px;
+}
+
+.arrow {
+    background-color: transparent;
+    border: none;
+    position: fixed;
+    top: 48%;
+    transform: translateY(200%);
+    cursor: pointer;
+}
+
+.arrow.left {
+    left: 300px;
+}
+
+.arrow.right {
+    right: 300px;
+}
+
+.arrow img {
+    width: 40px;
+    height: 40px;
+}
+
+/* =================== 모달 창 스타일 =================== */
+.modal {
+    display: none; /* 모달은 기본적으로 숨김 */
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    display: flex;
+    background-color: #f0f0f0;
+    width: 80%;
+    max-width: 900px;
+    padding: 20px;
+    position: relative;
+    border-radius: 8px;
+}
+
+.close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.close-button img {
+    width: 30px;
+    height: 30px;
+}
+
+.modal-body {
+    display: flex;
+}
+
+.book-cover {
+    display: flex;
+    width: 350px;
+    height: 450px;
+}
+
+.book-cover img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.book-details {
+    width: 300px;
+    padding-left: 50px;
+}
+
+.book-details h2 {
+    font-size: 30px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.book-details p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#keywords {
+    font-size: 18px;
+}
