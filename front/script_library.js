@@ -13,42 +13,42 @@ const books = [
         author: "지은이1",
         genre: "장르1",
         keywords: ["키워드1", "키워드2", "키워드3"],
-        cover: "img/pic1.jpg"
+        cover: "img/ex_image.jpg"
     },
     {
         title: "책2",
         author: "지은이2",
         genre: "장르2",
         keywords: ["키워드1", "키워드2", "키워드3","키워드4", "키워드5", "키워드6"],
-        cover: "img/pic2.jpg"
+        cover: "img/ex_image.jpg"
     },
         {
         title: "책3",
         author: "지은이1",
         genre: "장르1",
         keywords: ["키워드1", "키워드2", "키워드3"],
-        cover: "img/pic1.jpg"
+        cover: "img/ex_image.jpg"
     },
     {
         title: "책4",
         author: "지은이2",
         genre: "장르2",
         keywords: ["키워드1", "키워드2", "키워드3","키워드4", "키워드5", "키워드6"],
-        cover: "img/pic2.jpg"
+        cover: "img/ex_image.jpg"
     },
         {
         title: "책5",
         author: "지은이1",
         genre: "장르1",
         keywords: ["키워드1", "키워드2", "키워드3"],
-        cover: "img/pic1.jpg"
+        cover: "img/ex_image.jpg"
     },
     {
         title: "책6",
         author: "지은이2",
         genre: "장르2",
         keywords: ["키워드1", "키워드2", "키워드3","키워드4", "키워드5", "키워드6"],
-        cover: "img/pic2.jpg"
+        cover: "img/ex_image.jpg"
     },
     // ... 더 많은 책
 ];

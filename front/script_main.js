@@ -57,6 +57,8 @@ function updateUserData(userName, userGoal, userCurrent) {
     // 고양이 이미지 위치 업데이트 (진행도에 맞게, 바 끝에 고정)
     document.getElementById("cat-img").style.left = `calc(${progressPercentage}% - 25px)`;
 
+    // Update percentage positions
+    document.getElementById("progress-percentage").style.left = `calc(${progressPercentage}% - 10px)`;
 }
 
 // 페이지 로드 시 사용자 데이터 불러오기

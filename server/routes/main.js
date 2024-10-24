@@ -37,7 +37,7 @@ router.get('/userdata', async (req, res) => {
         // 현재 작성한 책 개수 (SQL COUNT 연산 사용)
         const { data: bookCount, error: bookCountError } = await supabase
             .from('book')
-            .select('*', { count: 'exact' })
+            .select('*')
             .eq('id_user', userID);
 
         if (bookCountError) {
@@ -45,13 +45,19 @@ router.get('/userdata', async (req, res) => {
             return res.status(500).json({ success: false, message: '책 개수를 불러오지 못했습니다.' });
         }
 
+        // 책 개수를 bookCount.length로 계산
+        const bookCountValue = bookCount.length;
+
+        // 책 개수 로그 출력
+        console.log('책 개수:', bookCountValue); // 실제 책 개수 확인을 위한 로그
+
         // 사용자 데이터를 클라이언트로 전송
         res.json({ 
             success: true, 
             data: { 
                 name: userData.name, 
                 goal: userData.goal, 
-                current_books: bookCount  // SQL로 계산된 책 개수
+                current_books: bookCountValue  // SQL로 계산된 책 개수
             } 
         });
     } catch (error) {

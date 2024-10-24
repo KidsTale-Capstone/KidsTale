@@ -1,3 +1,13 @@
+// 선택된 키워드를 저장할 배열
+let selectedKeywords = [];
+// 선택된 장르를 저장할 배열 (하나만 선택 가능)
+let selectedGenres = [];
+
+// 페이지가 로드되면 키워드를 불러오는 함수 실행
+document.addEventListener('DOMContentLoaded', function () {
+    loadKeywords();
+});
+
 // 키워드 추가 함수
 function addKeyword() {
     const keywordContainer = document.getElementById('keyword-container');
@@ -35,43 +45,23 @@ function editKeyword(button) {
     }
 }
 
-// 키워드 저장 함수
-function saveKeywords() {
-    const keywordButtons = document.getElementsByClassName('keyword-button');
-    const keywords = [];
 
-    // 각 키워드 버튼에서 텍스트를 추출하여 배열에 저장
-    for (let button of keywordButtons) {
-        keywords.push(button.textContent);
+// 키워드 선택/해제 함수
+function toggleKeyword(button) {
+    const keyword = button.innerText;
+
+    // 선택된 키워드 배열에 이미 있다면 선택 해제
+    if (selectedKeywords.includes(keyword)) {
+        selectedKeywords = selectedKeywords.filter(item => item !== keyword);
+        button.classList.remove('selected');
+    } else {
+        // 선택되지 않은 경우 배열에 추가
+        selectedKeywords.push(keyword);
+        button.classList.add('selected');
     }
-
-    // 키워드를 서버에 전송 (예시)
-    fetch('/save-keywords', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ keywords: keywords }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('키워드가 성공적으로 저장되었습니다.');
-        } else {
-            alert('키워드 저장에 실패했습니다.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('서버와 통신하는 중 오류가 발생했습니다.');
-    });
 }
 
-
-// 선택된 장르를 저장할 배열 (하나만 선택 가능)
-let selectedGenres = [];
-
-// 장르 선택 함수 (하나만 선택 가능)
+// 장르 선택/해제 함수 (하나만 선택 가능)
 function toggleGenre(button) {
     const genre = button.innerText;
 
@@ -83,13 +73,64 @@ function toggleGenre(button) {
 
     // 장르 선택/해제
     if (selectedGenres.includes(genre)) {
-        // 선택 해제
         selectedGenres = selectedGenres.filter(item => item !== genre);
         button.classList.remove('selected');
     } else {
         // 장르 배열에 추가 (최대 1개)
         selectedGenres.push(genre);
         button.classList.add('selected');
+    }
+}
+
+// 키워드 저장 함수
+async function saveKeywords() {
+    const token = localStorage.getItem('token'); // JWT 토큰 가져오기
+    const drawingId = localStorage.getItem('drawingId');
+    const drawingKwId = localStorage.getItem('drawingKwId');
+
+    if (!token) {
+        alert('로그인이 필요합니다.');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    if (selectedKeywords.length < 3) {
+        alert('키워드를 최소 3개 선택해야 합니다.');
+        return;
+    }
+
+    if (selectedGenres.length === 0) {
+        alert('장르를 선택해야 합니다.');
+        return;
+    }
+
+    try {
+        const response = await fetch('/select_keywords/submit-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                keywords: selectedKeywords,
+                genres: selectedGenres,
+                drawingId: drawingId,
+                drawingKwId: drawingKwId,
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert('키워드와 장르가 성공적으로 저장되었습니다.');
+            localStorage.setItem('selectKwId', result.selectKwId);
+            // 이후 동화 생성 또는 다른 작업으로 넘어가기
+        } else {
+            alert('키워드와 장르 저장에 실패했습니다.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('키워드와 장르 저장 중 오류가 발생했습니다.');
     }
 }
 

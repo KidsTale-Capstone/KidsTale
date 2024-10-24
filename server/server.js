@@ -43,6 +43,10 @@ app.use('/select_keywords', selectkeywordsRoutes);
 const bookRoutes = require('./routes/book');
 app.use('/book', bookRoutes);
 
+// 키워드만 선택 라우트
+const onlykeywordRoutes = require('./routes/only_keyword');
+app.use('/only_keyword', onlykeywordRoutes);
+
 // Flask 서버 실행 함수
 function startFlaskServer() {
   const flaskPath = './flask/app.py'

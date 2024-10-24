@@ -118,6 +118,18 @@ p {
     justify-content: space-between;
     font-size: 14px;
     color: #666;
+    position: relative;
+}
+
+#progress-middle {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#progress-percentage {
+    position: absolute;
+    left: 50%; /* 초기값을 20%로 설정 (dynamic updates will occur later) */
 }
 
 /* 2. 나의 책 섹션 */
