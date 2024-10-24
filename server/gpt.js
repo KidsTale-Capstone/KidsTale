@@ -10,11 +10,43 @@ const openai = new OpenAI({
 });
 
 // 1. 동화 생성 함수
-async function generateStory(keywords, genre) {
+async function generateStory(keywords, genre, userId) {
+
+    // 사용자의 나이를 가져옴
+    const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('age')
+        .eq('id_user', userId)
+        .single(); // 단일 데이터만 가져옴
+
+    if (userError || !userData) {
+        console.error('사용자 정보 불러오기 중 오류:', userError);
+        throw new Error('사용자 정보를 불러오는 데 실패했습니다.');
+    }
+
+    console.log('사용자 ID로 쿼리 실행: ', userId);
+
+    const age = userData.age;
+    console.log('사용자 age: ', age);
+
     const objStr = keywords.join(', ');
+    let sentenceLimitPrompt = ''; // 문장 수 제한
+
+    // 연령대별 문장 수 제한 설정
+    if (age <= 10) {
+        sentenceLimitPrompt = '이 동화는 영유아 및 초등학교 저학년을 위한 것으로, 분량은 10문장에서 20문장 이하로 작성해주세요. 내용에 적절하게 문단으로 나눠서 동화를 작성해주세요. 문체도 쉽고 친근하게 작성해주세요.';
+    } else if (age >= 11 && age <= 13) {
+        sentenceLimitPrompt = '이 동화는 초등학교 고학년을 위한 것으로, 분량은 20문장에서 30문장로 작성해주세요. 내용에 적절하게 문단으로 나눠서 동화를 작성해주세요. 문체는 적당하게 작성해주세요.';
+    } else {
+        sentenceLimitPrompt = '이 동화는 중학교 이상을 위한 것으로, 분량은 30문장 이상입니다. 내용에 적절하게 문단으로 나눠서 동화를 작성해주세요. 문체는 조금 더 깊이있게 작성해주세요.';
+    }
+
     
-    const prompt = `다음 ${keywords.length}개의 키워드들 모두 사용하여 한글 어린이 동화를 만들어주세요: ${objStr}. 
-                    동화의 장르는 ${genre}입니다. 결말을 포함하여 작성해주세요.`;
+    const prompt = `다음 ${keywords.length}개의 키워드를 모두 사용하여 하나의 한글 동화를 만들어주세요: ${objStr}.
+                    동화의 장르는 ${genre}입니다.
+                    사랑, 우정, 과학, 교육 장르에서는 주인공이 사람이 되도록 작성해주세요.
+                    ${sentenceLimitPrompt} 
+                    동화의 제목을 포함하지 않고, 결말을 포함해 하나의 멋진 동화를 작성해주세요.`;
 
     try {
         const response = await openai.chat.completions.create({
@@ -23,9 +55,12 @@ async function generateStory(keywords, genre) {
                 { role: "system", content: "You are a helpful assistant." },
                 { role: "user", content: prompt }
             ],
+            temperature: 0.7,
+            frequency_penalty: 0.2,
+            presence_penalty: 0.4
         });
 
-        console.log("API 응답_동화:", response);  // 응답을 로그로 출력
+        // console.log("API 응답_동화:", response);  // 응답을 로그로 출력
 
         // 응답에 choices가 있는지 확인하고 가져오기
         if (response.choices && response.choices.length > 0) {
@@ -43,7 +78,7 @@ async function generateStory(keywords, genre) {
 
 // 제목 생성 함수
 async function generateTitle(story) {
-    const prompt = "위 동화의 제목을 작성해주세요. 답변은 [제목] 형식으로 해주세요.";
+    const prompt = "위 동화의 제목을 작성해주세요. [제목] 형식으로 해주세요.";
 
     try {
         const response = await openai.chat.completions.create({
@@ -157,7 +192,7 @@ async function saveBookData(keywords, genre, userId, selectKwId) {
     try {
 
         // 생성
-        const storyKo = await generateStory(keywords, genre);
+        const storyKo = await generateStory(keywords, genre, userId);
         const titleKo = await generateTitle(storyKo);
         const { translatedStory, translatedTitle } = await generateEng(storyKo, titleKo);
 
