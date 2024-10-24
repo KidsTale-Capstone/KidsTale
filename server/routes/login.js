@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
           name: user.name, 
           age: user.age },
         process.env.JWT_SECRET,
-        { expiresIn: '1h' }  // 토큰 만료 시간 설정 (1시간)
+        { expiresIn: '24h' } // 1시간 동안 유효
     );
 
     // 로그인 성공 시

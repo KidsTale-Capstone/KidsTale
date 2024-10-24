@@ -1,72 +1,50 @@
 let currentIndex = 0; // 현재 페이지 인덱스
 const itemsPerPage = 3; // 한 페이지에 보여질 책의 개수
-const totalItems = document.querySelectorAll('.book-item').length; // 전체 책의 개수
 const bookList = document.getElementById('book-list');
 const itemWidth = 200; // 책의 너비 (CSS에서 설정한 값)
 const marginWidth = 70; // 책과 책 사이의 마진 (각각 좌우 마진 합산 값)
 const totalItemWidth = itemWidth + marginWidth; // 책 아이템과 마진을 포함한 총 너비
+let totalItems = 0; // 책의 총 개수
 
-// 예시로 사용할 책 데이터 (DB에서 받아온다고 가정)
-const books = [
-    {
-        title: "책1",
-        author: "지은이1",
-        genre: "장르1",
-        keywords: ["키워드1", "키워드2", "키워드3"],
-        cover: "img/ex_image.jpg"
-    },
-    {
-        title: "책2",
-        author: "지은이2",
-        genre: "장르2",
-        keywords: ["키워드1", "키워드2", "키워드3","키워드4", "키워드5", "키워드6"],
-        cover: "img/ex_image.jpg"
-    },
-        {
-        title: "책3",
-        author: "지은이1",
-        genre: "장르1",
-        keywords: ["키워드1", "키워드2", "키워드3"],
-        cover: "img/ex_image.jpg"
-    },
-    {
-        title: "책4",
-        author: "지은이2",
-        genre: "장르2",
-        keywords: ["키워드1", "키워드2", "키워드3","키워드4", "키워드5", "키워드6"],
-        cover: "img/ex_image.jpg"
-    },
-        {
-        title: "책5",
-        author: "지은이1",
-        genre: "장르1",
-        keywords: ["키워드1", "키워드2", "키워드3"],
-        cover: "img/ex_image.jpg"
-    },
-    {
-        title: "책6",
-        author: "지은이2",
-        genre: "장르2",
-        keywords: ["키워드1", "키워드2", "키워드3","키워드4", "키워드5", "키워드6"],
-        cover: "img/ex_image.jpg"
-    },
-    // ... 더 많은 책
-];
+// 책 데이터를 서버에서 불러와 슬라이더에 책 표지를 표시
+async function loadBooks() {
+    try {
 
-// 슬라이더에 책 표지만 표시
-function loadBooks() {
-    const bookList = document.getElementById('book-list');
-    bookList.innerHTML = ''; // 기존 리스트 초기화
+        const token = localStorage.getItem('token'); // 로컬 스토리지에서 JWT 토큰을 가져오기
 
-    books.forEach(book => {
-        const bookItem = document.createElement('div');
-        bookItem.classList.add('book-item');
-        bookItem.innerHTML = `
-            <img src="${book.cover}" alt="${book.title} 표지">
-        `;
-        bookItem.onclick = () => openBookModal(book); // 클릭 시 모달 열기
-        bookList.appendChild(bookItem);
-    });
+        if (!token) {
+            console.error('토큰이 없습니다. 다시 로그인하세요.');
+            return; // 토큰이 없으면 더 이상 진행하지 않음
+        }
+
+        const response = await fetch(`/library/get_book`, {
+            headers: {
+                'Authorization': `Bearer ${token}`, // Authorization 헤더에 JWT 토큰 추가
+            }
+        });
+        const data = await response.json();
+
+        if (data.message) {
+            document.getElementById('book-list').innerHTML = `<p>${data.message}</p>`;
+            return;
+        }
+
+        totalItems = data.length; // totalItems 업데이트
+
+        bookList.innerHTML = ''; // 기존 리스트 초기화
+
+        data.forEach(book => {
+            const bookItem = document.createElement('div');
+            bookItem.classList.add('book-item');
+            bookItem.innerHTML = `
+                <img src="${book.cover}" alt="${book.title} 표지">
+            `;
+            bookItem.onclick = () => openBookModal(book); // 클릭 시 모달 열기
+            bookList.appendChild(bookItem);
+        });
+    } catch (error) {
+        console.error('책 데이터를 불러오는 중 오류 발생:', error);
+    }
 }
 
 

@@ -47,6 +47,10 @@ app.use('/book', bookRoutes);
 const onlykeywordRoutes = require('./routes/only_keyword');
 app.use('/only_keyword', onlykeywordRoutes);
 
+// 책 보관함 선택 라우트
+const libraryRoutes = require('./routes/library');
+app.use('/library', libraryRoutes);
+
 // Flask 서버 실행 함수
 function startFlaskServer() {
   const flaskPath = './flask/app.py'

@@ -49,16 +49,37 @@ function updateUserData(userName, userGoal, userCurrent) {
         remainingBooksElement.innerText = `${remainingBooks}권 남았어요!`;
     }
 
-    // 프로그레스 바 업데이트
-    const progressPercentage = Math.floor((userCurrent / userGoal) * 100);
-    document.getElementById("progress-bar").style.width = `${progressPercentage}%`;
-    document.getElementById("progress-percentage").innerText = `${progressPercentage}%`;
 
-    // 고양이 이미지 위치 업데이트 (진행도에 맞게, 바 끝에 고정)
-    document.getElementById("cat-img").style.left = `calc(${progressPercentage}% - 25px)`;
+    // 프로그레스 바
+    let progressPercentage;
+    const progressPercentageElement = document.getElementById("progress-percentage");
+    const progressBarElement = document.getElementById("progress-bar");
+    if (userCurrent >= userGoal) {
+        progressPercentage = 100; // 목표보다 크거나 같으면 100%로 고정
+    } else {
+        progressPercentage = Math.floor((userCurrent / userGoal) * 100);
+    }
 
-    // Update percentage positions
-    document.getElementById("progress-percentage").style.left = `calc(${progressPercentage}% - 10px)`;
+    if (progressPercentage === 0 || progressPercentage === 100) {
+        progressPercentageElement.style.display = "none";  // 숨기기
+    } else {
+        progressPercentageElement.style.display = "block";  // 표시
+        progressPercentageElement.innerText = `${progressPercentage}%`;  // 퍼센트 업데이트
+        progressPercentageElement.style.left = `calc(${progressPercentage}% - 10px)`;  // 위치 업데이트
+    }
+
+    // // 고양이 이미지 위치 업데이트 (진행도에 맞게, 바 끝에 고정)
+    // document.getElementById("cat-img").style.left = `calc(${progressPercentage}% - 25px)`;
+
+    // // Update percentage positions
+    // document.getElementById("progress-percentage").style.left = `calc(${progressPercentage}% - 10px)`;
+
+    // 프로그레스 바의 너비 업데이트
+    progressBarElement.style.width = `${progressPercentage}%`;  // 바 너비 업데이트
+    // 고양이 이미지 위치 업데이트 (진행도에 맞게)
+    const catImageElement = document.getElementById("cat-img");
+    catImageElement.style.left = `calc(${progressPercentage}% - ${catImageElement.offsetWidth / 2}px)`;
+
 }
 
 // 페이지 로드 시 사용자 데이터 불러오기
