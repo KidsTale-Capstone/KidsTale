@@ -77,15 +77,19 @@ function displayPage(pageIndex) {
     const prevButton = document.getElementById('prev-page');
     const nextButton = document.getElementById('next-page');
 
+    // 첫 페이지는 내용이 아닌 표지로 설정
+    if (pageIndex === 0) {
+        document.getElementById('content-page').innerText = ''; // 첫 페이지에서는 내용 표시 안함
+        document.getElementById('book-cover').style.display = 'block'; // 표지 이미지 표시
+    } else {
+        document.getElementById('book-cover').style.display = 'block'; // 표지 이미지
+        document.getElementById('content-page').innerText = bookData[pageIndex]; // 다른 페이지에서는 내용 표시
+    }
+
+
     // 이전 페이지와 다음 페이지 버튼 표시 여부 결정
     prevButton.style.display = pageIndex === 0 ? 'none' : 'block';
     nextButton.style.display = pageIndex === bookData.length - 1 ? 'none' : 'block';
-
-    // 페이지 내용 업데이트 (각 문단을 표시)
-    document.getElementById('content-page').innerText = bookData[pageIndex];
-
-    // 페이지 컨테이너 표시
-    contentPage.style.display = 'block';
 }
 
 // 다음 페이지로 이동
