@@ -19,7 +19,7 @@
     <!-- 메뉴 바 섹션 -->
     <nav class="menu-bar">
         <ul>
-            <li><a href="#">책 보관함</a></li>
+            <li><a href="library.html">책 보관함</a></li>
             <li><a href="create_book.html">동화 만들기</a></li>
             <li><a href="#">마이페이지</a></li>
         </ul>
@@ -27,7 +27,7 @@
 
     <div class="content-section-1">
         <!-- 책 컨테이너 -->
-        <div id="first-page-section" style="display: none;">
+        <div id="book-container">
             <!-- 책 제목 및 저자 표시 -->
             <h1 id="book-title"></h1>
             <p id="book-author"></p>
@@ -35,22 +35,11 @@
             <!-- 업로드된 사진(표지) 박스 -->
             <div id="image-box">
                 <img id="book-cover" src="" alt="책 표지 이미지">
-                <!-- <p>업로드한 사진(표지)</p> -->
             </div>
-        </div>
-
-        <!-- 그 외 페이지에서만 보이는 사진 업로드 섹션 -->
-        <div id="upload-section" style="display: none;">
-            <label for="page-image-upload" id="upload-label">페이지에 추가할 사진을 업로드 해주세요</label>
-            <input type="file" id="page-image-upload" accept="image/*" onchange="previewPageImage(event)" style="display:none;">
-            <div id="preview-box">
-                <p id="preview-text">사진 첨부</p>
-            </div>
-            <button onclick="reuploadPageImage()">다시 첨부하기</button>
             
             <!-- 내용 페이지 -->
             <div id="content-page" class="book-page" style="display: block;">
-                <p id="content-text">여기에 동화의 내용이 표시됩니다.</p>
+                <p>책 내용</p>
             </div>
         </div>
 
@@ -61,12 +50,7 @@
 
         <!-- 다음 페이지 버튼을 누르면 자동으로 저장됨 -->
         <div class="navigation-right">
-            <button id="next-page" onclick="saveAndNextPage()"><img id="right" src="img/right.png" alt="오른쪽 화살표"></button>
-        </div>
-
-        <!-- 마지막 페이지에서 완성하기 버튼 -->
-        <div id="complete-button-container" style="display:none;">
-            <button id="complete-book" onclick="completeBook()">완성하기</button>
+            <button id="next-page" onclick="nextPage()"><img id="right" src="img/right.png" alt="오른쪽 화살표"></button>
         </div>
     </div>
 
