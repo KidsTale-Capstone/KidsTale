@@ -45,7 +45,7 @@ async function generateStory(keywords, genre, userId) {
     const prompt = `당신은 동화 작가입니다.
                     다음 ${keywords.length}개의 키워드를 모두 사용하여 하나의 한글 동화를 만들어주세요: ${objStr}.
                     동화의 장르는 ${genre}입니다.
-                    사랑, 우정, 과학, 교육 장르에서는 주인공이 사람이 되도록 작성해주세요.
+                    사랑, 우정, 과학, 교육 장르에서는 주인공이 사람이 되도록 작성해주세요. 내용에는 영어가 들어가지 않게 해주세요.
                     ${sentenceLimitPrompt} 
                     동화의 제목을 포함하지 않고, 결말을 포함해 하나의 멋진 동화책을 작성해주세요.`;
 
