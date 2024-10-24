@@ -1,65 +1,71 @@
 // 선택된 키워드를 저장할 배열
-let selectedKeywords = [];
+let keywords = [];
 // 선택된 장르를 저장할 배열 (하나만 선택 가능)
 let selectedGenres = [];
 
-// 페이지가 로드되면 키워드를 불러오는 함수 실행
-document.addEventListener('DOMContentLoaded', function () {
-    loadKeywords();
-});
 
-// 키워드 추가 함수
+// 키워드를 추가하는 함수 (알림창에서 먼저 입력을 받고 버튼 생성)
 function addKeyword() {
-    const keywordContainer = document.getElementById('keyword-container');
-    const rows = keywordContainer.getElementsByClassName('keyword-row');
-    const lastRow = rows[rows.length - 1];
+    // 알림창에서 키워드 입력받기
+    const keyword = prompt("키워드를 입력해주세요:");
 
-    // 새로운 행을 생성할지 여부 확인 (3개씩 넣기 위해)
-    if (lastRow.children.length < 4) {
-        // 마지막 행에 새로운 키워드 버튼 추가
-        const newButton = document.createElement('button');
-        newButton.classList.add('keyword-button');
-        newButton.textContent = `키워드 ${document.getElementsByClassName('keyword-button').length + 1}`;
-        newButton.onclick = function() { editKeyword(newButton) };
-        lastRow.appendChild(newButton);
-    } else {
-        // 새로운 행을 생성하고 그 안에 키워드 버튼 추가
-        const newRow = document.createElement('div');
-        newRow.classList.add('keyword-row');
-        
-        const newButton = document.createElement('button');
-        newButton.classList.add('keyword-button');
-        newButton.textContent = `키워드 ${document.getElementsByClassName('keyword-button').length + 1}`;
-        newButton.onclick = function() { editKeyword(newButton) };
-        
-        newRow.appendChild(newButton);
-        keywordContainer.appendChild(newRow);
-    }
-}
-
-// 키워드 수정(입력) 함수
-function editKeyword(button) {
-    const keyword = prompt("키워드를 입력해 주세요:", button.textContent);
+    // 입력받은 키워드가 유효할 때만 버튼 생성
     if (keyword !== null && keyword.trim() !== "") {
-        button.textContent = keyword;  // 버튼 텍스트 변경
-    }
-}
+        // 키워드를 배열에 저장
+        keywords.push(keyword);
 
-
-// 키워드 선택/해제 함수
-function toggleKeyword(button) {
-    const keyword = button.innerText;
-
-    // 선택된 키워드 배열에 이미 있다면 선택 해제
-    if (selectedKeywords.includes(keyword)) {
-        selectedKeywords = selectedKeywords.filter(item => item !== keyword);
-        button.classList.remove('selected');
+        // 입력한 키워드를 보여주는 버튼 생성
+        createKeywordButton(keyword);
     } else {
-        // 선택되지 않은 경우 배열에 추가
-        selectedKeywords.push(keyword);
-        button.classList.add('selected');
+        alert("키워드를 입력해주세요.");
     }
 }
+
+// 키워드 버튼을 생성하는 함수
+function createKeywordButton(keyword) {
+    const keywordContainer = document.getElementById('keyword-container');
+
+    // 새로운 줄을 생성할지 여부 확인 (4개씩 줄 배치)
+    let lastRow = keywordContainer.lastElementChild;
+    if (!lastRow || lastRow.children.length >= 4) {
+        // 새로운 행 생성
+        lastRow = document.createElement('div');
+        lastRow.classList.add('keyword-row'); // 스타일을 위해 새로운 클래스 적용
+        keywordContainer.appendChild(lastRow);
+    }
+
+    // 키워드 버튼 생성
+    const newButton = document.createElement('button');
+    newButton.classList.add('keyword-button');
+    newButton.textContent = keyword;
+
+    // 버튼을 클릭하면 키워드 수정 가능
+    newButton.onclick = function() {
+        editKeyword(newButton);
+    };
+
+    // 새 키워드 버튼을 행에 추가
+    lastRow.appendChild(newButton);
+}
+
+
+// 키워드를 수정하는 함수
+function editKeyword(button) {
+    const newKeyword = prompt("키워드를 수정해주세요:", button.textContent);
+
+    if (newKeyword !== null && newKeyword.trim() !== "") {
+        // 키워드 배열에서 수정
+        const index = keywords.indexOf(button.textContent);
+        if (index !== -1) {
+            keywords[index] = newKeyword;
+            button.textContent = newKeyword;
+        }
+    } else {
+        alert("유효한 키워드를 입력해주세요.");
+    }
+}
+
+// ======================================================================== //
 
 // 장르 선택/해제 함수 (하나만 선택 가능)
 function toggleGenre(button) {
@@ -82,55 +88,41 @@ function toggleGenre(button) {
     }
 }
 
-// 키워드 저장 함수
-async function saveKeywords() {
-    const token = localStorage.getItem('token'); // JWT 토큰 가져오기
-    const drawingId = localStorage.getItem('drawingId');
-    const drawingKwId = localStorage.getItem('drawingKwId');
-
-    if (!token) {
-        alert('로그인이 필요합니다.');
-        window.location.href = 'login.html';
-        return;
-    }
-
-    if (selectedKeywords.length < 3) {
-        alert('키워드를 최소 3개 선택해야 합니다.');
+// 다음 버튼 클릭 시 데이터 확인 후 페이지 이동
+function goToNextPage() {
+    const selectedGenre = document.querySelector('input[name="genre"]:checked');
+    
+    if (keywords.length < 3) {
+        alert('키워드를 최소 3개 이상 입력해주세요.');
         return;
     }
 
     if (selectedGenres.length === 0) {
-        alert('장르를 선택해야 합니다.');
+        alert('장르를 선택해주세요.');
         return;
     }
 
-    try {
-        const response = await fetch('/select_keywords/submit-data', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                keywords: selectedKeywords,
-                genres: selectedGenres,
-                drawingId: drawingId,
-                drawingKwId: drawingKwId,
-            }),
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            alert('키워드와 장르가 성공적으로 저장되었습니다.');
-            localStorage.setItem('selectKwId', result.selectKwId);
-            // 이후 동화 생성 또는 다른 작업으로 넘어가기
+    // 키워드와 장르 데이터를 서버로 전송 (예시)
+    fetch('/submit-keywords-genres', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ keywords: keywords, genre: selectedGenre.value })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 생성된 책 페이지로 이동
+            window.location.href = '#';
         } else {
-            alert('키워드와 장르 저장에 실패했습니다.');
+            alert('데이터 제출에 실패했습니다.');
         }
-    } catch (error) {
+    })
+    .catch(error => {
         console.error('Error:', error);
-        alert('키워드와 장르 저장 중 오류가 발생했습니다.');
-    }
+        alert('제출 중 오류가 발생했습니다.');
+    });
 }
+
 
