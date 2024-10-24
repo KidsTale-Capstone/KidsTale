@@ -1,3 +1,12 @@
+// 페이지가 로드될 때 호출되는 함수
+window.onload = function() {
+    // 페이지 진입 시 이전의 drawingId를 초기화
+    localStorage.removeItem('drawingId');  // 또는 localStorage.setItem('drawingId', null);
+    
+    // 이후 필요한 초기화 작업 수행
+    console.log('페이지 로드됨, 이전 drawingId 초기화');
+}
+
 
 // 1. 그림 업로드 페이지
 // 사용자가 파일을 선택했을 때 이미지 미리보기
@@ -141,7 +150,17 @@ async function showLoading() {
 
     const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오기
     const userId = localStorage.getItem('userId');
-    console.log('userId:', userId); // userId 값 확인
+    const drawingId = localStorage.getItem('drawingId'); // 그림이 업로드되었는지 확인
+
+    console.log('userId_current:', userId); // userId 값 확인
+    console.log('drawingId_current:', drawingId); // userId 값 확인
+
+    // 그림이 업로드되지 않았다면 경고 메시지 출력
+    if (!drawingId) {
+        loadingScreen.style.display = 'none'; // 로딩 화면 숨김
+        alert('그림을 먼저 업로드 해주세요.');
+        return;
+    }
 
     if (!token) {
         alert('인증 토큰을 찾을 수 없습니다. 다시 로그인해 주세요.');
@@ -153,9 +172,13 @@ async function showLoading() {
     try {
         //
         console.log('이미지 URL 가져오기 요청 중...');
-        const userId = localStorage.getItem('userId');  // userId를 로컬 스토리지에서 가져옴
 
-        const response = await fetch(`/create_book/get_uploaded_image_url`, {
+        if (!drawingId || isNaN(drawingId)) {
+            alert('그림 ID를 찾을 수 없습니다. 다시 업로드해 주세요.');
+            return;
+        }
+        
+        const response = await fetch(`/create_book/get_uploaded_image_url?drawingId=${drawingId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`

@@ -115,7 +115,7 @@ router.get('/get_uploaded_image_url', async (req, res) => {
             .from('drawing')
             .select('file_path, public_url')
             .eq('id_user', userId)
-            .order('id_drawing', { ascending: false })
+            .order('id_drawing', { ascending: false }) 
             .limit(1);  // 필요한 데이터만 선택
 
         console.log('쿼리 결과:', data);
