@@ -56,10 +56,20 @@ async function fetchTextFile(txtPath) {
     }
 }
 
-// 문단 단위로 텍스트를 나누기 (줄바꿈을 기준으로 분할)
+// 문단 단위로 텍스트를 나누고, 페이지별로 표시할 때 마침표를 기준으로 줄바꿈을 추가하는 함수
 function splitBookContent(content) {
-    let paragraphs = content.split(/\r?\n+/); // \n 또는 \r\n 으로 구분
-    return paragraphs;
+    // 먼저 문단 단위로 나누기 (\n 또는 \r\n 으로 구분)
+    let paragraphs = content.split(/\r?\n+/); 
+
+    // 각 문단 안에서 "."을 기준으로 문장을 나누고, 각 문단을 하나의 페이지로 처리
+    let refinedPages = paragraphs.map(paragraph => {
+        // 마침표 기준으로 문장을 나눔
+        let sentences = paragraph.split(/(?<=\.)\s*/);
+        // 문장들을 합쳐서 한 페이지에 넣고, 줄바꿈을 처리
+        return sentences.join("\n");
+    });
+
+    return refinedPages;
 }
 
 
@@ -70,14 +80,17 @@ function displayPage(pageIndex) {
     const langButton = document.getElementById('change-language');
     const modifyButton = document.getElementById('modify-content');
 
+    const totalPages = bookData.length; // 총 페이지 수 (내용 페이지 + 표지)
+
     // 첫 페이지는 내용이 아닌 표지로 설정
     if (pageIndex === 0) {
         document.getElementById('content-page').innerText = ''; // 첫 페이지에서는 내용 표시 안함
         document.getElementById('book-cover').style.display = 'block'; // 표지 이미지 표시
+        document.getElementById('page').innerText = '';
     } else {
         document.getElementById('book-cover').style.display = 'block'; // 표지 이미지
-        document.getElementById('content-page').innerText = bookData[pageIndex]; // 다른 페이지에서는 내용 표시
-        document.getElementById('page').innerText = currentPage; // 페이지 숫자 표시
+        document.getElementById('content-page').innerText = bookData[pageIndex - 1]; // 다른 페이지에서는 내용 표시
+        document.getElementById('page').innerText = `${pageIndex} / ${totalPages}`; // 페이지 숫자 표시
     }
 
     // 이전 페이지와 다음 페이지 버튼 표시 여부 결정

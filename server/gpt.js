@@ -47,7 +47,7 @@ async function generateStory(keywords, genre, userId) {
                     동화의 장르는 ${genre}입니다.
                     사랑, 우정, 과학, 교육 장르에서는 주인공이 사람이 되도록 작성해주세요. 내용에는 영어가 들어가지 않게 해주세요.
                     ${sentenceLimitPrompt} 
-                    동화의 제목을 포함하지 않고, 서론, 본론, 결말이 전부 포함된 하나의 멋진 동화책을 작성해주세요.`;
+                    동화의 제목을 포함하지 않고, 서론, 본론, 결말이 전부 포함된 하나의 멋진 동화책을 작성해주세요. 동화 내용만 출력해주세요.`;
 
     try {
         const response = await openai.chat.completions.create({
