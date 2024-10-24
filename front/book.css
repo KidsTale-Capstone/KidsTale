@@ -6,6 +6,10 @@ body, html {
     background-color: white;
 }
 
+a {
+    text-decoration-line: none;
+}
+
 /* 로고 섹션 */
 .logo-section {
     text-align: center;
@@ -105,7 +109,7 @@ body, html {
 
 #content-page {
     margin-top: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     text-align: justify;
 }
 
@@ -143,13 +147,29 @@ body, html {
 }
 
 /* 수정하기 & 언어변경 버튼 div 스타일 */
-.language-container {
+.button-container {
     display: flex;
     margin-right: 320px;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     justify-content: flex-end;
 }
+
+.audio-button {
+    padding: 10px 20px;
+    margin-right: 15px;
+    background-color: #7d4ac9;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.audio-button:hover {
+    background-color: #6b3c9a;
+}
+
 
 .modify-button {
     padding: 10px 20px;
@@ -178,4 +198,10 @@ body, html {
 
 .language-button:hover {
     background-color: #6b3c9a;
+}
+
+.page-index {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }

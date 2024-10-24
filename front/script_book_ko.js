@@ -2,7 +2,6 @@
 let currentPage = 0;
 let bookContent = '';
 let bookData = [];
-// let lineBreak_added_bookData = [];
 
 // 서버에서 책 제목, 내용, 이미지 데이터를 받아오는 함수
 async function fetchBookData() {
@@ -37,9 +36,6 @@ async function fetchBookData() {
             // 책 내용을 문단 단위로 나눔
             bookData = splitBookContent(bookContent);
 
-            // 마침표 뒤에 줄바꿈을 추가
-            // lineBreak_added_bookData = addLineBreaks(bookData);
-
         } else {
             throw new Error('책 정보를 불러오는데 실패했습니다.');
         }
@@ -66,16 +62,13 @@ function splitBookContent(content) {
     return paragraphs;
 }
 
-// 마침표 뒤에 줄바꿈을 추가
-// function addLineBreaks(text) {
-//     console.log(text);
-//     lineBreak_added_bookData = text.replace(/\.\s*/g, '.\n\n');
-// }
 
 function displayPage(pageIndex) {
     const contentPage = document.getElementById('content-page');
     const prevButton = document.getElementById('prev-page');
     const nextButton = document.getElementById('next-page');
+    const langButton = document.getElementById('change-language');
+    const modifyButton = document.getElementById('modify-content');
 
     // 첫 페이지는 내용이 아닌 표지로 설정
     if (pageIndex === 0) {
@@ -84,12 +77,14 @@ function displayPage(pageIndex) {
     } else {
         document.getElementById('book-cover').style.display = 'block'; // 표지 이미지
         document.getElementById('content-page').innerText = bookData[pageIndex]; // 다른 페이지에서는 내용 표시
+        document.getElementById('page').innerText = currentPage; // 페이지 숫자 표시
     }
-
 
     // 이전 페이지와 다음 페이지 버튼 표시 여부 결정
     prevButton.style.display = pageIndex === 0 ? 'none' : 'block';
     nextButton.style.display = pageIndex === bookData.length - 1 ? 'none' : 'block';
+    langButton.style.display = currentPage === 0 ? 'block' : 'none';
+    modifyButton.style.display = currentPage === 0 ? 'none' : 'block';
 }
 
 // 다음 페이지로 이동
