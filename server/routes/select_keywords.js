@@ -66,9 +66,8 @@ router.get('/keywords', async (req, res) => {
 
         // 쉼표로 구분된 키워드를 배열로 변환하고 필터링 (_와 공백 제거)
         const keywords = data[0].keywords_ko
-            .split(',')  // 쉼표로 구분된 문자열을 배열로 변환
-            .map(keyword => keyword.trim())  // 공백 제거
-            .filter(keyword => !keyword.includes('_') && !keyword.includes('전체'));
+            .split(/[,_\s]+/)  // 쉼표로 구분된 문자열을 배열로 변환
+            .filter(keyword => keyword !== '전체' && keyword !== '');
 
         // 최대 8개의 키워드를 선택
         const selectedKeywords = keywords.slice(0, 8);
