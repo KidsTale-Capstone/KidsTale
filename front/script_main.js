@@ -60,7 +60,7 @@ function updateUserData(userName, userGoal, userCurrent) {
         progressPercentage = Math.floor((userCurrent / userGoal) * 100);
     }
 
-    if (progressPercentage === 0 || progressPercentage === 100) {
+    if (progressPercentage === 0 || progressPercentage === 50 || progressPercentage === 100) {
         progressPercentageElement.style.display = "none";  // 숨기기
     } else {
         progressPercentageElement.style.display = "block";  // 표시

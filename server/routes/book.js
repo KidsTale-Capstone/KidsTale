@@ -19,21 +19,21 @@ function getUserIdFromToken(req) {
     }
 }
 
-// 책 데이터를 불러오는 함수
+// book table 가져오기
 async function fetchBookData(userId, lang, bookId) {
     try {
         const titleField = lang === 'eng' ? 'title_eng' : 'title_ko';
-        const txtPathField = lang === 'eng' ? 'txt_eng_path' : 'txt_ko_path';
-        if (!bookId) {
-            return res.status(400).json({ success: false, message: '책 정보가 없습니다.' });
-        }
 
-        console.log(`Fetching book data for userId: ${userId}, lang: ${lang}, bookId: ${bookId}`);
+        console.log(`userId: ${userId}, lang: ${lang}, bookId: ${bookId}`);
+        
+        if (!bookId) {
+            throw new Error('책 정보가 없습니다.');
+        }
 
         // Supabase에서 해당 사용자의 책 데이터 가져오기
         const { data, error } = await supabase
             .from('book')
-            .select(`${titleField}, ${txtPathField}, users(name)`)
+            .select(`${titleField}, author`)
             .eq('id_user', userId)
             .eq('id_book', bookId)
             .single();
@@ -41,62 +41,37 @@ async function fetchBookData(userId, lang, bookId) {
         if (error || !data) {
             throw new Error('책 데이터를 불러오는 중 오류가 발생했습니다.');
         }
-        const filePath = data[txtPathField]; // 파일 경로를 가져옴
-
-        const { data: publicUrlData, error: publicUrlError } = supabase
-            .storage
-            .from('book')
-            .getPublicUrl(filePath);
-
-        if (publicUrlError) {
-            throw new Error(`Supabase에서 공용 URL 가져오기 중 오류 발생: ${publicUrlError.message}`);
-        }
-
-        const publicUrl = publicUrlData.publicUrl;
-
-        console.log('Book 퍼블릭 URL:', publicUrl);
 
         return {
             title: data[titleField],
-            txtPath: publicUrl,
-            author: data.users.name
+            author: data.author
         };
     } catch (error) {
-        console.error('책 데이터를 불러오는 중 오류:', error);
-        throw new Error('책 데이터를 불러오는 중 오류가 발생했습니다.');
+        console.error('책 정보를 불러오는 중 오류:', error);
+        throw new Error('책 정보를 불러오는 중 오류가 발생했습니다.');
     }
 }
 
-// 이미지 데이터를 불러오는 함수
-async function fetchDrawingData(userId, drawingId) {
+// 페이지별 내용 가져오기
+async function fetchPageData(bookId, pageIndex, lang) {
     try {
-        // drawingId가 없으면 오류 처리
-        if (!drawingId) {
-            throw new Error('drawingId가 없습니다.');
-        }
-
-        console.log(`Fetching drawing data for userId: ${userId}, drawingId: ${drawingId}`);
-
-        // Supabase에서 drawing 테이블에서 해당 사용자의 이미지 데이터 가져오기
+        // pages 테이블에서 페이지 인덱스에 맞는 내용 가져오기
         const { data, error } = await supabase
-            .from('drawing')
-            .select('public_url')
-            .eq('id_drawing', drawingId)
-            .eq('id_user', userId)
+            .from('pages')
+            .select('page_content, page_image_path')
+            .eq('id_book', bookId)
+            .eq('page_index', pageIndex)
+            .eq('page_lang', lang)
             .single();
 
         if (error || !data) {
-            throw new Error('이미지 데이터를 불러오는 중 오류가 발생했습니다.');
+            throw new Error('페이지 데이터를 불러오는 중 오류가 발생했습니다.');
         }
 
-        console.log('drawing 퍼블릭 url: ', data.public_url)
-
-        // public_url을 반환
-        return { imagePath: data.public_url };
-
+        return data;
     } catch (error) {
-        console.error('이미지 데이터를 불러오는 중 오류:', error);
-        throw new Error('이미지 데이터를 불러오는 중 오류가 발생했습니다.');
+        console.error('페이지 데이터를 불러오는 중 오류:', error);
+        throw new Error('페이지 데이터를 불러오는 중 오류가 발생했습니다.');
     }
 }
 
@@ -109,31 +84,63 @@ router.get('/:lang', async (req, res) => {
         // JWT 토큰에서 사용자 ID 추출
         const lang = req.params.lang; // 'ko' 또는 'eng' 언어 정보
         const bookId = req.query.id_book; // 클라이언트에서 전달한 id_book
-        const drawingId = req.query.drawing_id;
+        const pageIndex = parseInt(req.query.page_index, 10);
 
-        if (!bookId || !drawingId) {
-            return res.status(400).json({ success: false, message: '책 정보나 그림 정보가 없습니다.' });
+        if (!bookId || isNaN(pageIndex)) {
+            return res.status(400).json({ success: false, message: '책 정보나 페이지 정보가 없습니다.' });
         }
 
         if (!lang) {
             return res.status(400).json({ success: false, message: '잘못된 요청입니다.' });
         }
 
-        // 책 데이터와 이미지 데이터 가져오기
+        // book table 가져오기
         const bookData = await fetchBookData(userId, lang, bookId);
-        const drawingData = await fetchDrawingData(userId, drawingId);
 
-        // 클라이언트에 책 정보와 이미지 경로 전달
+        // page table 가져오기
+        const pageData = await fetchPageData(bookId, pageIndex, lang);
+
         res.status(200).json({
             success: true,
             title: bookData.title,
-            txtPath: bookData.txtPath,
-            imagePath: drawingData.imagePath,
-            author: bookData.author
+            author: bookData.author,
+            pageContent: pageData.page_content,
+            pageImagePath: pageData.page_image_path
         });
+
     } catch (error) {
         console.error('데이터를 불러오는 중 오류:', error);
         res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// 서버의 라우트 예시 (Express)
+router.get('/:lang/total_pages', async (req, res) => {
+
+    const lang = req.params.lang; // 'ko' 또는 'eng' 언어 정보
+    const bookId = req.query.id_book; // 클라이언트에서 전달한 id_book
+
+    console.log(`bookId: ${bookId}, lang: ${lang}`)
+
+    try {
+        const { data, error } = await supabase
+            .from('pages')
+            .select('page_index')
+            .eq('id_book', bookId)
+            .eq('page_lang', lang)
+            .order('page_index', { ascending: false })
+            .limit(1);
+
+        if (error || !data) {
+            console.error('Supabase 오류 또는 데이터 없음:', error); // 오류 로그 추가
+            return res.status(500).json({ success: false, message: '총 페이지 수를 가져오는 중 오류가 발생했습니다.' });
+        }
+
+        console.log(`Fetched total pages successfully. Highest page_index: ${data[0].page_index}`);
+        res.status(200).json({ success: true, totalPages: data[0].page_index });
+    } catch (error) {
+        console.error('총 페이지 수를 가져오는 중 오류:', error);
+        res.status(500).json({ success: false, message: '총 페이지 수를 가져오는 중 오류가 발생했습니다.' });
     }
 });
 

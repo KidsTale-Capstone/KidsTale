@@ -24,8 +24,6 @@ async function generateStory(keywords, genre, userId) {
         throw new Error('사용자 정보를 불러오는 데 실패했습니다.');
     }
 
-    console.log('사용자 ID로 쿼리 실행: ', userId);
-
     const age = userData.age;
     console.log('사용자 age: ', age);
 
@@ -47,7 +45,8 @@ async function generateStory(keywords, genre, userId) {
                     동화의 장르는 ${genre}입니다.
                     사랑, 우정, 과학, 교육 장르에서는 주인공이 사람이 되도록 작성해주세요. 내용에는 영어가 들어가지 않게 해주세요.
                     ${sentenceLimitPrompt} 
-                    동화의 제목을 포함하지 않고, 서론, 본론, 결말이 전부 포함된 하나의 멋진 동화책을 작성해주세요. 동화 내용만 출력해주세요.`;
+                    동화의 제목을 포함하지 않고, 서론, 본론, 결말이 전부 포함된 하나의 멋진 동화책을 작성해주세요. 
+                    서론, 본론, 결론이라는 말은 포함하지 말고, 실제 동화책처럼 자연스럽게 동화를 생성해주고, 내용만 출력해주세요. `;
 
     try {
         const response = await openai.chat.completions.create({
@@ -77,7 +76,7 @@ async function generateStory(keywords, genre, userId) {
     }
 }
 
-// 제목 생성 함수
+// 2. 제목 생성 함수
 async function generateTitle(story) {
     const prompt = "위 동화의 제목을 작성해주세요. 제목을 대괄호로 감싸 [제목] 형식으로만 출력해주세요.";
 
@@ -148,18 +147,62 @@ async function generateEng(story, title) {
     }
 }
 
+// 4. Supabase에서 작가 데이터를 가져오는 함수
+async function fetchUsersData(userId) {
+    try {
+        const { data, error } = await supabase
+            .from('users')
+            .select('name')
+            .eq('id_user', userId)
+            .single();
+
+        if (error || !data) {
+            console.error('작가 데이터를 불러오는 중 오류:', error);
+            throw new Error('작가 데이터를 불러오는 중 오류가 발생했습니다.');
+        }
+
+        return data.name;
+
+    } catch (error) {
+        console.error('작가 데이터 불러오는 중 오류:', error);
+        throw error;
+    }
+}
+
+// 5. Supabase에서 그림 데이터를 가져오는 함수
+async function fetchDrawingData(userId, drawingId) {
+    try {
+        const { data, error } = await supabase
+            .from('drawing')
+            .select('public_url')
+            .eq('id_drawing', drawingId)
+            .eq('id_user', userId)
+            .single();
+            // .order('id_drawing', { ascending: false })
+            // .limit(1);
+
+        if (error || !data) {
+            console.error('그림 데이터를 불러오는 중 오류:', error);
+            throw new Error('그림 데이터를 불러오는 중 오류가 발생했습니다.');
+        }
+
+        return data.public_url;
+
+    } catch (error) {
+        console.error('이미지 데이터를 불러오는 중 오류:', error);
+        throw error;
+    }
+}
+
 // 파일을 Supabase 버킷에 저장하는 함수
 async function saveStoryToBucket(selectKwId, title, content, isKorean = true) {
 
     const safeTitle = title.replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
-
     console.log(`safeTitle: ${safeTitle}`)
-
     const folderPath = `${selectKwId}`;
 
     // 파일명 설정
     const fileName = isKorean ? `${safeTitle}_ko.txt` : `${safeTitle}_eng.txt`;
-
     // 최종 파일 경로
     const filePath = `${folderPath}/${fileName}`;
 
@@ -189,22 +232,28 @@ async function saveStoryToBucket(selectKwId, title, content, isKorean = true) {
 }
 
 // 동화 및 번역 저장, 경로 및 제목 테이블에 저장
-async function saveBookData(keywords, genre, userId, selectKwId) {
+async function saveBookData(keywords, genre, userId, selectKwId, drawingId) {
     try {
 
-        // 생성
+        // 0. 작가 이름 가져오기
+        const name = await fetchUsersData(userId);
+
+        // 1. 동화 생성 (한글)
         const storyKo = await generateStory(keywords, genre, userId);
         const titleKo = await generateTitle(storyKo);
+
+        // 2. 동화 번역 (영어)
         const { translatedStory, translatedTitle } = await generateEng(storyKo, titleKo);
 
-        // 저장
+        // 3. supabase bucket에 저장 (한글, 영어 동화)
         const txtKoPath = await saveStoryToBucket(selectKwId, translatedTitle, storyKo, true);
         const txtEngPath = await saveStoryToBucket(selectKwId, translatedTitle, translatedStory, false);
 
-        // 테이블에 저장
+        // 4. book 테이블에 책 정보 저장
         const { data, error } = await supabase.from('book').insert({
             id_user: userId,
             id_select_kw: selectKwId,
+            author: name,
             title_ko: titleKo,
             title_eng: translatedTitle,
             txt_ko_path: txtKoPath,
@@ -217,6 +266,41 @@ async function saveBookData(keywords, genre, userId, selectKwId) {
         if (error) {
             console.error('책 정보 저장 중 오류:', error);
             throw new Error('책 정보를 저장하는 중 오류가 발생했습니다.');
+        }
+
+        const idBook = data.id_book;
+
+        // 5. pages 테이블에 한글 동화 내용 저장
+        const imagePath = await fetchDrawingData(userId, drawingId);
+        const pagesKo = storyKo.split(/\r?\n+/);
+        for (let pageIndex = 0; pageIndex <= pagesKo.length; pageIndex++) {
+            const pageContent = pageIndex === 0 ? null : pagesKo[pageIndex - 1];
+
+            await supabase
+                .from('pages')
+                .insert({
+                    id_book: idBook,
+                    page_index: pageIndex,
+                    page_content: pageContent,
+                    page_lang: 'ko',
+                    page_image_path: imagePath
+                });
+        }
+
+        // 6. pages 테이블에 영어 동화 내용 저장
+        const pagesEng = translatedStory.split(/\r?\n+/);  // 문단 단위로 분리
+        for (let pageIndex = 0; pageIndex <= pagesEng.length; pageIndex++) {
+            const pageContent = pageIndex === 0 ? null : pagesEng[pageIndex - 1];
+
+            await supabase
+                .from('pages')
+                .insert({
+                    id_book: idBook,
+                    page_index: pageIndex,
+                    page_content: pageContent,
+                    page_lang: 'eng',
+                    page_image_path: imagePath
+                });
         }
 
         console.log('책 정보가 성공적으로 저장되었습니다.');

@@ -136,11 +136,12 @@ router.post('/submit-data', async (req, res) => {
     }
 });
 
+
 // 동화 생성 및 저장 라우트
 router.post('/generate-story', async (req, res) => {
-    const { selectKwId, keywords, genre } = req.body;
+    const { selectKwId, keywords, genre, drawingId } = req.body;
 
-    if (!selectKwId || !keywords || !genre) {
+    if (!selectKwId || !keywords || !genre || !drawingId) {
         return res.status(400).json({ error: '필수 데이터가 누락되었습니다.' });
     }
 
@@ -149,11 +150,15 @@ router.post('/generate-story', async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.sub;
 
-        // GPT API로 동화 생성 및 저장
-        const bookData = await gpt.saveBookData(keywords, genre, userId, selectKwId);
-        
-        res.json({ success: true, id_book: bookData.id_book });
+        if (!drawingId) {
+            console.error('drawingId가 undefined입니다.');
+            return res.status(400).json({ error: 'drawingId가 필요합니다.' });
+        }
 
+        // GPT API로 동화 생성 및 저장
+        const bookData = await gpt.saveBookData(keywords, genre, userId, selectKwId, drawingId);
+
+        res.json({ success: true, id_book: bookData.id_book });
 
     } catch (error) {
         console.error('동화 생성 및 저장 중 오류:', error);
