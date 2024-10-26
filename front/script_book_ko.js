@@ -118,8 +118,10 @@ function displayPage(pageIndex) {
         const nextButton = document.getElementById('next-page');
 
         const audioButton = document.getElementById('audio-book');
+        const playAllButton = document.getElementById('audio-book-all');
         const langButton = document.getElementById('change-language');
         const modifyButton = document.getElementById('modify-content');
+        const libraryButton = document.getElementById('go-library');
 
         if (pageIndex === 0) {
             coverImage.style.display = 'block';
@@ -142,9 +144,11 @@ function displayPage(pageIndex) {
         prevButton.style.display = pageIndex === 0 ? 'none' : 'block';
         nextButton.style.display = pageIndex === totalPages ? 'none' : 'block';
 
+        playAllButton.style.display =  currentPage === 0 ? 'block' : 'none';
         audioButton.style.display = currentPage === 0 ? 'none' : 'block';
         langButton.style.display = currentPage === 0 ? 'block' : 'none';
         modifyButton.style.display = currentPage === 0 ? 'none' : 'block';
+        libraryButton.style.display = (totalPages - currentPage) === 0 ? 'block' : 'none';
     }).catch(error => {
         console.error("페이지 데이터를 불러오는 중 오류 발생:", error);
     });

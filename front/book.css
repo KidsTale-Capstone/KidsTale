@@ -67,7 +67,7 @@ a {
 .content-section-1 {
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 37px;
 }
 
 /* 책 컨테이너 */
@@ -83,13 +83,13 @@ a {
 
 /* 책 제목 및 저자 정보 */
 #book-title {
-    font-size: 1.5em;
+    font-size: 30px;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
 #book-author {
-    font-size: 1em;
+    font-size: 20px;
     color: #666;
     margin-bottom: 20px;
 }
@@ -111,6 +111,7 @@ a {
     margin-top: 40px;
     margin-bottom: 20px;
     text-align: justify;
+    font-size: 20px;
 }
 
 #content-text {
@@ -155,6 +156,7 @@ a {
     justify-content: flex-end;
 }
 
+/* 전체 재생 & 각 페이지 듣기 */
 .audio-button {
     padding: 10px 20px;
     margin-right: 15px;
@@ -170,7 +172,7 @@ a {
     background-color: #6b3c9a;
 }
 
-
+/* 수정하기 버튼 */
 .modify-button {
     padding: 10px 20px;
     margin-right: 15px;
@@ -186,6 +188,7 @@ a {
     background-color: #6b3c9a;
 }
 
+/* 언어 변경 버튼 */
 .language-button {
     padding: 10px 20px;
     background-color: #7d4ac9;
@@ -200,6 +203,22 @@ a {
     background-color: #6b3c9a;
 }
 
+/* 책 보관함 가기 버튼 */
+.go-to-button {
+    padding: 10px 20px;
+    background-color: #7d4ac9;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.go-to-button:hover {
+    background-color: #6b3c9a;
+}
+
+/* 각 페이지 숫자 */
 .page-index {
     display: flex;
     justify-content: space-around;
