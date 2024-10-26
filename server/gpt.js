@@ -78,7 +78,7 @@ async function generateStory(keywords, genre, userId) {
 
 // 2. 제목 생성 함수
 async function generateTitle(story) {
-    const prompt = "위 동화의 제목을 작성해주세요. 제목을 대괄호로 감싸 [제목] 형식으로만 출력해주세요.";
+    const prompt = "위 동화의 제목을 작성해주세요. 제목을 괄호로 감싸 < 제목 > 형식으로만 출력해주세요.";
 
     try {
         const response = await openai.chat.completions.create({
