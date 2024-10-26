@@ -182,7 +182,7 @@ body, html {
     display: flex;
     background-color: #f0f0f0;
     width: 80%;
-    max-width: 900px;
+    max-width: 850px;
     padding: 20px;
     position: relative;
     border-radius: 8px;
@@ -217,7 +217,7 @@ body, html {
 }
 
 .book-details {
-    width: 300px;
+    width: 350px;
     padding-left: 50px;
 }
 
@@ -234,4 +234,24 @@ body, html {
 
 #keywords {
     font-size: 18px;
+}
+
+.read-button-section {
+    display: flex;
+    align-items: flex-end;
+}
+
+/* 책 읽기 버튼 */
+.go-to-button {
+    padding: 10px 20px;
+    background-color: #7d4ac9;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.go-to-button:hover {
+    background-color: #6b3c9a;
 }
