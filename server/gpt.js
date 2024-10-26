@@ -43,7 +43,7 @@ async function generateStory(keywords, genre, userId) {
     const prompt = `당신은 동화 작가입니다.
                     다음 ${keywords.length}개의 키워드를 모두 사용하여 하나의 한글 동화를 만들어주세요: ${objStr}.
                     동화의 장르는 ${genre}입니다.
-                    사랑, 우정, 과학, 교육 장르에서는 주인공이 사람이 되도록 작성해주세요. 내용에는 영어가 들어가지 않게 해주세요.
+                    사랑, 우정, 가족, 교육 장르에서는 주인공이 사람이 되도록 작성해주세요. 내용에는 영어가 들어가지 않게 해주세요.
                     ${sentenceLimitPrompt} 
                     동화의 제목을 포함하지 않고, 서론, 본론, 결말이 전부 포함된 하나의 멋진 동화책을 작성해주세요. 
                     서론, 본론, 결론이라는 말은 포함하지 말고, 실제 동화책처럼 자연스럽게 동화를 생성해주고, 내용만 출력해주세요. `;
@@ -152,7 +152,7 @@ async function fetchUsersData(userId) {
     try {
         const { data, error } = await supabase
             .from('users')
-            .select('name')
+            .select('name, age')
             .eq('id_user', userId)
             .single();
 
@@ -161,7 +161,7 @@ async function fetchUsersData(userId) {
             throw new Error('작가 데이터를 불러오는 중 오류가 발생했습니다.');
         }
 
-        return data.name;
+        return data;
 
     } catch (error) {
         console.error('작가 데이터 불러오는 중 오류:', error);
@@ -195,14 +195,14 @@ async function fetchDrawingData(userId, drawingId) {
 }
 
 // 파일을 Supabase 버킷에 저장하는 함수
-async function saveStoryToBucket(selectKwId, title, content, isKorean = true) {
+async function saveStoryToBucket(selectKwId, title, content, age, isKorean = true) {
 
     const safeTitle = title.replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
     console.log(`safeTitle: ${safeTitle}`)
     const folderPath = `${selectKwId}`;
 
     // 파일명 설정
-    const fileName = isKorean ? `${safeTitle}_ko.txt` : `${safeTitle}_eng.txt`;
+    const fileName = isKorean ? `${safeTitle}_${age}_ko.txt` : `${safeTitle}_${age}_eng.txt`;
     // 최종 파일 경로
     const filePath = `${folderPath}/${fileName}`;
 
@@ -236,7 +236,7 @@ async function saveBookData(keywords, genre, userId, selectKwId, drawingId) {
     try {
 
         // 0. 작가 이름 가져오기
-        const name = await fetchUsersData(userId);
+        const { name, age } = await fetchUsersData(userId);
 
         // 1. 동화 생성 (한글)
         const storyKo = await generateStory(keywords, genre, userId);
@@ -246,8 +246,8 @@ async function saveBookData(keywords, genre, userId, selectKwId, drawingId) {
         const { translatedStory, translatedTitle } = await generateEng(storyKo, titleKo);
 
         // 3. supabase bucket에 저장 (한글, 영어 동화)
-        const txtKoPath = await saveStoryToBucket(selectKwId, translatedTitle, storyKo, true);
-        const txtEngPath = await saveStoryToBucket(selectKwId, translatedTitle, translatedStory, false);
+        const txtKoPath = await saveStoryToBucket(selectKwId, translatedTitle, storyKo, age, true);
+        const txtEngPath = await saveStoryToBucket(selectKwId, translatedTitle, translatedStory, age, false);
 
         // 4. book 테이블에 책 정보 저장
         const { data, error } = await supabase.from('book').insert({
