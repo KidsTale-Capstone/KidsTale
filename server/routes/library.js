@@ -82,14 +82,18 @@ router.get('/get_book', async (req, res) => {
                 .from('book')
                 .select('title_ko, id_select_kw')
                 .eq('id_user', userId)
-                .eq('id_select_kw', keyword.id_select_kw);
+                .eq('id_select_kw', keyword.id_select_kw)
+                .single();
 
             if (bookError) {
                 throw bookError;
             }
 
             // select_kw의 실제 값을 확인
-            console.log('select_kw:', keyword.select_kw); 
+            console.log('select_kw:', keyword.select_kw);
+            console.log('keyword.id_select_kw', keyword.id_select_kw);
+            console.log('title', book.title_ko);
+            console.log('book.id_select_kw', book.id_select_kw);
 
             // 책 정보 결합
             return {
