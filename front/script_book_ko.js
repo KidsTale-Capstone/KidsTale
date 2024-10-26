@@ -61,6 +61,39 @@ async function fetchTotalPages(bookId, lang) {
     }
 }
 
+// TTS 요청 및 재생 함수
+async function playTTS(pageContent, bookId, lang) {
+    const token = localStorage.getItem('token');
+    const encodedText = encodeURIComponent(pageContent);
+
+    console.log(pageContent);
+    console.log("TTS 요청 시 bookId:", bookId, "lang:", lang);
+
+    try {
+        console.log(`TTS 요청 시작: ${encodedText}`);
+        const response = await fetch(`/book/${lang}/tts?text=${encodedText}&id_book=${bookId}&page_index=${currentPage}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            const audio = new Audio(data.audioPath);
+            console.log('TTS 요청 성공: 오디오 재생 시작');
+            audio.play();
+        } else {
+            console.error(`TTS 요청 실패: ${data.message}`);
+            alert('TTS 요청 중 실패가 발생했습니다.');
+        }
+    } catch (error) {
+        console.error('TTS 요청 중 오류:', error);
+        alert('TTS 요청 중 오류가 발생했습니다.');
+    }
+}
+
 // 페이지 표시 함수
 function displayPage(pageIndex) {
     const bookId = localStorage.getItem('id_book');
@@ -84,6 +117,7 @@ function displayPage(pageIndex) {
         const prevButton = document.getElementById('prev-page');
         const nextButton = document.getElementById('next-page');
 
+        const audioButton = document.getElementById('audio-book');
         const langButton = document.getElementById('change-language');
         const modifyButton = document.getElementById('modify-content');
 
@@ -99,11 +133,20 @@ function displayPage(pageIndex) {
             pageIndicator.innerText = `${pageIndex} / ${totalPages}`;
         }
 
+        // TTS 버튼 클릭 시 playTTS 함수에 필요한 정보 전달
+        audioButton.onclick = () => {
+            console.log("TTS 요청 준비 중...");
+            playTTS(pageData.pageContent, bookId, lang);
+        };
+
         prevButton.style.display = pageIndex === 0 ? 'none' : 'block';
         nextButton.style.display = pageIndex === totalPages ? 'none' : 'block';
 
+        audioButton.style.display = currentPage === 0 ? 'none' : 'block';
         langButton.style.display = currentPage === 0 ? 'block' : 'none';
         modifyButton.style.display = currentPage === 0 ? 'none' : 'block';
+    }).catch(error => {
+        console.error("페이지 데이터를 불러오는 중 오류 발생:", error);
     });
 }
 
