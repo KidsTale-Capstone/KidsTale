@@ -176,6 +176,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     const bookId = localStorage.getItem('id_book');
     const lang = 'ko'; // 한글 버전이므로 'ko' 사용
 
+    // bookId가 없을 경우 오류 처리 (기존 코드 개선)
+    if (!bookId) {
+        console.error("bookId 값이 없습니다. localStorage에서 제대로 가져오지 못했습니다.");
+        alert("책 정보를 불러오는 중 문제가 발생했습니다. 다시 시도해 주세요.");
+        return;
+    }
+
+    console.log("bookId 확인: ", bookId); // bookId 로그 출력
+
     totalPages = await fetchTotalPages(bookId, lang);
     displayPage(0);
 });

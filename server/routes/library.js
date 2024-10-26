@@ -80,7 +80,7 @@ router.get('/get_book', async (req, res) => {
             // book table
             const { data: book, error: bookError } = await supabase
                 .from('book')
-                .select('title_ko, id_select_kw')
+                .select('title_ko, id_select_kw, id_book')
                 .eq('id_user', userId)
                 .eq('id_select_kw', keyword.id_select_kw)
                 .single();
@@ -101,7 +101,8 @@ router.get('/get_book', async (req, res) => {
                 author: author.name,
                 genre: keyword.genre, // 키워드를 배열로 변환
                 keywords: keyword.select_kw, // JSON 문자열을 배열로 변환
-                cover: drawing.public_url
+                cover: drawing.public_url,
+                bookId: book.id_book
             };
         }));
 
