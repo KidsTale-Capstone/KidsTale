@@ -66,8 +66,8 @@ a {
 /* 메뉴바 아래 섹션 */
 .content-section-1 {
     display: flex;
-    justify-content: center;
-    margin-top: 37px;
+    justify-content: space-evenly;
+    margin-top: 35px;
 }
 
 /* 책 컨테이너 */
@@ -223,4 +223,50 @@ a {
     display: flex;
     justify-content: space-around;
     align-items: center;
+}
+
+/* 수정 모드 스타일 */
+#edit-section {
+    display: none;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+#new-image {
+    margin-bottom: 10px;
+}
+
+#edit-content {
+    width: 100%;
+    max-width: 700px;
+    height: 200px;
+    font-size: 18px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* 완료 버튼 */
+.button {
+    display: flex;
+    margin-right: 125px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    justify-content: flex-end;
+}
+
+#complete-edit {
+    display: none;
+    padding: 10px 20px;
+    background-color: #7d4ac9;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#complete-edit:hover {
+    background-color: #6b3c9a;
 }
