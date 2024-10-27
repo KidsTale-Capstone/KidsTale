@@ -43,6 +43,15 @@
             </div>
         </div>
 
+        <!-- 수정하기 기능: 버튼 클릭시에 바뀜 -->
+        <div id="edit-section" style="display: none;">
+            <input type="file" id="new-image" accept="image/*">
+            <textarea id="edit-content" rows="10" cols="50"></textarea>
+            <div class="button">
+                <button id="complete-edit" style="display: none;" onclick="completeEdit()">완료</button>
+            </div>
+        </div>
+
         <!-- 페이지 넘김 버튼 -->
         <div class="navigation-left">
             <button class="btn" id="prev-page" onclick="prevPage()"><img id="left" src="img/left.png" alt="왼쪽 화살표"></button>

@@ -188,3 +188,53 @@ document.addEventListener('DOMContentLoaded', async function () {
     totalPages = await fetchTotalPages(bookId, lang);
     displayPage(0);
 });
+
+// ************ 새로운 추가한 기능 *************
+// 수정하기 기능
+document.getElementById('modify-content').onclick = () => {
+    document.getElementById('prev-page').style.display = 'none'; // 수정시 버튼 숨기기
+    document.getElementById('next-page').style.display = 'none'; // 수정시 버튼 숨기기
+    document.getElementById('audio-book').style.display = 'none'; // 수정시 듣기 버튼 숨기기
+    document.getElementById('modify-content').style.display = 'none'; // 수정시 수정하기 버튼 숨기기
+
+    document.getElementById('edit-section').style.display = 'block';  // 수정 필드 보이기
+    document.getElementById('complete-edit').style.display = 'block'; // 완료 버튼 보이기
+
+    const contentText = document.getElementById('content-page').innerText;
+    document.getElementById('edit-content').value = contentText;  // 기존 내용을 텍스트 입력 필드로 복사
+};
+
+// 완료 버튼 누르면 저장
+async function completeEdit() {
+    const bookId = localStorage.getItem('id_book');
+    const token = localStorage.getItem('token');
+    const updatedContent = document.getElementById('edit-content').value;
+    const newImage = document.getElementById('new-image').files[0];
+
+    const formData = new FormData();
+    formData.append('content', updatedContent);
+    if (newImage) formData.append('image', newImage);
+
+    try {
+        const response = await fetch(`/book/update?id_book=${bookId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            alert('수정된 내용이 저장되었습니다.');
+            document.getElementById('edit-section').style.display = 'none';
+            document.getElementById('complete-edit').style.display = 'none';
+            displayPage(currentPage);  // 새 데이터로 페이지 새로고침
+        } else {
+            throw new Error('저장 실패');
+        }
+    } catch (error) {
+        console.error('저장 중 오류:', error);
+        alert('저장 중 오류가 발생했습니다.');
+    }
+}
