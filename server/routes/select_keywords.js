@@ -64,10 +64,25 @@ router.get('/keywords', async (req, res) => {
         }
         console.log('쿼리 결과:', data);
 
-        // 쉼표로 구분된 키워드를 배열로 변환하고 필터링 (_와 공백 제거)
-        const keywords = data[0].keywords_ko
-            .split(/[,_\s]+/)  // 쉼표로 구분된 문자열을 배열로 변환
-            .filter(keyword => keyword !== '전체' && keyword !== '');
+        // 쉼표로 구분된 키워드를 배열로 변환하고 필터링 (_와 공백 제거 및 중복 제거)
+        const keywords = [...new Set(
+            data[0].keywords_ko
+                .split(/[,_\s]+/)  // 쉼표로 구분된 문자열을 배열로 변환
+                .filter(keyword => 
+                    keyword !== '전체' && 
+                    keyword !== '' && 
+                    keyword !== '눈' && 
+                    keyword !== '코' && 
+                    keyword !== '입' && 
+                    keyword !== '귀' && 
+                    keyword !== '머리' && 
+                    keyword !== '상체' &&
+                    keyword !== '목' &&
+                    keyword !== '얼굴' &&
+                    keyword !== '피트' &&
+                    keyword !== '소유'
+                )
+        )];
 
         // 최대 8개의 키워드를 선택
         const selectedKeywords = keywords.slice(0, 8);
