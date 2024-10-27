@@ -120,7 +120,7 @@ async function generateEng(story, title) {
         if (responseStory.choices && responseStory.choices.length > 0) {
             const translatedStory = responseStory.choices[0].message.content;
 
-            const promptTitle = `위 동화의 제목을 영어로 번역해 주세요.`;
+            const promptTitle = `위 동화의 제목을 영어로 번역해 주세요. 제목을 괄호로 감싸 < 제목 > 형식으로만 출력해주세요.`;
 
             const responseTitle = await openai.chat.completions.create({
                 model: "gpt-3.5-turbo",
