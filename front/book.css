@@ -229,15 +229,22 @@ a {
 #edit-section {
     display: none;
     flex-direction: column;
-    margin-top: 20px;
 }
 
 #new-image {
     margin-bottom: 10px;
 }
 
+#image-preview {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
 #edit-content {
-    width: 100%;
+    width: 95%;
     max-width: 700px;
     height: 200px;
     font-size: 18px;
@@ -246,15 +253,33 @@ a {
     border-radius: 5px;
 }
 
-/* 완료 버튼 */
+/* 수정하기 모드에서 취소 & 완료 버튼 */
 .button {
     display: flex;
-    margin-right: 125px;
     margin-top: 20px;
     margin-bottom: 20px;
     justify-content: flex-end;
 }
 
+/* 취소 버튼 */
+#cancel-edit {
+    display: none;
+    padding: 10px 20px;
+    background-color: #7d4ac9;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+
+#cancel-edit:hover {
+    background-color: #6b3c9a;
+}
+
+/* 완료 버튼 */
 #complete-edit {
     display: none;
     padding: 10px 20px;
@@ -265,6 +290,7 @@ a {
     font-size: 1em;
     cursor: pointer;
     margin-top: 10px;
+    margin-right: 5px;
 }
 
 #complete-edit:hover {

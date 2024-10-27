@@ -45,9 +45,15 @@
 
         <!-- 수정하기 기능: 버튼 클릭시에 바뀜 -->
         <div id="edit-section" style="display: none;">
-            <input type="file" id="new-image" accept="image/*">
+            <!-- <input type="file" id="new-image" accept="image/*"> -->
+            <div id='image-box'>
+                <img id="image-preview" src="" alt="미리 보기 이미지" style="display: none;">
+            </div>
+            
+            <input type="file" id="new-image" accept="image/*" onchange="previewImage()">
             <textarea id="edit-content" rows="10" cols="50"></textarea>
             <div class="button">
+                <button id="cancel-edit" style="display: none;" onclick="cancelEdit()">취소</button>
                 <button id="complete-edit" style="display: none;" onclick="completeEdit()">완료</button>
             </div>
         </div>
@@ -65,7 +71,7 @@
 
 
     <!-- 오디오북 $ 수정하기 & 언어변경 버튼 -->
-    <div class="button-container">
+    <div class="button-container" id="buttons">
 
         <a href="#">
             <button id="audio-book-all" class="audio-button">전체듣기</button>

@@ -2,6 +2,19 @@
 let currentPage = 0;
 let totalPages = 0;
 
+const coverImage = document.getElementById('book-cover');
+const contentPage = document.getElementById('content-page');
+const pageIndicator = document.getElementById('page');
+
+const prevButton = document.getElementById('prev-page');
+const nextButton = document.getElementById('next-page');
+
+const audioButton = document.getElementById('audio-book');
+const playAllButton = document.getElementById('audio-book-all');
+const langButton = document.getElementById('change-language');
+const modifyButton = document.getElementById('modify-content');
+const libraryButton = document.getElementById('go-library');
+
 // 서버에서 책 제목, 내용, 이미지 데이터를 받아오는 함수
 async function fetchBookData(bookId, pageIndex, lang) {
     const token = localStorage.getItem('token'); // JWT 토큰을 로컬 스토리지에서 가져옴
@@ -104,24 +117,11 @@ function displayPage(pageIndex) {
         return;
     }
 
-
     fetchBookData(bookId, pageIndex, lang).then(pageData => {
         if (!pageData) return;
 
         document.getElementById('book-title').innerText = pageData.title;
         document.getElementById('book-author').innerText = `지은이: ${pageData.author}`;
-        const coverImage = document.getElementById('book-cover');
-        const contentPage = document.getElementById('content-page');
-        const pageIndicator = document.getElementById('page');
-
-        const prevButton = document.getElementById('prev-page');
-        const nextButton = document.getElementById('next-page');
-
-        const audioButton = document.getElementById('audio-book');
-        const playAllButton = document.getElementById('audio-book-all');
-        const langButton = document.getElementById('change-language');
-        const modifyButton = document.getElementById('modify-content');
-        const libraryButton = document.getElementById('go-library');
 
         if (pageIndex === 0) {
             coverImage.style.display = 'block';
@@ -189,20 +189,56 @@ document.addEventListener('DOMContentLoaded', async function () {
     displayPage(0);
 });
 
-// ************ 새로운 추가한 기능 *************
+// ************************ 새로운 추가한 기능 *************************
 // 수정하기 기능
 document.getElementById('modify-content').onclick = () => {
-    document.getElementById('prev-page').style.display = 'none'; // 수정시 버튼 숨기기
-    document.getElementById('next-page').style.display = 'none'; // 수정시 버튼 숨기기
-    document.getElementById('audio-book').style.display = 'none'; // 수정시 듣기 버튼 숨기기
-    document.getElementById('modify-content').style.display = 'none'; // 수정시 수정하기 버튼 숨기기
+    document.getElementById('book-container').style.display = 'none'; 
+    document.getElementById('prev-page').style.display = 'none'; 
+    document.getElementById('next-page').style.display = 'none'; 
+    document.getElementById('audio-book').style.display = 'none';
+    document.getElementById('modify-content').style.display = 'none';
 
-    document.getElementById('edit-section').style.display = 'block';  // 수정 필드 보이기
-    document.getElementById('complete-edit').style.display = 'block'; // 완료 버튼 보이기
+    document.getElementById('edit-section').style.display = 'flex';  // 수정 필드 보이기
+    document.getElementById('cancel-edit').style.display = 'flex'; // 취소 버튼 보이기
+    document.getElementById('complete-edit').style.display = 'flex'; // 완료 버튼 보이기
 
     const contentText = document.getElementById('content-page').innerText;
     document.getElementById('edit-content').value = contentText;  // 기존 내용을 텍스트 입력 필드로 복사
 };
+
+function cancelEdit() {
+    // 수정 모드 UI 요소 숨기기
+    document.getElementById('edit-section').style.display = 'none';
+    document.getElementById('cancel-edit').style.display = 'none';
+    document.getElementById('complete-edit').style.display = 'none';
+    
+    // 기존 UI 요소 다시 보이도록 설정
+    document.getElementById('book-container').style.display = 'block';
+    document.getElementById('prev-page').style.display = currentPage === 0 ? 'none' : 'block';
+    document.getElementById('next-page').style.display = currentPage === totalPages ? 'none' : 'block';
+    modifyButton.style.display = currentPage === 0 ? 'none' : 'block';
+    audioButton.style.display = currentPage === 0 ? 'none' : 'block';
+}
+
+// 사진 미리보기 기능
+function previewImage() {
+    const fileInput = document.getElementById('new-image');
+    const preview = document.getElementById('image-preview');
+
+    const file = fileInput.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = '';
+        preview.style.display = 'none';
+    }
+}
+
 
 // 완료 버튼 누르면 저장
 async function completeEdit() {
@@ -228,6 +264,7 @@ async function completeEdit() {
         if (data.success) {
             alert('수정된 내용이 저장되었습니다.');
             document.getElementById('edit-section').style.display = 'none';
+            document.getElementById('cancel-edit').style.display = 'none';
             document.getElementById('complete-edit').style.display = 'none';
             displayPage(currentPage);  // 새 데이터로 페이지 새로고침
         } else {
