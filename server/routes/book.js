@@ -174,6 +174,21 @@ router.get('/:lang/tts', async (req, res) => {
     }
 
     try {
+
+        const { data: pageData, error: pageError } = await supabase
+            .from('pages')
+            .select('version_num')
+            .eq('id_book', bookId)
+            .eq('page_index', pageIndex)
+            .eq('page_lang', lang)
+            .single();
+
+        if (pageError || !pageData) {
+            throw new Error('페이지 데이터 가져오기 중 오류가 발생했습니다.');
+        }
+        const versionNum = pageData.version_num;
+        console.log('version_num', versionNum);
+
         const { data: existingAudio, error } = await supabase
             .from('book_tts')
             .select('path')
@@ -186,66 +201,131 @@ router.get('/:lang/tts', async (req, res) => {
         if (error) console.error("기존 오디오 경로 가져오기 중 오류:", error);
 
         if (existingAudio && existingAudio.length > 0) {
-            console.log("이미 존재하는 오디오 경로:", existingAudio[0].path);
             const audioPath = existingAudio[0].path;
-            return res.json({ success: true, audioPath: audioPath });
-        } else {
-            // 새 오디오 생성
-            const client = new textToSpeech.TextToSpeechClient();
-            const request = {
-                input: { text },
-                voice: { languageCode: lang === 'eng' ? 'en-US' : 'ko-KR', name: lang === 'eng' ? 'en-US-Wavenet-D' : 'ko-KR-Wavenet-A' },
-                audioConfig: { audioEncoding: 'MP3' },
-            };
-
-            const [response] = await client.synthesizeSpeech(request);
-
-            const filePath = `${bookId}/${lang}_${pageIndex}.mp3`;
-
-            console.log("오디오 파일을 Supabase 버킷에 업로드 중...");
-
-            // Supabase에 파일 업로드
-            const { data: uploadData, error: uploadError } = await supabase.storage
-                .from(BUCKET_NAME)
-                .upload(filePath, response.audioContent, {
-                    cacheControl: '3600',
-                    upsert: true,
-                    contentType: 'audio/mpeg',
-                });
-
-            if (uploadError) {
-                console.error('Supabase bucket 업로드 중 오류:', uploadError);
-                return res.status(500).json({ success: false, message: 'Supabase 업로드 중 오류가 발생했습니다.' });
+            const existingVersionNum = parseInt(audioPath.split('_').pop().replace('.mp3', ''), 10); // 경로에서 version_num 추출
+    
+            console.log('기존 오디오 경로:', audioPath, 'version_num:', existingVersionNum);
+    
+                // 기존 오디오의 version_num이 현재와 같으면 기존 오디오 경로 반환
+            if (existingVersionNum === versionNum) {
+                return res.json({ success: true, audioPath: audioPath });
             }
-            console.log("오디오 파일 업로드 성공:", uploadData);
+        }
+        // 새 오디오 생성
+        const client = new textToSpeech.TextToSpeechClient();
+        const request = {
+            input: { text },
+            voice: { languageCode: lang === 'eng' ? 'en-US' : 'ko-KR', name: lang === 'eng' ? 'en-US-Wavenet-D' : 'ko-KR-Wavenet-A' },
+            audioConfig: { audioEncoding: 'MP3' },
+        };
 
-            // publicURL 설정
-            const publicURL = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath).data.publicUrl;
-            console.log("publicURL 생성 성공:", publicURL);
+        const [response] = await client.synthesizeSpeech(request);
 
-            // 2. 새로 생성된 경로를 Supabase `book_tts` 테이블에 저장
-            console.log("오디오 경로를 book_tts 테이블에 저장 중...");
-            const { data: insertData, error: insertError } = await supabase.from('book_tts').insert({
-                id_book: bookId,
-                page_index: pageIndex,
-                page_lang: lang,
-                path: publicURL
+        const filePath = `${bookId}/${lang}_${pageIndex}_${pageData.version_num}.mp3`;
+
+        console.log("오디오 파일을 Supabase 버킷에 업로드 중...");
+
+        // Supabase에 파일 업로드
+        const { data: uploadData, error: uploadError } = await supabase.storage
+            .from(BUCKET_NAME)
+            .upload(filePath, response.audioContent, {
+                cacheControl: '3600',
+                upsert: true,
+                contentType: 'audio/mpeg',
             });
 
-            if (insertError) {
-                console.error("book_tts 테이블에 경로 저장 중 오류:", insertError);
-                return res.status(500).json({ success: false, message: 'book_tts 테이블 저장 중 오류가 발생했습니다.' });
-            }
-
-
-            console.log("book_tts 테이블에 경로 저장 성공:", insertData);
-            res.json({ success: true, audioPath: publicURL });
+        if (uploadError) {
+            console.error('Supabase bucket 업로드 중 오류:', uploadError);
+            return res.status(500).json({ success: false, message: 'Supabase 업로드 중 오류가 발생했습니다.' });
         }
+        console.log("오디오 파일 업로드 성공:", uploadData);
+
+        // publicURL 설정
+        const publicURL = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath).data.publicUrl;
+        console.log("publicURL 생성 성공:", publicURL);
+
+        // 2. 새로 생성된 경로를 Supabase `book_tts` 테이블에 저장
+        console.log("오디오 경로를 book_tts 테이블에 저장 중...");
+        const { data: insertData, error: insertError } = await supabase.from('book_tts').insert({
+            id_book: bookId,
+            page_index: pageIndex,
+            page_lang: lang,
+            path: publicURL
+        });
+
+        if (insertError) {
+            console.error("book_tts 테이블에 경로 저장 중 오류:", insertError);
+            return res.status(500).json({ success: false, message: 'book_tts 테이블 저장 중 오류가 발생했습니다.' });
+        }
+
+
+        console.log("book_tts 테이블에 경로 저장 성공:", insertData);
+        res.json({ success: true, audioPath: publicURL });
+
     } catch (error) {
         console.error("TTS 생성 중 오류:", error);
         res.status(500).json({ success: false, message: 'TTS 생성 중 오류 발생' });
     }
 });
 
+
+// 페이지 내용 및 이미지 업데이트 라우트
+router.post('/update_page', upload.single('image'), async (req, res) => {
+    const { id_book, page_index, lang } = req.query;
+    const { content } = req.body;
+    const newImage = req.file; // multer로 받아온 새 이미지
+
+    try {
+        // Supabase에서 해당 페이지 찾기
+        const { data: page, error } = await supabase
+            .from('pages')
+            .select('*')
+            .eq('id_book', id_book)
+            .eq('page_index', page_index)
+            .eq('page_lang', lang)
+            .single();
+
+        if (error || !page) {
+            return res.status(404).json({ success: false, message: '페이지를 찾을 수 없습니다.' });
+        }
+
+        // version_num 증가
+        const currentVersionNum = (page.version_num || 0) + 1; // 현재 버전이 없으면 0에서 시작
+
+        // 새 이미지가 있을 경우 처리
+        let publicUrl = page.page_image_path;
+        if (newImage) {
+            const imagePath = `${id_book}/${id_book}_${page_index}_${currentVersionNum}.jpeg`; // 이미지 경로 설정
+            const { data: uploadData, error: uploadError } = await supabase
+                .storage
+                .from('pages') // Supabase 버킷에 저장
+                .upload(imagePath, newImage.buffer, { contentType: newImage.mimetype });
+
+            if (uploadError) {
+                console.error('이미지 업로드 중 오류:', uploadError);
+                throw new Error('이미지 업로드 중 오류가 발생했습니다.');
+            }
+
+            publicUrl = supabase.storage.from('pages').getPublicUrl(imagePath).data.publicUrl;
+
+        }
+
+        const { error: updateError } = await supabase
+            .from('pages')
+            .update({ page_content: content, page_image_path: publicUrl, version_num: currentVersionNum })
+            .eq('id_book', id_book)
+            .eq('page_index', page_index)
+            .eq('page_lang', lang);
+
+        if (updateError) {
+            throw new Error('페이지 업데이트 중 오류가 발생했습니다.');
+        }
+
+        res.json({ success: true, message: '페이지가 성공적으로 업데이트되었습니다.' });
+    } catch (error) {
+        console.error('페이지 업데이트 중 오류:', error);
+        res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
+    }
+});
 
 module.exports = router;

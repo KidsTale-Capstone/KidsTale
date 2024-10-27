@@ -259,7 +259,7 @@ async function saveBookData(keywords, genre, userId, selectKwId, drawingId) {
             txt_ko_path: txtKoPath,
             txt_eng_path: txtEngPath
         })
-        .select('id_book')
+        .select('id_book, title_ko, title_eng')
         .single();
 
 
@@ -267,14 +267,15 @@ async function saveBookData(keywords, genre, userId, selectKwId, drawingId) {
             console.error('책 정보 저장 중 오류:', error);
             throw new Error('책 정보를 저장하는 중 오류가 발생했습니다.');
         }
-
+        const title_ko = data.title_ko;
+        const title_eng = data.title_eng;
         const idBook = data.id_book;
 
         // 5. pages 테이블에 한글 동화 내용 저장
         const imagePath = await fetchDrawingData(userId, drawingId);
         const pagesKo = storyKo.split(/\r?\n+/);
         for (let pageIndex = 0; pageIndex <= pagesKo.length; pageIndex++) {
-            const pageContent = pageIndex === 0 ? null : pagesKo[pageIndex - 1];
+            const pageContent = pageIndex === 0 ? title_ko : pagesKo[pageIndex - 1];
 
             await supabase
                 .from('pages')
@@ -283,14 +284,15 @@ async function saveBookData(keywords, genre, userId, selectKwId, drawingId) {
                     page_index: pageIndex,
                     page_content: pageContent,
                     page_lang: 'ko',
-                    page_image_path: imagePath
+                    page_image_path: imagePath,
+                    version_num: 0
                 });
         }
 
         // 6. pages 테이블에 영어 동화 내용 저장
         const pagesEng = translatedStory.split(/\r?\n+/);  // 문단 단위로 분리
         for (let pageIndex = 0; pageIndex <= pagesEng.length; pageIndex++) {
-            const pageContent = pageIndex === 0 ? null : pagesEng[pageIndex - 1];
+            const pageContent = pageIndex === 0 ? title_eng : pagesEng[pageIndex - 1];
 
             await supabase
                 .from('pages')
@@ -299,7 +301,8 @@ async function saveBookData(keywords, genre, userId, selectKwId, drawingId) {
                     page_index: pageIndex,
                     page_content: pageContent,
                     page_lang: 'eng',
-                    page_image_path: imagePath
+                    page_image_path: imagePath,
+                    version_num: 0
                 });
         }
 

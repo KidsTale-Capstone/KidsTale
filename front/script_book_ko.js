@@ -46,7 +46,7 @@ async function fetchBookData(bookId, pageIndex, lang) {
     }
 }
 
-// 서버에서 책의 총 페이지 수를 받아오는 함수
+// 페이지 표시 함수
 async function fetchTotalPages(bookId, lang) {
     const token = localStorage.getItem('token'); // JWT 토큰을 로컬 스토리지에서 가져옴
 
@@ -74,6 +74,9 @@ async function fetchTotalPages(bookId, lang) {
     }
 }
 
+
+let currentAudio = null;
+let isPlaying = false;
 // TTS 요청 및 재생 함수
 async function playTTS(pageContent, bookId, lang) {
     const token = localStorage.getItem('token');
@@ -94,9 +97,28 @@ async function playTTS(pageContent, bookId, lang) {
 
         const data = await response.json();
         if (data.success) {
-            const audio = new Audio(data.audioPath);
+
+            if (currentAudio) {
+                // 이미 재생 중인 오디오가 있으면 멈추기
+                currentAudio.pause();
+                currentAudio.currentTime = 0; // 재생 위치 초기화
+                currentAudio = null;
+            }
+
+            currentAudio = new Audio(data.audioPath);
             console.log('TTS 요청 성공: 오디오 재생 시작');
-            audio.play();
+            currentAudio.play();
+
+            isPlaying = true;
+            audioButton.innerText = "듣기 중지"; // 버튼을 '듣기 중지'로 변경
+
+            // 오디오 재생이 끝났을 때 버튼을 다시 '듣기'로 변경
+            currentAudio.onended = () => {
+                isPlaying = false;
+                audioButton.innerText = "듣기"; // 재생 완료 후 버튼 상태 변경
+                currentAudio = null;
+            };
+
         } else {
             console.error(`TTS 요청 실패: ${data.message}`);
             alert('TTS 요청 중 실패가 발생했습니다.');
@@ -118,6 +140,7 @@ function displayPage(pageIndex) {
     }
 
     fetchBookData(bookId, pageIndex, lang).then(pageData => {
+        console.log(pageData);
         if (!pageData) return;
 
         document.getElementById('book-title').innerText = pageData.title;
@@ -135,11 +158,23 @@ function displayPage(pageIndex) {
             pageIndicator.innerText = `${pageIndex} / ${totalPages}`;
         }
 
-        // TTS 버튼 클릭 시 playTTS 함수에 필요한 정보 전달
         audioButton.onclick = () => {
-            console.log("TTS 요청 준비 중...");
-            playTTS(pageData.pageContent, bookId, lang);
+            if (isPlaying && currentAudio) {
+                // 오디오가 재생 중일 때는 멈춤
+                currentAudio.pause();
+                currentAudio.currentTime = 0; // 재생 위치 초기화
+                currentAudio = null; // 오디오 객체 초기화
+                isPlaying = false;
+                audioButton.innerText = "듣기"; // 버튼을 다시 '듣기'로 변경
+            } else {
+                // 오디오가 재생 중이 아니면 playTTS 호출
+                console.log("TTS 요청 준비 중...");
+                const bookId = localStorage.getItem('id_book');
+                const lang = 'ko'; // 현재 언어는 'ko'
+                playTTS(contentPage.innerText, bookId, lang);
+            }
         };
+        
 
         prevButton.style.display = pageIndex === 0 ? 'none' : 'block';
         nextButton.style.display = pageIndex === totalPages ? 'none' : 'block';
@@ -171,24 +206,6 @@ function prevPage() {
     }
 }
 
-// 페이지가 로드되면 총 페이지 수를 가져와 첫 페이지를 표시
-document.addEventListener('DOMContentLoaded', async function () {
-    const bookId = localStorage.getItem('id_book');
-    const lang = 'ko'; // 한글 버전이므로 'ko' 사용
-
-    // bookId가 없을 경우 오류 처리 (기존 코드 개선)
-    if (!bookId) {
-        console.error("bookId 값이 없습니다. localStorage에서 제대로 가져오지 못했습니다.");
-        alert("책 정보를 불러오는 중 문제가 발생했습니다. 다시 시도해 주세요.");
-        return;
-    }
-
-    console.log("bookId 확인: ", bookId); // bookId 로그 출력
-
-    totalPages = await fetchTotalPages(bookId, lang);
-    displayPage(0);
-});
-
 // ************************ 새로운 추가한 기능 *************************
 // 수정하기 기능
 document.getElementById('modify-content').onclick = () => {
@@ -204,6 +221,12 @@ document.getElementById('modify-content').onclick = () => {
 
     const contentText = document.getElementById('content-page').innerText;
     document.getElementById('edit-content').value = contentText;  // 기존 내용을 텍스트 입력 필드로 복사
+
+    // **이미지 미리보기 기능에 기존 이미지 경로 적용**
+    const imagePath = document.getElementById('book-cover').src;
+    const preview = document.getElementById('image-preview');
+    preview.src = imagePath; // 기존 이미지 미리보기에 적용
+    preview.style.display = 'block';  // 이미지 미리보기 보이기
 };
 
 function cancelEdit() {
@@ -249,10 +272,12 @@ async function completeEdit() {
 
     const formData = new FormData();
     formData.append('content', updatedContent);
-    if (newImage) formData.append('image', newImage);
+    if (newImage) {
+        formData.append('image', newImage); // 새 이미지가 있으면 추가
+    }
 
     try {
-        const response = await fetch(`/book/update?id_book=${bookId}`, {
+        const response = await fetch(`/book/update_page?id_book=${bookId}&page_index=${currentPage}&lang=ko`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -263,10 +288,20 @@ async function completeEdit() {
         const data = await response.json();
         if (data.success) {
             alert('수정된 내용이 저장되었습니다.');
+            // 수정모드 비활성화
             document.getElementById('edit-section').style.display = 'none';
             document.getElementById('cancel-edit').style.display = 'none';
             document.getElementById('complete-edit').style.display = 'none';
-            displayPage(currentPage);  // 새 데이터로 페이지 새로고침
+            
+            // 기존 UI 다시 활성화
+            document.getElementById('book-container').style.display = 'block';
+            document.getElementById('prev-page').style.display = currentPage === 0 ? 'none' : 'block';
+            document.getElementById('next-page').style.display = currentPage === totalPages ? 'none' : 'block';
+            modifyButton.style.display = currentPage === 0 ? 'none' : 'block';
+            audioButton.style.display = currentPage === 0 ? 'none' : 'block';
+
+            // 새 데이터로 페이지 새로고침
+            displayPage(currentPage);
         } else {
             throw new Error('저장 실패');
         }
@@ -275,3 +310,21 @@ async function completeEdit() {
         alert('저장 중 오류가 발생했습니다.');
     }
 }
+
+
+// 페이지가 로드되면 총 페이지 수를 가져와 첫 페이지를 표시
+document.addEventListener('DOMContentLoaded', async function () {
+    const bookId = localStorage.getItem('id_book');
+    const lang = 'ko'; // 한글 버전이므로 'ko' 사용
+
+    // bookId가 없을 경우 오류 처리 (기존 코드 개선)
+    if (!bookId) {
+        alert("책 정보를 불러오는 중 문제가 발생했습니다. 다시 시도해 주세요.");
+        return;
+    }
+
+    console.log("bookId 확인: ", bookId); // bookId 로그 출력
+
+    totalPages = await fetchTotalPages(bookId, lang);
+    displayPage(0);
+});
