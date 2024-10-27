@@ -149,7 +149,7 @@ function displayPage(pageIndex) {
         if (pageIndex === 0) {
             coverImage.style.display = 'block';
             coverImage.src = pageData.pageImagePath;
-            contentPage.innerText = pageData.pageContent;
+            contentPage.innerText = '';
             pageIndicator.innerText = '';
         } else {
             coverImage.style.display = 'block';
@@ -179,7 +179,7 @@ function displayPage(pageIndex) {
         prevButton.style.display = pageIndex === 0 ? 'none' : 'block';
         nextButton.style.display = pageIndex === totalPages ? 'none' : 'block';
 
-        playAllButton.style.display =  currentPage === 0 ? 'block' : 'none';
+        playAllButton.style.display =  currentPage === 0 ? 'none' : 'none';
         audioButton.style.display = currentPage === 0 ? 'none' : 'block';
         langButton.style.display = currentPage === 0 ? 'block' : 'none';
         modifyButton.style.display = currentPage === 0 ? 'none' : 'block';
