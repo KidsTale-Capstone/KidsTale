@@ -220,10 +220,13 @@ async function showLoading() {
     }
 
     // 선택된 키워드 개수 확인
-    const selectedKeywords = document.querySelectorAll('.keyword-button.selected');
-    if (selectedKeywords.length < 3) {
+    const selectedKeywordElements = document.querySelectorAll('.keyword-button.selected');
+    if (selectedKeywordElements.length < 3) {
         return alert('키워드를 최소 3개 이상 선택해주세요.');
     }
+
+    // 선택된 키워드를 배열로 변환
+    const selectedKeywords = Array.from(selectedKeywordElements).map(button => button.textContent);
 
     if (selectedGenres.length === 0) {
         return alert('장르를 선택해주세요.');
@@ -238,7 +241,7 @@ async function showLoading() {
                 'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({ 
-                keywords: selectedKeywords, 
+                keywords: selectedKeywords,
                 genres: selectedGenres,
                 drawingId: drawingId, 
                 drawingKwId: drawingKwId,

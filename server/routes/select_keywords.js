@@ -71,7 +71,6 @@ router.get('/keywords', async (req, res) => {
                 .filter(keyword => 
                     keyword !== '전체' && 
                     keyword !== '' && 
-                    keyword !== '눈' && 
                     keyword !== '코' && 
                     keyword !== '입' && 
                     keyword !== '귀' && 
@@ -118,6 +117,11 @@ router.post('/submit-data', async (req, res) => {
 
         if (!drawingId || !drawingKwId || !keywords || !genres) {
             return res.status(400).json({ success: false, message: '필수 데이터가 누락되었습니다.' });
+        }
+
+        // keywords가 배열인지 확인
+        if (!Array.isArray(keywords)) {
+            return res.status(400).json({ success: false, message: 'Keywords should be an array' });
         }
 
         // Supabase에 키워드와 장르 저장
