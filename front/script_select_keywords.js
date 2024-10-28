@@ -1,7 +1,6 @@
-// 선택된 키워드를 저장할 배열
-let selectedKeywords = [];
-// 선택된 장르를 저장할 배열 (하나만 선택 가능)
-let selectedGenres = [];
+let keywords = []; // 전역 변수로 선언
+let selectedGenres = []; // 선택된 장르를 저장할 배열 (하나만 선택 가능)
+let isKeywordsLoaded = false; // 전역 변수를 통해 중복 호출 방지
 
 // 페이지가 로드되면 키워드를 불러오는 함수 실행
 document.addEventListener('DOMContentLoaded', function () {
@@ -46,17 +45,30 @@ async function loadImage() {
     }
 }
 
+// 페이지 로드 시 서버에서 키워드를 불러오는 함수 호출
+document.addEventListener('DOMContentLoaded', function () {
+    loadKeywords();
+});
+
 // 키워드 불러오는 함수
 async function loadKeywords() {
     const token = localStorage.getItem('token'); // 로컬 스토리지에 저장된 JWT 토큰 가져오기
-    const userId = localStorage.getItem('userId');
-    console.log('userId:', userId); // userId 값 확인
-    const drawingId = localStorage.getItem('drawingId');
+    const userId = localStorage.getItem('userId'); //console.log('userId:', userId); // userId 값 확인
+
+    const drawingId = localStorage.getItem('drawingId'); //console.log('drawingId:', drawingId);
     localStorage.setItem('drawingId', drawingId);
-    console.log('drawingId:', drawingId);
-    const drawingKwId = localStorage.getItem('drawingKwId');
+    
+    const drawingKwId = localStorage.getItem('drawingKwId'); //console.log('drawingKwId:', drawingKwId);
     localStorage.setItem('drawingKwId', drawingKwId);
-    console.log('drawingKwId:', drawingKwId);
+
+    // 함수 호출 검사
+    if (isKeywordsLoaded) {
+        console.log("loadKeywords 함수가 이미 호출되었습니다.");
+        return;
+    }
+
+    isKeywordsLoaded = true; // 첫 호출 시 true로 설정
+    console.log("loadKeywords 함수 호출");
 
     if (!token) {
         alert('로그인이 필요합니다.');
@@ -75,36 +87,89 @@ async function loadKeywords() {
         const result = await response.json();
 
         if (result.success) {
-            const keywordButtons = document.querySelectorAll('.keyword-button');
-            result.keywords.forEach((keyword, index) => {
-                if (index < keywordButtons.length) {
-                    keywordButtons[index].innerText = keyword;
-                }
+            // 서버에서 받아온 키워드를 배열에 추가하고 버튼으로 생성
+            result.keywords.forEach(keyword => {
+                keywords.push(keyword);
+                createKeywordButton(keyword); // 수정 가능으로 설정
             });
         } else {
             alert('키워드를 불러오지 못했습니다.');
         }
-        
+
     } catch (error) {
         console.error('Error:', error);
         alert('키워드를 불러오는 중 오류가 발생했습니다.');
     }
 }
 
-// 키워드 선택/해제 함수 (3개 이상 선택 가능)
-function toggleKeyword(button) {
-    const keyword = button.innerText;
+// DOMContentLoaded 이벤트에 loadKeywords 함수를 등록
+document.addEventListener('DOMContentLoaded', loadKeywords);
 
-    // 선택된 키워드 배열에 이미 있다면 선택 해제
-    if (selectedKeywords.includes(keyword)) {
-        selectedKeywords = selectedKeywords.filter(item => item !== keyword);
-        button.classList.remove('selected');  // 선택 해제 시 색상 원래대로
+// 키워드 추가 버튼 클릭 시 호출되는 함수
+function addKeyword() {
+    const keyword = prompt("키워드를 입력해주세요:");
+
+    if (keyword !== null && keyword.trim() !== "") {
+        keywords.push(keyword);
+        createKeywordButton(keyword);
     } else {
-        // 선택되지 않은 경우 배열에 추가
-        selectedKeywords.push(keyword);
-        button.classList.add('selected');  // 선택 시 색상 변경
+        alert("키워드를 입력해주세요.");
     }
 }
+
+// 키워드 버튼을 생성하는 함수
+function createKeywordButton(keyword) {
+    const keywordContainer = document.getElementById('keyword-container');
+
+    let lastRow = keywordContainer.lastElementChild;
+    if (!lastRow || lastRow.children.length >= 4) {
+        lastRow = document.createElement('div');
+        lastRow.classList.add('keyword-row');
+        keywordContainer.appendChild(lastRow);
+    }
+
+    const newButton = document.createElement('button');
+    newButton.classList.add('keyword-button');
+    newButton.textContent = keyword;
+
+    // 버튼 클릭으로 선택/해제 가능하게
+    newButton.onclick = function() {
+        toggleKeyword(newButton);
+    };
+
+    // 모든 키워드 버튼에 수정 기능 추가
+    newButton.ondblclick = function() {
+        editKeyword(newButton);
+    };
+
+    lastRow.appendChild(newButton);
+}
+
+// 키워드 선택/해제 토글 함수
+function toggleKeyword(button) {
+    if (button.classList.contains('selected')) {
+        // 선택 해제
+        button.classList.remove('selected');
+    } else {
+        // 선택
+        button.classList.add('selected');
+    }
+}
+
+// 키워드를 수정하는 함수
+function editKeyword(button) {
+    const newKeyword = prompt("키워드를 수정해주세요:", button.textContent);
+
+    if (newKeyword !== null && newKeyword.trim() !== "") {
+        // 키워드 배열에서 수정
+        const index = keywords.indexOf(button.textContent);
+        if (index !== -1) {
+            keywords[index] = newKeyword;
+            button.textContent = newKeyword;
+        }
+    }
+}
+
 
 // 장르 선택 함수 (하나만 선택 가능)
 function toggleGenre(button) {
@@ -137,7 +202,6 @@ async function showLoading() {
     const token = localStorage.getItem('token'); // 로컬 스토리지에 저장된 JWT 토큰 가져오기
     const drawingId = localStorage.getItem('drawingId');
     const drawingKwId = localStorage.getItem('drawingKwId');
-
     console.log('drawingId:', drawingId, 'drawingKwId:', drawingKwId);
 
     if (!token) {
@@ -155,14 +219,14 @@ async function showLoading() {
         return;
     }
 
+    // 선택된 키워드 개수 확인
+    const selectedKeywords = document.querySelectorAll('.keyword-button.selected');
     if (selectedKeywords.length < 3) {
-        alert('키워드를 최소 3개 선택해야 합니다.');
-        return;
+        return alert('키워드를 최소 3개 이상 선택해주세요.');
     }
 
     if (selectedGenres.length === 0) {
-        alert('장르를 선택해야 합니다.');
-        return;
+        return alert('장르를 선택해주세요.');
     }
 
     try {
@@ -221,6 +285,7 @@ async function showLoading() {
         } else {
             alert('키워드 및 장르를 저장하는 데 실패했습니다.');
         }
+
     } catch (error) {
         console.error('Error:', error);
         alert('제출 중 오류가 발생했습니다.');

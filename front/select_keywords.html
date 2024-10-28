@@ -40,19 +40,19 @@
         <!-- 키워드 선택 -->
         <div class="container">
             <h3>키워드를 선택해주세요 (3개 이상)</h3>
-            <div class="keyword-row">
-                <button class="keyword-button" onclick="toggleKeyword(this)"></button>
-                <button class="keyword-button" onclick="toggleKeyword(this)"></button>
-                <button class="keyword-button" onclick="toggleKeyword(this)"></button>
-                <button class="keyword-button" onclick="toggleKeyword(this)"></button>
-            </div>
+            <!-- 키워드 입력 필드 컨테이너 -->
+            <div id="keyword-container" class="keyword-container">
 
+            <!-- 키워드 버튼 줄 -->
             <div class="keyword-row">
-                <button class="keyword-button" onclick="toggleKeyword(this)"></button>
-                <button class="keyword-button" onclick="toggleKeyword(this)"></button>
-                <button class="keyword-button" onclick="toggleKeyword(this)"></button>
-                <button class="keyword-button" onclick="toggleKeyword(this)"></button>
             </div>
+        </div>
+
+        <!-- 추가 버튼 -->
+        <div class="add-button-container">
+            <button id="add-keyword" class="add-button" onclick="addKeyword()">
+                <img src="img/add_button.png" alt="Add" />
+            </button>
         </div>
 
         <!-- 장르 선택 -->
