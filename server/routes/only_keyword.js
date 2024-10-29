@@ -76,6 +76,11 @@ router.post('/submit-data', async (req, res) => {
             return res.status(401).json({ success: false, message: '인증 토큰이 없습니다.' });
         }
 
+
+        if (!token) {
+            return res.status(401).json({ success: false, message: '인증 토큰이 없습니다.' });
+        }
+
         let userId;
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET); // JWT 검증

@@ -101,13 +101,12 @@ function toggleGenre(button) {
 }
 
 // 다음 버튼 클릭 시 데이터 확인 후 페이지 이동
-function goToNextPage() {
-    const selectedGenre = document.querySelector('input[name="genre"]:checked');
+async function goToNextPage() {
+    // selectedGenres 배열에서 선택된 첫 번째 장르 가져오기
+    const selectedGenre = selectedGenres[0]; 
 
-    console.log(keywords);
-    
-    if (keywords.length < 3) {
-        alert('키워드를 최소 3개 이상 입력해주세요.');
+    if (!selectedGenre) { // 선택된 장르가 없는 경우
+        alert('장르를 선택해주세요.');
         return;
     }
 
@@ -116,25 +115,123 @@ function goToNextPage() {
         return;
     }
 
-    // 키워드와 장르 데이터를 서버로 전송 (예시)
-    fetch('/submit-keywords-genres', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ keywords: keywords, genre: selectedGenres.value })
-    })
-    .then(response => response.json())
-    .then(data => {
+    console.log('선택된 장르의 값:', selectedGenre);
+
+    if (keywords.length < 3) {
+        alert('키워드를 최소 3개 이상 입력해주세요.');
+        return;
+    }
+
+    const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오기
+    if (!token) {
+        alert('인증 토큰을 찾을 수 없습니다. 다시 로그인해 주세요.');
+        return;
+    }
+
+    let imageFileName;
+
+    // 장르별로 고유한 파일 이름 설정
+    if (selectedGenre === '모험') {
+        imageFileName = '001.jpg';
+    } else if (selectedGenre === '추리') {
+        imageFileName = '002.jpg';
+    } else if (selectedGenre === '우화') {
+        imageFileName = '003.jpg';
+    } else if (selectedGenre === '공포') {
+        imageFileName = '004.jpg';
+    } else if (selectedGenre === '사랑') {
+        imageFileName = '005.jpg';
+    } else if (selectedGenre === '우정') {
+        imageFileName = '006.jpg';
+    } else if (selectedGenre === '가족') {
+        imageFileName = '007.jpg';
+    } else if (selectedGenre === '교육') {
+        imageFileName = '008.jpg';
+    } else {
+        alert('유효한 장르를 선택해주세요.');
+        return;
+    }
+
+    const filePath = `sample/${imageFileName}`;
+
+    try {
+        
+        // 1. keywords_only 장르를 통해 drawing table 저장
+        const response = await fetch('/only_keyword/upload-genre-drawing', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                file_name: imageFileName,
+                file_path: filePath
+            })
+        });
+
+        const data = await response.json();
+
         if (data.success) {
-            // 생성된 책 페이지로 이동
-            window.location.href = '#';
+            const drawingId = data.drawingId;
+
+            // 2. 선택된 키워드와 장르를 select_kw에 저장
+            const submitResponse = await fetch('/only_keyword/submit-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ 
+                    keywords: keywords,
+                    genres: selectedGenres,
+                    drawingId: drawingId, 
+                }),
+            });
+
+            const submitResult = await submitResponse.json();
+
+            if (submitResult.success) {
+                const selectKwId = submitResult.selectKwId;
+                localStorage.setItem('selectKwId', selectKwId);
+
+                // 3. 저장된 selectKwId를 기반으로 GPT API로 동화 생성 요청
+                const generateResponse = await fetch('/select_keywords/generate-story', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        selectKwId: selectKwId,
+                        keywords: keywords,
+                        genre: selectedGenres[0], // 선택된 첫 번째 장르
+                        drawingId: drawingId,
+                    })
+                });
+
+                const generateResult = await generateResponse.json();
+
+                if (generateResult.success) {
+                    console.log('동화 생성 성공:', generateResult);
+
+                    // 동화 생성 후 반환된 id_book을 localStorage에 저장
+                    const bookId = generateResult.id_book;
+                    localStorage.setItem('id_book', bookId);
+                    console.log('book_id: ', bookId)
+
+                    // 동화 생성 후 book_ko.html 페이지로 이동
+                    window.location.href = 'book_ko.html';
+                } else {
+                    alert('동화 생성에 실패했습니다.');
+                }
+            } else {
+                alert('키워드 및 장르를 저장하는 데 실패했습니다.');
+            }
         } else {
-            alert('데이터 제출에 실패했습니다.');
+            alert('이미지 URL 가져오기에 실패했습니다.');
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error:', error);
         alert('제출 중 오류가 발생했습니다.');
-    });
-} 
+    }
+}
