@@ -142,7 +142,6 @@ function reuploadImage() {
     fileInput.value = '';  // 파일 선택 초기화
     fileInput.click();  // 파일 탐색창 열기
 }
-
 // 로딩 화면 표시 후 서버에서 데이터를 받아오고 다음 페이지로 이동
 async function showLoading() {
     const loadingScreen = document.getElementById('loading');

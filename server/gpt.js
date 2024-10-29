@@ -46,7 +46,7 @@ async function generateStory(keywords, genre, userId) {
                     사랑, 우정, 가족, 교육 장르에서는 주인공이 사람이 되도록 작성해주세요. 내용에는 영어가 들어가지 않게 해주세요.
                     ${sentenceLimitPrompt} 
                     동화의 제목을 포함하지 않고, 서론, 본론, 결말이 전부 포함된 하나의 멋진 동화책을 작성해주세요. 
-                    서론, 본론, 결론이라는 말은 포함하지 말고, 실제 동화책처럼 자연스럽게 동화를 생성해주고, 내용만 출력해주세요. `;
+                    서론, 본론, 결론이라는 말은 포함하지 말고, 실제 동화책처럼 자연스럽게 창의적인 동화를 생성해주고, 동화의 내용만 출력해주세요. `;
 
     try {
         const response = await openai.chat.completions.create({

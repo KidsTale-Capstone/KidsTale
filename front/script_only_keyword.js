@@ -39,9 +39,9 @@ function createKeywordButton(keyword) {
     newButton.classList.add('keyword-button');
     newButton.textContent = keyword;
 
-    // 버튼을 클릭하면 키워드 수정 가능
+    // 버튼 클릭으로 선택/해제 가능하게
     newButton.onclick = function() {
-        editKeyword(newButton);
+        toggleKeyword(newButton);
     };
 
     // 새 키워드 버튼을 행에 추가
@@ -49,21 +49,32 @@ function createKeywordButton(keyword) {
 }
 
 
-// 키워드를 수정하는 함수
-function editKeyword(button) {
-    const newKeyword = prompt("키워드를 수정해주세요:", button.textContent);
-
-    if (newKeyword !== null && newKeyword.trim() !== "") {
-        // 키워드 배열에서 수정
-        const index = keywords.indexOf(button.textContent);
-        if (index !== -1) {
-            keywords[index] = newKeyword;
-            button.textContent = newKeyword;
-        }
+// 키워드 선택/해제 토글 함수
+function toggleKeyword(button) {
+    if (button.classList.contains('selected')) {
+        // 선택 해제
+        button.classList.remove('selected');
     } else {
-        alert("유효한 키워드를 입력해주세요.");
+        // 선택
+        button.classList.add('selected');
     }
 }
+
+// // 키워드를 수정하는 함수
+// function editKeyword(button) {
+//     const newKeyword = prompt("키워드를 수정해주세요:", button.textContent);
+
+//     if (newKeyword !== null && newKeyword.trim() !== "") {
+//         // 키워드 배열에서 수정
+//         const index = keywords.indexOf(button.textContent);
+//         if (index !== -1) {
+//             keywords[index] = newKeyword;
+//             button.textContent = newKeyword;
+//         }
+//     } else {
+//         alert("유효한 키워드를 입력해주세요.");
+//     }
+// }
 
 // ======================================================================== //
 
@@ -89,7 +100,7 @@ function toggleGenre(button) {
 }
 
 // 다음 버튼 클릭 시 데이터 확인 후 페이지 이동
-function goToNextPage() {
+async function goToNextPage() {
     const selectedGenre = document.querySelector('input[name="genre"]:checked');
     
     if (keywords.length < 3) {
@@ -102,27 +113,113 @@ function goToNextPage() {
         return;
     }
 
-    // 키워드와 장르 데이터를 서버로 전송 (예시)
-    fetch('/submit-keywords-genres', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ keywords: keywords, genre: selectedGenre.value })
-    })
-    .then(response => response.json())
-    .then(data => {
+    let imageFileName;
+    const genreFolder = selectedGenre.value;
+    console.log('장르', genreFolder)
+
+    // 장르별로 고유한 파일 이름 설정
+    if (genreFolder === '모험') {
+        imageFileName = '001.jpg';
+    } else if (genreFolder === '추리') {
+        imageFileName = '002.jpg';
+    } else if (genreFolder === '우화') {
+        imageFileName = '003.jpg';
+    } else if (genreFolder === '공포') {
+        imageFileName = '004.jpg';
+    } else if (genreFolder === '사랑') {
+        imageFileName = '005.jpg';
+    } else if (genreFolder === '우정') {
+        imageFileName = '006.jpg';
+    } else if (genreFolder === '가족') {
+        imageFileName = '007.jpg';
+    } else if (genreFolder === '교육') {
+        imageFileName = '008.jpg';
+    } else {
+        alert('유효한 장르를 선택해주세요.');
+        return;
+    }
+
+    const filePath = `sample/${imageFileName}`;
+    const token = localStorage.getItem('token');
+
+    try {
+        
+        // 1. keywords_only 장르를 통해 drawing table 저장
+        const response = await fetch('/only_keywords/upload-genre-drawing', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                file_name: imageFileName,
+                file_path: filePath
+            })
+        });
+
+        const data = await response.json();
+
         if (data.success) {
-            // 생성된 책 페이지로 이동
-            window.location.href = '#';
+            const drawingId = data.drawingId;
+
+            // 2. 선택된 키워드와 장르를 select_kw에 저장
+            const submitResponse = await fetch('/only_keywords/submit-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ 
+                    keywords: keywords,
+                    genres: selectedGenres,
+                    drawingId: drawingId, 
+                }),
+            });
+
+            const submitResult = await submitResponse.json();
+
+            if (submitResult.success) {
+                const selectKwId = submitResult.selectKwId;
+                localStorage.setItem('selectKwId', selectKwId);
+
+                // 3. 저장된 selectKwId를 기반으로 GPT API로 동화 생성 요청
+                const generateResponse = await fetch('/select_keywords/generate-story', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        selectKwId: selectKwId,
+                        keywords: keywords,
+                        genre: selectedGenres[0], // 선택된 첫 번째 장르
+                        drawingId: drawingId,
+                    })
+                });
+
+                const generateResult = await generateResponse.json();
+
+                if (generateResult.success) {
+                    console.log('동화 생성 성공:', generateResult);
+
+                    // 동화 생성 후 반환된 id_book을 localStorage에 저장
+                    const bookId = generateResult.id_book;
+                    localStorage.setItem('id_book', bookId);
+                    console.log('book_id: ', bookId)
+
+                    // 동화 생성 후 book_ko.html 페이지로 이동
+                    window.location.href = 'book_ko.html';
+                } else {
+                    alert('동화 생성에 실패했습니다.');
+                }
+            } else {
+                alert('키워드 및 장르를 저장하는 데 실패했습니다.');
+            }
         } else {
-            alert('데이터 제출에 실패했습니다.');
+            alert('이미지 URL 가져오기에 실패했습니다.');
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error:', error);
         alert('제출 중 오류가 발생했습니다.');
-    });
+    }
 }
-
-

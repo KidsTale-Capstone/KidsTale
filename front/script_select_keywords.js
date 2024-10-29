@@ -58,8 +58,6 @@ async function loadKeywords() {
     const drawingId = localStorage.getItem('drawingId'); //console.log('drawingId:', drawingId);
     localStorage.setItem('drawingId', drawingId);
     
-    const drawingKwId = localStorage.getItem('drawingKwId'); //console.log('drawingKwId:', drawingKwId);
-    localStorage.setItem('drawingKwId', drawingKwId);
 
     // 함수 호출 검사
     if (isKeywordsLoaded) {
@@ -201,8 +199,7 @@ async function showLoading() {
 
     const token = localStorage.getItem('token'); // 로컬 스토리지에 저장된 JWT 토큰 가져오기
     const drawingId = localStorage.getItem('drawingId');
-    const drawingKwId = localStorage.getItem('drawingKwId');
-    console.log('drawingId:', drawingId, 'drawingKwId:', drawingKwId);
+    console.log('drawingId:', drawingId);
 
     if (!token) {
         alert('로그인이 필요합니다.');
@@ -212,10 +209,6 @@ async function showLoading() {
 
     if (!drawingId) {
         alert('drawingId가 없습니다. 다시 시도해주세요.');
-        return;
-    }
-    if (!drawingKwId) {
-        alert('drawingKwId가 없습니다. 다시 시도해주세요.');
         return;
     }
 
@@ -243,8 +236,7 @@ async function showLoading() {
             body: JSON.stringify({ 
                 keywords: selectedKeywords,
                 genres: selectedGenres,
-                drawingId: drawingId, 
-                drawingKwId: drawingKwId,
+                drawingId: drawingId
             }),
         });
 
@@ -266,7 +258,6 @@ async function showLoading() {
                     keywords: selectedKeywords,
                     genre: selectedGenres[0], // 선택된 첫 번째 장르
                     drawingId: drawingId,
-                    drawingKwId: drawingKwId
                 })
             });
 

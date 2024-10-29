@@ -113,9 +113,9 @@ router.post('/submit-data', async (req, res) => {
         }
 
         // POST 요청에서 받은 키워드와 장르 추출
-        const { keywords, genres, drawingId, drawingKwId } = req.body;
+        const { keywords, genres, drawingId  } = req.body;
 
-        if (!drawingId || !drawingKwId || !keywords || !genres) {
+        if (!drawingId || !keywords || !genres) {
             return res.status(400).json({ success: false, message: '필수 데이터가 누락되었습니다.' });
         }
 
@@ -131,7 +131,6 @@ router.post('/submit-data', async (req, res) => {
                 {
                     id_user: userId,
                     id_drawing: drawingId,
-                    id_drawing_kw: drawingKwId,
                     select_kw: keywords,
                     genre: genres[0],
                 }
