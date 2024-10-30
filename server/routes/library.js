@@ -46,11 +46,11 @@ router.get('/get_book', async (req, res) => {
         }
 
         // 사용자가 책을 하나도 갖고 있지 않은 경우 처리
-        if (!books || books.length === 0) {
-            return res.status(200).json({
-                message: "나만의 책을 생성해주세요!"
-            });
-        }
+        // if (!books || books.length === 0) {
+        //     return res.status(200).json({
+        //         message: "나만의 책을 생성해주세요!"
+        //     });
+        // }
 
         const bookData = await Promise.all(books.map(async (bookItem) => {
 

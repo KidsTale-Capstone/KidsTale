@@ -132,16 +132,18 @@ p {
     left: 50%; /* 초기값을 20%로 설정 (dynamic updates will occur later) */
 }
 
-/* 2. 나의 책 섹션 */
+/* 나의 책 섹션 */
 .content-section-2 {
     display: flex;
-    padding-left: 300px;
-    margin-top: 100px;
-    margin-bottom: 80px;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .content-section-2 .box {
-    width: 900px;
+    width: 950px;
     height: 400px;
     display: flex;
     align-items: center;
@@ -154,60 +156,175 @@ p {
     margin-bottom: 15px;
 }
 
-/* 슬라이더 컨테이너 */
+/* 슬라이더 컨테이너에 너비를 설정하고, 오버플로우를 숨김 처리 */
 .slider-container {
     display: flex;
-    margin: 20px 50px 20px 50px;
+    justify-content: center;
+    margin: 20px auto; /* 중앙 정렬 */
     align-items: center;
     position: relative;
+    overflow: hidden;
+    width: 810px;
+    /* background-color: #f0f0f0; */
+    border-radius: 10px;
 }
 
 /* 책 리스트 */
 .book-list {
     display: flex;
-    overflow: hidden;
     transition: transform 0.5s ease;
 }
 
-/* 책 아이템 */
+/* book-item 설정 */
 .book-item {
+    width: 240px;
     height: 300px;
-    min-width: 200px;
-    margin: 25px 10px;
-    background-color: #ececec;
-    padding: 20px;
+    margin: 25px 15px;
     text-align: center;
     border-radius: 5px;
+    flex-shrink: 0; /* 책 아이템이 줄어들지 않도록 설정 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 아이템 그림자 */
 }
 
-/* 화살표 버튼 */
+/*.book-item img {
+    width: 240px;
+    height: auto;
+    border-radius: 5px;
+    object-fit: fill; 
+}*/
 
+.book-item img {
+    width: 100%; /* book-item의 너비에 맞춤 */
+    height: 100%; /* book-item의 높이에 맞춤 */
+    object-fit: cover; /* 비율을 유지하면서 박스를 채우도록 설정 */
+    border-radius: 5px; /* 선택 사항: 둥근 모서리 */
+}
+
+
+
+.book-item h3, .book-item p {
+    display: none; /* 슬라이더에서는 제목, 지은이, 장르, 키워드를 숨김 */
+}
+
+/* =================== 화살표 버튼 =================== */
 .left-button {
-    margin-right: 10px;
+    background-color: transparent;
+    border: none;
+    position: absolute; /* fixed에서 absolute로 수정 */
+    top: 50%; /* 슬라이더 높이의 중앙에 위치 */
+    transform: translateY(750%);
+    cursor: pointer;
+    margin-left: 15px;
 }
 
 .right-button {
-    margin-left: 10px;
-}
-
-.arrow {
     background-color: transparent;
     border: none;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    position: absolute; /* fixed에서 absolute로 수정 */
+    top: 50%; /* 슬라이더 높이의 중앙에 위치 */
+    transform: translateY(750%);
+    margin-left: 885px;
     cursor: pointer;
 }
 
-.arrow.left {
-    left: -40px;
+.left-button img {
+    width: 30px;
+    height: 30px;
 }
 
-.arrow.right {
-    right: -40px;
+.right-button img {
+    width: 30px;
+    height: 30px;
 }
 
-.arrow img {
-    width: 40px;
-    height: 40px;
+/* =================== 모달 창 스타일 =================== */
+.modal {
+    display: none; /* 모달은 기본적으로 숨김 */
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    display: flex;
+    background-color: #f0f0f0;
+    width: 80%;
+    max-width: 850px;
+    padding: 20px;
+    position: relative;
+    border-radius: 8px;
+}
+
+.close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.close-button img {
+    width: 30px;
+    height: 30px;
+}
+
+.modal-body {
+    display: flex;
+}
+
+.book-cover {
+    display: flex;
+    width: 350px;
+    height: 450px;
+}
+
+.book-cover img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.book-details {
+    width: 350px;
+    padding-left: 50px;
+}
+
+.book-details h2 {
+    font-size: 30px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.book-details p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#keywords {
+    font-size: 18px;
+}
+
+.read-button-section {
+    display: flex;
+    align-items: flex-end;
+}
+
+/* 책 읽기 버튼 */
+.go-to-button {
+    padding: 10px 20px;
+    background-color: #7d4ac9;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.go-to-button:hover {
+    background-color: #6b3c9a;
 }
