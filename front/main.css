@@ -208,23 +208,28 @@ p {
 
 /* =================== 화살표 버튼 =================== */
 .left-button {
-    background-color: transparent;
-    border: none;
-    position: absolute; /* fixed에서 absolute로 수정 */
-    top: 50%; /* 슬라이더 높이의 중앙에 위치 */
-    transform: translateY(750%);
+    position: absolute;
+    transform: translateY(550%);
     cursor: pointer;
     margin-left: 15px;
 }
 
 .right-button {
-    background-color: transparent;
-    border: none;
     position: absolute; /* fixed에서 absolute로 수정 */
     top: 50%; /* 슬라이더 높이의 중앙에 위치 */
-    transform: translateY(750%);
-    margin-left: 885px;
+    transform: translateY(900%);
+    margin-left: 895px;
     cursor: pointer;
+}
+
+#left-btn {
+    background-color: transparent;
+    border: none;
+}
+
+#right-btn {
+    background-color: transparent;
+    border: none;
 }
 
 .left-button img {
