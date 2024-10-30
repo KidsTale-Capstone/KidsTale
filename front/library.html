@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>책 보관함</title>
-    <link rel="stylesheet" href="library.css"> <!-- 외부 CSS 파일 연결 -->
+    <link rel="stylesheet" href="lib.css"> <!-- 외부 CSS 파일 연결 -->
 </head>
 <body>
     <!-- 로고 섹션 -->
@@ -27,78 +27,60 @@
 
     <!-- 메뉴바 아래 섹션 -->
     <!-- 책 리스트 섹션 -->
-    <div class="content-section-2">
-        <div class="book-container">
-            <!-- 왼쪽 화살표 -->
-            <div class="left-button">
-                <button class="arrow left" onclick="moveLeft()">
-                    <img src="img/left.png" alt="왼쪽 화살표">
-                </button>
-            </div>
+    
+    <div class="content-section-1">
+        
+        <h2>나의 책 보관함</h2>
 
-            <div class="box">
-                <!-- 슬라이드 컨테이너 -->
-                <div class="slider-container">
-                    <!-- 책 리스트 -->
-                    <div class="book-list" id="book-list">
-                        <!-- 사용자의 DB에서 책을 추가 -->
-                        <div class="book-item" onclick="openModal()">책 제목1</div>
-                        <div class="book-item" onclick="openModal()">책 제목2</div>
-                        <div class="book-item" onclick="openModal()">책 제목3</div>
-
-                        <div class="book-item" onclick="openModal()">책 제목4</div>
-                        <div class="book-item" onclick="openModal()">책 제목5</div>
-                        <div class="book-item" onclick="openModal()">책 제목6</div>
+        <div class="book-list-container">
+            <!-- 정적으로 생성된 기본 4개의 책 리스트 항목 -->
+            <div id="book-list">
+                <div class="book-item">
+                    <div class="book-cover">책 표지</div>
+                    <div class="book-details">
+                        <div class="book-title">책 제목</div>
+                        <div class="book-info">지은이: 작가 이름</div>
+                        <div class="book-info">장르: 선택한 장르</div>
+                        <div class="keywords"></div>
+                    </div>
+                </div>
+                <div class="book-item">
+                    <div class="book-cover">책 표지</div>
+                    <div class="book-details">
+                        <div class="book-title">책 제목</div>
+                        <div class="book-info">지은이: 작가 이름</div>
+                        <div class="book-info">장르: 선택한 장르</div>
+                        <div class="keywords"></div>
+                    </div>
+                </div>
+                <div class="book-item">
+                    <div class="book-cover">책 표지</div>
+                    <div class="book-details">
+                        <div class="book-title">책 제목</div>
+                        <div class="book-info">지은이: 작가 이름</div>
+                        <div class="book-info">장르: 선택한 장르</div>
+                        <div class="keywords"></div>
+                    </div>
+                </div>
+                <div class="book-item">
+                    <div class="book-cover">책 표지</div>
+                    <div class="book-details">
+                        <div class="book-title">책 제목</div>
+                        <div class="book-info">지은이: 작가 이름</div>
+                        <div class="book-info">장르: 선택한 장르</div>
+                        <div class="keywords"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- 오른쪽 화살표 -->
-            <div class="right-button">
-                <button class="arrow right" onclick="moveRight()">
-                    <img src="img/right.png" alt="오른쪽 화살표">
-                </button>
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+                <a href="#" id="prev-page" class="disabled">이전</a>
+                <a href="#" id="next-page">다음</a>
             </div>
         </div>
     </div>
 
-    <!-- 모달 창: 책 세부 정보 창 -->
-    <div id="bookModal" class="modal">
-        <div class="modal-content">
-
-            <div class="close-button" onclick="closeModal()">
-                <img src="img/close_button.png" alt="닫기 버튼">
-            </div>
-
-            <div class="modal-body">
-                <!-- 왼쪽 책 표지 이미지 -->
-                <div class="book-cover">
-                    <img src="" alt="책 표지" />
-                </div>
-                
-                <!-- 오른쪽 책 정보: 제목, 지은이, 장르, 키워드 -->
-                <div class="book-details">
-                    <h2>책 제목</h2>
-                    <p><strong>지은이:</strong> 이름</p>
-                    <p><strong>장르:</strong> 장르</p>
-                    <p><strong>키워드:</strong></p>
-                    <div id="keywords">
-                        <!-- 키워드가 3개 이상일 경우 줄바꿈 -->
-                        키워드1, 키워드2, 키워드3 <br />
-                        키워드4, 키워드5
-                    </div>
-                </div>
-
-                <!-- 책 읽기 버튼 섹션 -->
-                <div class="read-button-section">
-                    <!-- 책 읽기 버튼 -->
-                    <button id="reading-book" class="go-to-button">책 읽기</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script src="script_library.js"></script> <!-- JavaScript 파일 연결 -->
+    <script src="lib.js"></script> <!-- JavaScript 파일 연결 -->
 </body>
 </html>
