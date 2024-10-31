@@ -194,6 +194,12 @@ async function goToNextPage() {
                 const selectKwId = submitResult.selectKwId;
                 localStorage.setItem('selectKwId', selectKwId);
 
+                // 서버에서 `userId`를 받아와서 `ownerId`로 로컬 스토리지에 저장
+                const userId = submitResult.userId; // 서버에서 받아온 `userId`
+                console.log("서버에서 가져온 userId:", userId); // 확인용 로그 추가
+                localStorage.setItem('id_owner', userId); // `ownerId`로 저장
+                console.log("로컬 스토리지에 저장된 id_owner:", localStorage.getItem('id_owner')); // 저장 후 확인
+
                 // 3. 저장된 selectKwId를 기반으로 GPT API로 동화 생성 요청
                 const generateResponse = await fetch('/select_keywords/generate-story', {
                     method: 'POST',

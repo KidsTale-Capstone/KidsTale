@@ -125,7 +125,7 @@ router.post('/submit-data', async (req, res) => {
         const selectKwId = data[0].id_select_kw;  
 
         // 성공적인 응답
-        res.status(200).json({ success: true, message: '키워드와 장르가 성공적으로 저장되었습니다.', selectKwId });
+        res.status(200).json({ success: true, message: '키워드와 장르가 성공적으로 저장되었습니다.', selectKwId, userId });
     } catch (error) {
         console.error('데이터 제출 중 오류:', error);
         res.status(500).json({ success: false, message: '데이터 제출 중 오류가 발생했습니다.' });
