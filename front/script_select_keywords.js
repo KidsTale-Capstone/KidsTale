@@ -278,6 +278,8 @@ async function showLoading() {
                 localStorage.setItem('id_book', bookId);
                 console.log('book_id: ', bookId)
 
+                localStorage.setItem('hideModifyButton', 'false');
+
                 // 동화 생성 후 book_ko.html 페이지로 이동
                 window.location.href = 'book_ko.html';
             } else {

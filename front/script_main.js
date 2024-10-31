@@ -266,6 +266,9 @@ function openBookModal(book) {
         console.log("bookId 저장 확인: ", book.bookId);
         console.log("ownerId 저장 확인: ", book.ownerId);
 
+        // main.html에서 book.html로 이동하기 전에 특정 값 저장
+        localStorage.setItem('hideModifyButton', 'true');
+
         window.location.href = 'book_ko.html'; // 페이지 이동
     };
 }

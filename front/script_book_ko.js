@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     console.log("DOM 로드 시 bookId 확인:", bookId); // bookId 로그 출력
     console.log("DOM 로드 시 ownerId 확인:", ownerId); // ownerId 로그 출력
+    console.log("저장된 hideModifyButton:", localStorage.getItem('hideModifyButton'));
 
     totalPages = await fetchTotalPages(ownerId, bookId, lang);
     displayPage(0);
@@ -203,7 +204,15 @@ function displayPage(pageIndex) {
         playAllButton.style.display =  currentPage === 0 ? 'none' : 'none';
         audioButton.style.display = currentPage === 0 ? 'none' : 'block';
         langButton.style.display = currentPage === 0 ? 'block' : 'none';
-        modifyButton.style.display = currentPage === 0 ? 'none' : 'block';
+
+        // 수정 버튼
+        const hideModify = localStorage.getItem('hideModifyButton');
+        if (hideModify === 'true') {
+            modifyButton.style.display = 'none';
+        } else {
+            modifyButton.style.display = currentPage === 0 ? 'none' : 'block';
+        }
+
         libraryButton.style.display = (totalPages - currentPage) === 0 ? 'block' : 'none';
     }).catch(error => {
         console.error("페이지 데이터를 불러오는 중 오류 발생:", error);
