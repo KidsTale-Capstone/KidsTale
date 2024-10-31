@@ -28,11 +28,11 @@ function getUserIdFromToken(req) {
 }
 
 // book table 가져오기
-async function fetchBookData(userId, lang, bookId) {
+async function fetchBookData(ownerId, lang, bookId) {
     try {
         const titleField = lang === 'eng' ? 'title_eng' : 'title_ko';
 
-        console.log(`userId: ${userId}, lang: ${lang}, bookId: ${bookId}`);
+        console.log(`router fetchBookData ownerId: ${ownerId}, lang: ${lang}, bookId: ${bookId}`);
         
         if (!bookId) {
             throw new Error('책 정보가 없습니다.');
@@ -42,12 +42,16 @@ async function fetchBookData(userId, lang, bookId) {
         const { data, error } = await supabase
             .from('book')
             .select(`${titleField}, author`)
-            .eq('id_user', userId)
+            .eq('id_user', ownerId)
             .eq('id_book', bookId)
             .single();
 
-        if (error || !data) {
+        if (error) {
+            console.error('Supabase error:', error); // 구체적인 에러 정보 출력
             throw new Error('책 데이터를 불러오는 중 오류가 발생했습니다.');
+        }
+        if (!data) {
+            throw new Error('책 데이터가 존재하지 않습니다.');
         }
 
         return {
@@ -94,6 +98,7 @@ router.get('/:lang', async (req, res) => {
         const lang = req.params.lang; // 'ko' 또는 'eng' 언어 정보
         const bookId = req.query.id_book; // 클라이언트에서 전달한 id_book
         const pageIndex = parseInt(req.query.page_index, 10);
+        const ownerId = req.query.owner_id;
 
         console.log("lang:", lang, "bookId:", bookId, "pageIndex:", pageIndex);  // 각 변수 확인
 
@@ -108,7 +113,7 @@ router.get('/:lang', async (req, res) => {
         }
 
         // book table 가져오기
-        const bookData = await fetchBookData(userId, lang, bookId);
+        const bookData = await fetchBookData(ownerId, lang, bookId);
 
         // page table 가져오기
         const pageData = await fetchPageData(bookId, pageIndex, lang);
@@ -251,15 +256,16 @@ router.get('/:lang/tts', async (req, res) => {
             page_index: pageIndex,
             page_lang: lang,
             path: publicURL
-        });
+        })
+        .select();
 
         if (insertError) {
             console.error("book_tts 테이블에 경로 저장 중 오류:", insertError);
             return res.status(500).json({ success: false, message: 'book_tts 테이블 저장 중 오류가 발생했습니다.' });
+        } else {
+            console.log("book_tts 테이블에 경로 저장 성공:", insertData);
         }
 
-
-        console.log("book_tts 테이블에 경로 저장 성공:", insertData);
         res.json({ success: true, audioPath: publicURL });
 
     } catch (error) {

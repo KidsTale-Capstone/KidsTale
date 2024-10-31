@@ -85,6 +85,12 @@ async function loadKeywords() {
         const result = await response.json();
 
         if (result.success) {
+            // 서버에서 `userId`를 받아와서 `ownerId`로 로컬 스토리지에 저장
+            const userId = result.userId; // 서버에서 받아온 `userId`
+            console.log("서버에서 가져온 userId:", userId); // 확인용 로그 추가
+            localStorage.setItem('id_owner', userId); // `ownerId`로 저장
+            console.log("로컬 스토리지에 저장된 id_owner:", localStorage.getItem('id_owner')); // 저장 후 확인
+            
             // 서버에서 받아온 키워드를 배열에 추가하고 버튼으로 생성
             result.keywords.forEach(keyword => {
                 keywords.push(keyword);
@@ -226,6 +232,7 @@ async function showLoading() {
     }
 
     try {
+
         // 1. 선택된 키워드와 장르를 서버에 전송
         const submitResponse = await fetch('/select_keywords/submit-data', {
             method: 'POST',

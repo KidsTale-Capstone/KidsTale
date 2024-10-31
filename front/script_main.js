@@ -181,8 +181,14 @@ async function loadBooks() {
 
             bookItem.onclick = () => openBookModal(book); // 클릭 시 모달 열기
 
-            // bookItem에 id_book 추가 
-            bookItem.setAttribute('data-id', book.bookId);
+
+            // book.bookId와 book.ownerId가 정의되어 있는지 확인
+            if (book.bookId && book.ownerId) {
+                bookItem.setAttribute('data-id', book.bookId);
+                bookItem.setAttribute('data-owner-id', book.ownerId);
+            } else {
+                console.warn("bookId 또는 ownerId가 없습니다:", book);
+            }
 
             bookList.appendChild(bookItem);
         });
@@ -248,17 +254,20 @@ function openBookModal(book) {
         }
     });
 
-    // 책 읽기 버튼에 id_book 값 저장 후 이동 (script_library.js 부분)
+    // 책 읽기 버튼에 id_book 값 저장 후 이동
     const readButton = document.getElementById('reading-book');
     readButton.setAttribute('data-book-id', book.id_book); // book의 id_book 설정
     readButton.onclick = function () {
-        // bookId를 로컬 스토리지에 저장 (기존 코드)
+        // bookId를 로컬 스토리지에 저장
         localStorage.setItem('id_book', book.bookId); 
+        localStorage.setItem('id_owner', book.ownerId); // 책 소유자 ID 저장
         
         // book_ko.html로 이동 (여기서도 'bookId'를 로그로 출력하여 제대로 저장되었는지 확인)
         console.log("bookId 저장 확인: ", book.bookId);
+        console.log("ownerId 저장 확인: ", book.ownerId);
+
         window.location.href = 'book_ko.html'; // 페이지 이동
-    };  
+    };
 }
 
 

@@ -148,7 +148,8 @@ router.get('/get_all_book', async (req, res) => {
                 genre: keyword.genre, // 키워드를 배열로 변환
                 keywords: keyword.select_kw, // JSON 문자열을 배열로 변환
                 cover: drawing.public_url,
-                bookId: book.id_book
+                bookId: book.id_book,
+                ownerId: drawing.id_user
             };
         }));
 

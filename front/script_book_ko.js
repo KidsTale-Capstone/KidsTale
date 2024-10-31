@@ -1,3 +1,21 @@
+// 페이지가 로드되면 총 페이지 수를 가져와 첫 페이지를 표시
+document.addEventListener('DOMContentLoaded', async function () {
+    const bookId = localStorage.getItem('id_book');
+    const ownerId = localStorage.getItem('id_owner');
+    const lang = 'ko'; // 한글 버전이므로 'ko' 사용
+
+    if (!bookId || !ownerId) {
+        alert("책 정보나 소유자 정보를 불러오는 중 문제가 발생했습니다. 다시 시도해 주세요.");
+        return;
+    }
+
+    console.log("DOM 로드 시 bookId 확인:", bookId); // bookId 로그 출력
+    console.log("DOM 로드 시 ownerId 확인:", ownerId); // ownerId 로그 출력
+
+    totalPages = await fetchTotalPages(ownerId, bookId, lang);
+    displayPage(0);
+});
+
 // 현재 페이지 인덱스
 let currentPage = 0;
 let totalPages = 0;
@@ -16,14 +34,14 @@ const modifyButton = document.getElementById('modify-content');
 const libraryButton = document.getElementById('go-library');
 
 // 서버에서 책 제목, 내용, 이미지 데이터를 받아오는 함수
-async function fetchBookData(bookId, pageIndex, lang) {
+async function fetchBookData(ownerId, bookId, pageIndex, lang) {
     const token = localStorage.getItem('token'); // JWT 토큰을 로컬 스토리지에서 가져옴
 
     console.log(bookId);
     console.log(pageIndex);
     
     try {
-        const response = await fetch(`/book/${lang}?id_book=${bookId}&page_index=${pageIndex}`, {
+        const response = await fetch(`/book/${lang}?id_book=${bookId}&page_index=${pageIndex}&owner_id=${ownerId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -47,11 +65,11 @@ async function fetchBookData(bookId, pageIndex, lang) {
 }
 
 // 페이지 표시 함수
-async function fetchTotalPages(bookId, lang) {
+async function fetchTotalPages(ownerId, bookId, lang) {
     const token = localStorage.getItem('token'); // JWT 토큰을 로컬 스토리지에서 가져옴
 
     try {
-        const response = await fetch(`/book/${lang}/total_pages?id_book=${bookId}`, {
+        const response = await fetch(`/book/${lang}/total_pages?id_book=${bookId}&id_owner=${ownerId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -132,14 +150,17 @@ async function playTTS(pageContent, bookId, lang) {
 // 페이지 표시 함수
 function displayPage(pageIndex) {
     const bookId = localStorage.getItem('id_book');
+    const ownerId = localStorage.getItem('id_owner');
+
     const lang = 'ko'; // 한글 버전이므로 'ko' 사용
 
-    if (!bookId) {
-        console.error("bookId 값이 없습니다.");
+    if (!bookId || !ownerId) {
+        console.error("bookId 또는 ownerId 값이 없습니다.");
         return;
     }
+    console.log("displayPage - bookId:", bookId, "ownerId:", ownerId, "pageIndex:", pageIndex, "lang:", lang);
 
-    fetchBookData(bookId, pageIndex, lang).then(pageData => {
+    fetchBookData(ownerId, bookId, pageIndex, lang).then(pageData => {
         console.log(pageData);
         if (!pageData) return;
 
@@ -312,19 +333,4 @@ async function completeEdit() {
 }
 
 
-// 페이지가 로드되면 총 페이지 수를 가져와 첫 페이지를 표시
-document.addEventListener('DOMContentLoaded', async function () {
-    const bookId = localStorage.getItem('id_book');
-    const lang = 'ko'; // 한글 버전이므로 'ko' 사용
 
-    // bookId가 없을 경우 오류 처리 (기존 코드 개선)
-    if (!bookId) {
-        alert("책 정보를 불러오는 중 문제가 발생했습니다. 다시 시도해 주세요.");
-        return;
-    }
-
-    console.log("bookId 확인: ", bookId); // bookId 로그 출력
-
-    totalPages = await fetchTotalPages(bookId, lang);
-    displayPage(0);
-});

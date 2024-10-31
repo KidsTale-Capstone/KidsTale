@@ -87,7 +87,7 @@ router.get('/keywords', async (req, res) => {
         const selectedKeywords = keywords.slice(0, 8);
 
         // 응답으로 키워드를 보냄
-        res.status(200).json({ success: true, keywords: selectedKeywords });
+        res.status(200).json({ success: true, keywords: selectedKeywords , userId: userId });
     } catch (error) {
         console.error('키워드 불러오는 중 오류:', error);
         res.status(500).json({ success: false, message: '키워드를 불러오는 중 오류가 발생했습니다.', error });
