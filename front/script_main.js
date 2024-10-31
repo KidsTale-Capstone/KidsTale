@@ -106,7 +106,7 @@ async function loadBooks() {
             return; // 토큰이 없으면 더 이상 진행하지 않음
         }
 
-        const response = await fetch(`/library/get_book`, {
+        const response = await fetch(`/main/get_book`, {
             headers: {
                 'Authorization': `Bearer ${token}`, // Authorization 헤더에 JWT 토큰 추가
             }
