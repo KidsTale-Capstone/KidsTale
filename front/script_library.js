@@ -108,6 +108,45 @@ function renderKeywords(keywords) {
     return keywords.map(keyword => `<span class="keyword-button">${keyword}</span>`).join('');
 }
 
+// 책 읽기 기능
+function readBook(book) {
+    localStorage.setItem('id_book', book.bookId);
+    localStorage.setItem('id_owner', book.userId); // 소유자 ID 저장
+    window.location.href = 'book_ko.html'; // 책 읽기 페이지로 이동
+}
+
+async function deleteBook(book) {
+    const token = localStorage.getItem('token'); // JWT 토큰 가져오기
+    if (!token) {
+        alert('로그인이 필요합니다.');
+        return;
+    }
+
+    const drawingId = book.drawingId; // book 객체에서 drawingId 가져오기
+
+    if (confirm('이 책을 삭제하시겠습니까?')) {
+        try {
+            const response = await fetch(`/library/delete_drawing?id_drawing=${drawingId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('삭제에 실패했습니다.');
+            }
+
+            alert('책이 삭제되었습니다.'); // 삭제 완료 메시지
+            fetchBooks();
+        } catch (error) {
+            console.error('삭제 중 오류 발생:', error);
+            alert('삭제 중 문제가 발생했습니다.');
+        }
+    }
+}
+
 // 다음 페이지로 넘어가는 함수
 function loadNextPage() {
     if (currentPage < Math.ceil(books.length / booksPerPage)) {

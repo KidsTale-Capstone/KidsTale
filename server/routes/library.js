@@ -57,7 +57,7 @@ router.get('/get_book', async (req, res) => {
             // drawing table
             const { data: drawing, error: drawingError } = await supabase
                 .from('drawing')
-                .select('public_url')
+                .select('id_drawing, public_url')
                 .eq('id_user', userId)
                 .eq('id_drawing', bookItem.id_drawing)
                 .single();
@@ -102,7 +102,9 @@ router.get('/get_book', async (req, res) => {
                 genre: keyword.genre, // 키워드를 배열로 변환
                 keywords: keyword.select_kw, // JSON 문자열을 배열로 변환
                 cover: drawing.public_url,
-                bookId: book.id_book
+                bookId: book.id_book,
+                userId: userId,
+                drawingId: drawing.id_drawing
             };
         }));
 
@@ -112,6 +114,36 @@ router.get('/get_book', async (req, res) => {
         console.error('책 목록 가져오기 실패:', error);
         return res.status(500).json({ error: '책 목록을 가져오는 중 오류가 발생했습니다.' });
     }
+});
+
+router.delete('/delete_drawing', async (req, res) => {
+    const { id_drawing } = req.query;
+    console.log('delete_id_drawing', id_drawing)
+
+    const { data: existingData, error: fetchError } = await supabase
+    .from('drawing')
+    .select('*')
+    .eq('id_drawing', id_drawing);
+
+    if (fetchError || existingData.length === 0) {
+        console.error('삭제할 데이터가 존재하지 않음:', fetchError);
+        return res.status(404).json({ success: false, message: '삭제할 데이터가 존재하지 않습니다.' });
+    }
+    
+    // DB에서 drawing 삭제 로직
+    const { data, error } = await supabase
+        .from('drawing')
+        .delete()
+        .eq('id_drawing', id_drawing);
+
+    if (error) {
+        console.error('삭제 오류:', error);
+        return res.status(500).json({ success: false, message: '그림 삭제 실패' });
+    } else {
+        return res.status(200).json({ success: true, message: '그림이 삭제되었습니다.' });
+    }
+
+    
 });
 
 module.exports = router;
