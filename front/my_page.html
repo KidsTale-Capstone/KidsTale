@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지</title>
+    <link rel="stylesheet" href="my_page.css"> <!-- 외부 CSS 파일 연결 -->
+</head>
+<body>
+    <!-- 로고 섹션 -->
+    <div class="logo-section">
+        <img src="img/logo.png" alt="KidsTale Logo" onclick="window.location.href='main.html'">
+    </div>
+
+    <div class="logout">
+        <a href="login.html">로그아웃</a>
+    </div>
+
+    <!-- 메뉴 바 섹션 -->
+    <nav class="menu-bar">
+        <ul>
+            <li><a href="library.html">책 보관함</a></li>
+            <li><a href="create_book.html">동화 만들기</a></li>
+            <li><a href="my_page.html">마이페이지</a></li>
+        </ul>
+    </nav>
+
+    <!-- 메뉴바 아래 섹션 -->
+    <!-- 프로필 섹션 -->
+    <div class="content-section-1">
+        <div class="profile-section">
+            <div class="profile-picture">프로필 사진</div>
+            <p class="email">email@example.com</p>
+        </div>
+    </div>
+
+    <!-- 프로필 수정 섹션 -->
+    <div class="content-section-2">
+        
+
+        <form id="userForm">
+            <h3>회원정보 수정</h3>
+
+            <label for="name">이름</label>
+            <input type="text" id="name" placeholder="이름" value="" />
+
+            <label for="age">나이</label>
+            <input type="text" id="age" placeholder="나이" value="" />
+
+            <label for="target">목표 권수</label>
+            <input type="text" id="target" value="10" />
+
+            <label for="password">비밀번호 수정</label>
+            <div class="password-section">
+                <input type="password" id="password" />
+                <button type="button" id="duplicateCheck">중복확인</button>
+            </div>
+
+            <button type="button" id="confirmButton">확인</button>
+        </form>
+    </div>
+
+    <!-- 문의하기 탈퇴하기 버튼 -->
+    <div class="footer-buttons">
+        <button class="qa-button">문의하기 Q&A</button>
+        <button class="delete-button">탈퇴하기</button>
+    </div>
+    
+    
+
+    <script src="script_my_page.js"></script> <!-- JavaScript 파일 연결 -->
+</body>
+</html>

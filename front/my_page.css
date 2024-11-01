@@ -1,0 +1,205 @@
+/* 기본적인 스타일 설정 */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: white;
+}
+
+/* 로고 섹션 */
+.logo-section {
+    text-align: center;
+    padding-top: 50px;
+    margin-bottom: 30px;
+}
+
+.logo-section img {
+    max-width: 200px; /* 로고 크기 설정 */
+}
+
+/* 로그아웃 */
+.logout {
+    text-align: right;
+    margin-right: 40px;
+}
+
+.logout a {
+    color: #7d4ac9;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* 메뉴 바 */
+.menu-bar {
+    background-color: #9370db; /* 메뉴 바 배경 색상 */
+    padding: 15px 0;
+    margin-top: 10px;
+}
+
+.menu-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-evenly; /* 메뉴 항목 가운데 정렬 */
+}
+
+.menu-bar ul li {
+    margin: 0 20px;
+}
+
+.menu-bar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.menu-bar ul li a:hover {
+    text-decoration: underline;
+}
+
+/* 메뉴바 아래 두 섹션 */
+.content-section-1 {
+    display: flex;
+    justify-content: center;
+    margin-top: 70px;
+}
+
+.container {
+    width: 300px;
+    text-align: center;
+}
+
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    background-color: #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #888;
+    margin: 0 auto;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.email {
+    margin-top: 10px;
+    color: #333;
+    font-size: 16px;
+}
+
+h3 {
+    font-size: 18px;
+    margin: 20px 0;
+    color: #333;
+}
+
+p {
+    font-size: 23px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* 나의 책 섹션 */
+.content-section-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 50px;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px 40px 30px 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    font-size: 12px;
+    color: #666;
+    text-align: left;
+}
+
+input {
+    width: 200px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.password-section {
+    display: flex;
+    gap: 5px;
+}
+
+#duplicateCheck {
+    padding: 8px;
+    font-size: 12px;
+    background-color: #a392ec;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#confirmButton {
+    padding: 10px;
+    background-color: #a392ec;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.footer-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.qa-button {
+    padding: 8px 16px;
+    margin-right: 160px;
+    font-size: 14px;
+    background-color: #a392ec;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #a392ec;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
