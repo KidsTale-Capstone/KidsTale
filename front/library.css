@@ -161,14 +161,12 @@ body, html {
 /* 책 표지 이미지 스타일 (4:6 비율) */
 .book-cover {
     flex: 4;
-    background-color: #cfcfcf;
     height: 200px;
     width: 133px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 14px;
-    color: #666;
     border-radius: 4px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -189,6 +187,8 @@ body, html {
     flex-direction: column;
     margin-top: 10px;
     margin-left: 30px;
+    position: relative; /* 하위 요소의 절대 위치 설정을 위해 추가 */
+    padding-bottom: 40px; /* 버튼 컨테이너 공간 확보 */
 }
 
 .book-title {
@@ -209,13 +209,49 @@ body, html {
 }
 
 .keyword-button {
-    background-color: #fff;
-    border: 1px solid #ccc;
+    background-color: #9470db;
+    border: 2px solid #9470db;
+    color: white;
     padding: 5px 10px;
-    border-radius: 3px;
-    font-size: 12px;
-    flex-basis: 23%; /* 한 줄에 4개씩 배치되도록 너비 설정 */
+    border-radius: 10px;
+    font-size: 14px;
+    flex-basis: 18%; /* 한 줄에 4개씩 배치되도록 너비 설정 */
     text-align: center;
+}
+
+.button-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.read-button,
+.delete-button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.read-button {
+    background-color: #7d4ac9;
+    color: white;
+}
+
+.delete-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.read-button:hover {
+    background-color: #6b3c9a;
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
 }
 
 /* 페이지네이션 스타일 */

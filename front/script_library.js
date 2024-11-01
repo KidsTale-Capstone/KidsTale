@@ -80,6 +80,24 @@ function renderBooks() {
         keywordContainer.innerHTML = renderKeywords(book.keywords);
         bookItem.querySelector('.book-details').appendChild(keywordContainer);
 
+        // 책 읽기 및 삭제 버튼 추가
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'button-container';
+
+        const readButton = document.createElement('button');
+        readButton.className = 'read-button';
+        readButton.innerText = '책 읽기';
+        readButton.onclick = () => readBook(book);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.innerText = '삭제';
+        deleteButton.onclick = () => deleteBook(book);
+
+        buttonContainer.appendChild(readButton);
+        buttonContainer.appendChild(deleteButton);
+        bookItem.querySelector('.book-details').appendChild(buttonContainer);
+
         bookList.appendChild(bookItem);
     });
 
@@ -110,9 +128,9 @@ function updatePagination() {
     const paginationContainer = document.querySelector('.pagination');
     const totalPages = Math.ceil(books.length / booksPerPage);
 
-    if (currentPage === 1) {
+    if (books.length < 5) {
         prevButton.style.display = 'none';
-        nextButton.style.display = 'flex';
+        nextButton.style.display = 'none';
         paginationContainer.style.justifyContent = 'flex-end';
     } else if (currentPage === totalPages) {
         prevButton.style.display = 'flex';
