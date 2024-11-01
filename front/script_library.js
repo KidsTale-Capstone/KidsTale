@@ -151,6 +151,7 @@ async function deleteBook(book) {
 function loadNextPage() {
     if (currentPage < Math.ceil(books.length / booksPerPage)) {
         currentPage++;
+        console.log('currentPage: ', currentPage);
         renderBooks();
     }
 }
@@ -159,6 +160,7 @@ function loadNextPage() {
 function loadPreviousPage() {
     if (currentPage > 1) {
         currentPage--;
+        console.log('currentPage: ', currentPage);
         renderBooks();
     }
 }
@@ -171,6 +173,10 @@ function updatePagination() {
         prevButton.style.display = 'none';
         nextButton.style.display = 'none';
         paginationContainer.style.justifyContent = 'flex-end';
+    } else if (currentPage === 1) {
+        prevButton.style.display = 'none';
+        nextButton.style.display = 'flex';
+        paginationContainer.style.justifyContent = 'flex-start';
     } else if (currentPage === totalPages) {
         prevButton.style.display = 'flex';
         nextButton.style.display = 'none';
