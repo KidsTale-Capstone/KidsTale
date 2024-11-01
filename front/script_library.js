@@ -173,7 +173,7 @@ function updatePagination() {
         prevButton.style.display = 'none';
         nextButton.style.display = 'none';
         paginationContainer.style.justifyContent = 'flex-end';
-    } else if (books.total > 4 && currentPage === 1) {
+    } else if (currentPage === 1) {
         prevButton.style.display = 'none';
         nextButton.style.display = 'flex';
         paginationContainer.style.justifyContent = 'flex-start';
