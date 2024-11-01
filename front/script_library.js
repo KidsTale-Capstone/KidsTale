@@ -176,7 +176,7 @@ function updatePagination() {
     } else if (currentPage === 1) {
         prevButton.style.display = 'none';
         nextButton.style.display = 'flex';
-        paginationContainer.style.justifyContent = 'flex-start';
+        paginationContainer.style.justifyContent = 'flex-end';
     } else if (currentPage === totalPages) {
         prevButton.style.display = 'flex';
         nextButton.style.display = 'none';
