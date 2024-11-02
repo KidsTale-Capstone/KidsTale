@@ -60,143 +60,292 @@ body, html {
 }
 
 /* 메뉴바 아래 두 섹션 */
-.content-section-1 {
+.entire-section {
     display: flex;
-    justify-content: center;
-    margin-top: 70px;
+    flex-direction: row;
 }
 
-.container {
-    width: 300px;
-    text-align: center;
+/* 프로필 섹션 */
+.content-section-1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    margin-top: 70px;
+    margin-bottom: 40px;
+    margin-left: 160px;
+    margin-right: 20px;
 }
 
 .profile-section {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 .profile-picture {
-    width: 150px;
-    height: 150px;
-    background-color: #ddd;
-    border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 14px;
-    color: #888;
-    margin: 0 auto;
-    overflow: hidden;
-    margin-bottom: 20px;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #ddd;
 }
 
 .profile-picture img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
 }
 
 .email {
-    margin-top: 10px;
+    margin-top: 20px;
     color: #333;
-    font-size: 16px;
-}
-
-h3 {
     font-size: 18px;
-    margin: 20px 0;
-    color: #333;
 }
 
-p {
-    font-size: 23px;
-    color: #666;
-    margin-bottom: 25px;
-}
-
-/* 나의 책 섹션 */
-.content-section-2 {
+.info-box {
     display: flex;
+    justify-content: space-between;
     flex-direction: column;
-    align-items: center;
-    margin-bottom: 50px;
-}
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 20px 40px 30px 40px;
+    height: 300px;
+    width: 300px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 20px;
 }
 
-label {
-    font-size: 12px;
+.info-box h3 {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.info-box p {
+    font-size: 18px;
     color: #666;
-    text-align: left;
+    margin: 15px 0;
 }
 
-input {
-    width: 200px;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.password-section {
-    display: flex;
-    gap: 5px;
-}
-
-#duplicateCheck {
-    padding: 8px;
-    font-size: 12px;
-    background-color: #a392ec;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#confirmButton {
+#editButton {
+    margin-top: 15px;
     padding: 10px;
     background-color: #a392ec;
     color: #fff;
     border: none;
     border-radius: 4px;
-    font-size: 16px;
     cursor: pointer;
-    margin-top: 20px;
+    font-size: 16px;
 }
 
-.footer-buttons {
+/* 프로필 수정 모달 창 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* 반투명 어두운 배경 추가 */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* 모달이 항상 위에 보이도록 설정 */
+}
+
+.modal-content {
+    position: relative; /* 닫기 버튼 위치 조정을 위한 기준 */
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 450px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1001; /* 모달 콘텐츠가 배경보다 위에 보이도록 설정 */
+}
+
+.modal h2 {
+    text-align: center;
+    font-size: 25px;
+    color: #333;
+    margin-bottom: 45px;
+}
+
+.profile-preview {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.profile-preview img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+/* 폼 스타일 */
+#editForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start; /* 폼을 왼쪽 정렬 */
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%; /* form-group을 폼 전체 너비로 설정 */
+}
+
+.form-group label {
+    flex: 0 0 100px; /* 레이블 너비를 고정 */
+    font-size: 14px;
+    color: #666;
+    text-align: left; /* 레이블 텍스트를 왼쪽 정렬 */
+    padding-right: 10px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group input[type="password"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="file"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: #a392ec;
+    outline: none;
+}
+
+.profile-preview img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+/* 버튼 스타일 */
+.close-button {
+    position: absolute;
+    top: 20px; /* 모달 창의 위쪽에서 10px 떨어지게 설정 */
+    right: 20px; /* 모달 창의 오른쪽에서 10px 떨어지게 설정 */
+    font-size: 30px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s;
+}
+
+.close-button:hover {
+    color: #555;
+}
+
+.button-container {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+}
+
+#saveChanges {
+    padding: 12px;
+    background-color: #a392ec;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#saveChanges:hover {
+    background-color: #6f5dbd;
+}
+
+.delete-button {
+    padding: 12px;
+    background-color: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px; /* 간격을 주고 싶다면 사용 */
+}
+
+.delete-button:hover {
+    background-color: #d93636;
+}
+
+/* 나의 뱃지 섹션 */
+.content-section-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 800px;
+    margin-top: 70px;
+    margin-right: 100px;
+    margin-bottom: 40px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.badge-section {
+    text-align: center;
+    width: 80%;
+    max-width: 600px;
+}
+
+.content-section-2 h2 {
+    font-size: 30px;
+    margin-bottom: 50px;
+}
+
+.badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
     margin-bottom: 20px;
+}
+
+.badge {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    opacity: 0.3;
+    transition: opacity 0.3s;
+}
+
+.badge.active {
+    opacity: 1;
+}
+
+/* 하단 버튼 섹션 */
+.footer-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 110px;
 }
 
 .qa-button {
     padding: 8px 16px;
-    margin-right: 160px;
-    font-size: 14px;
-    background-color: #a392ec;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.delete-button {
-    padding: 8px 16px;
-    font-size: 14px;
+    font-size: 16px;
     background-color: #a392ec;
     color: #fff;
     border: none;

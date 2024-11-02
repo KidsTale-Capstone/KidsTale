@@ -25,49 +25,100 @@
         </ul>
     </nav>
 
-    <!-- 메뉴바 아래 섹션 -->
-    <!-- 프로필 섹션 -->
-    <div class="content-section-1">
-        <div class="profile-section">
-            <div class="profile-picture">프로필 사진</div>
-            <p class="email">email@example.com</p>
-        </div>
-    </div>
+    <!-- 메뉴바 아래 전체 섹션 -->
+    <div class="entire-section">
+        <!-- 왼쪽 프로필 섹션 -->
+        <div class="content-section-1">
+            <div class="profile-section">
+                <div class="profile-picture">
+                    <img src="img/default_profile.png" alt="프로필 사진" id="profileImage" />
+                </div>
+                <p class="email">email@example.com</p>
 
-    <!-- 프로필 수정 섹션 -->
-    <div class="content-section-2">
-        
-
-        <form id="userForm">
-            <h3>회원정보 수정</h3>
-
-            <label for="name">이름</label>
-            <input type="text" id="name" placeholder="이름" value="" />
-
-            <label for="age">나이</label>
-            <input type="text" id="age" placeholder="나이" value="" />
-
-            <label for="target">목표 권수</label>
-            <input type="text" id="target" value="10" />
-
-            <label for="password">비밀번호 수정</label>
-            <div class="password-section">
-                <input type="password" id="password" />
-                <button type="button" id="duplicateCheck">중복확인</button>
+                <div class="info-box">
+                    <h3>회원정보</h3>
+                    <p><strong>이름:</strong> 홍길동</p>
+                    <p><strong>나이:</strong> 25살</p>
+                    <p><strong>목표 책 수:</strong> 10 권</p>
+                    <button id="editButton">회원정보 수정</button>
+                </div>
             </div>
+        </div>
 
-            <button type="button" id="confirmButton">확인</button>
-        </form>
+        <!-- 프로필 수정하기 모달 창 -->
+        <div class="modal" id="editModal">
+            <div class="modal-content">
+                <span class="close-button" id="closeModal">&times;</span>
+                <h2>회원정보 수정</h2>
+                <form id="editForm">
+                    <div class="form-group">
+                        <div class="profile-preview">
+                            <img src="img/default_profile.png" alt="프로필 사진 미리보기" id="profilePreview">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profileImageInput">프로필</label>
+                        <input type="file" id="profileImageInput" accept="image/*">
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="editName">이름</label>
+                        <input type="text" id="editName" value="홍길동" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editAge">나이</label>
+                        <input type="text" id="editAge" value="25" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTarget">목표 책 수</label>
+                        <input type="text" id="editTarget" value="10" />
+                    </div>
+                </form>
+
+                <div class="button-container">
+                    <button type="button" id="saveChanges">저장하기</button>
+                    <button type="button" id="deleteAccount" class="delete-button">탈퇴하기</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 오른쪽 사용자 뱃지 섹션 -->
+        <div class="content-section-2">
+            <div class="badge-section">
+                <h2>나의 활동 뱃지</h2>
+                <div class="badge-row">
+                    <img src="img/badges/01_one_day_attend.png" alt="첫번째 출석" class="badge active">
+                    <img src="img/badges/02_ten_days_attend.png" alt="10번 연속 출석" class="badge">
+                </div>
+                <div class="badge-row">
+                    <img src="img/badges/03_1st_book.png" alt="첫번째 동화 생성" class="badge">
+                    <img src="img/badges/04_50th_books.png" alt="50번째 동화 생성" class="badge">
+                    <img src="img/badges/05_100th_books.png" alt="100번째 동화 생성" class="badge">
+                </div>
+                <div class="badge-row">
+                    <img src="img/badges/06_edit_all.png" alt="책 한권 수정 완료" class="badge">
+                    <img src="img/badges/07_all_genres.png" alt="모든 장르 책 생성" class="badge">
+                </div>
+                <div class="badge-row">
+                    <img src="img/badges/08_1st_likes.png" alt="좋아요 1등" class="badge">
+                    <img src="img/badges/09_2nd_likes.png" alt="좋아요 2등" class="badge">
+                    <img src="img/badges/10_3rd_likse.png" alt="좋아요 3등" class="badge">
+                </div>
+            </div>
+        </div>
+
     </div>
+    
 
     <!-- 문의하기 탈퇴하기 버튼 -->
     <div class="footer-buttons">
         <button class="qa-button">문의하기 Q&A</button>
-        <button class="delete-button">탈퇴하기</button>
     </div>
     
     
-
     <script src="script_my_page.js"></script> <!-- JavaScript 파일 연결 -->
 </body>
 </html>
