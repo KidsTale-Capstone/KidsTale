@@ -81,7 +81,7 @@ window.onload = function() {
     fetchUserData();  // 페이지가 로드되면 사용자 데이터를 가져오는 함수 호출
 };
 
-// =============================================== 명예의 책 섹션 =================================================
+// =============================================== 명예의 책 전당 섹션 =================================================
 
 const bookList = document.getElementById('carousel');
 const itemsPerPage = 2; // 한 번에 보여줄 아이템 수
@@ -134,24 +134,6 @@ async function loadBooks() {
 
             bookList.appendChild(bookItem);
         });
-
-        // books를 추가한 후에 totalPages 계산
-        // const items = document.querySelectorAll('.carousel-item');
-        // const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-        // // 이전 및 다음 버튼 클릭 시 처리
-        // prevBtn.addEventListener('click', () => {
-        //     currentIndex = (currentIndex === 0) ? totalPages - 1 : currentIndex - 1;
-        //     updateCarousel();
-        // });
-
-        // nextBtn.addEventListener('click', () => {
-        //     currentIndex = (currentIndex === totalPages - 1) ? 0 : currentIndex + 1;
-        //     updateCarousel();
-        // });
-
-        // // 로드 후 첫 번째 슬라이드 업데이트
-        // updateCarousel();
 
     } catch (error) {
         console.error('책 데이터를 불러오는 중 오류 발생:', error);
