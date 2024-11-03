@@ -72,6 +72,7 @@ function renderBooks() {
                 <div class="book-title">${book.title}</div>
                 <div class="book-info">지은이: ${book.author}</div>
                 <div class="book-info">장르: ${book.genre}</div>
+                <div class="book-keyword">선택한 키워드</div>
             </div>
         `;
 

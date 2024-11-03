@@ -167,27 +167,31 @@ function closeModal() {
     document.getElementById("bookModal").style.display = "none";
 }
 
+let isLiked = false; // 좋아요 상태
+let likeCount = 0; // 초기 좋아요 수
+const likeButton = document.getElementById('like-button');
+const likeCountElement = document.getElementById('like-count');
 
-// 모달에 책 세부 정보 표시
-function openBookModal(book) {
+// 책 모달 열기 함수 (책 정보를 가져올 때 좋아요 수도 함께 가져옵니다)
+async function openBookModal(book) {
     document.getElementById('bookModal').style.display = 'flex';
     document.querySelector('.book-cover img').src = book.cover;
     document.querySelector('.book-details h2').textContent = book.title;
     document.querySelector('.book-details p:nth-of-type(1)').textContent = `지은이: ${book.author}`;
     document.querySelector('.book-details p:nth-of-type(2)').textContent = `장르: ${book.genre}`;
+
+    // 좋아요 수 가져오기
+    await fetchLikeCount(book.id_book);
     
-    // 키워드 처리: 3개 이상이면 줄바꿈
+    // 키워드 처리
     const keywordDiv = document.getElementById('keywords');
     keywordDiv.innerHTML = ''; // 기존 내용을 초기화
 
-    book.keywords.forEach((keyword, index) => {
-        if (index > 0 && index % 3 === 0) {
-            keywordDiv.innerHTML += '<br>'; // 3개마다 줄바꿈 추가
-        }
-        keywordDiv.innerHTML += keyword;
-        if (index < book.keywords.length - 1) {
-            keywordDiv.innerHTML += ', '; // 키워드 사이에 쉼표 추가
-        }
+    book.keywords.forEach(keyword => {
+        const keywordButton = document.createElement('button');
+        keywordButton.classList.add('keyword-button');
+        keywordButton.textContent = keyword;
+        keywordDiv.appendChild(keywordButton);
     });
 
     // 책 읽기 버튼에 id_book 값 저장 후 이동
@@ -207,8 +211,56 @@ function openBookModal(book) {
 
         window.location.href = 'book_ko.html'; // 페이지 이동
     };
+
 }
 
+// 서버에서 좋아요 수 가져오기
+async function fetchLikeCount(bookId) {
+    try {
+        const response = await fetch(`/api/get_like_count/${bookId}`);
+        const data = await response.json();
+        if (data.success) {
+            likeCount = data.like_count;
+            likeCountElement.textContent = likeCount;
+            isLiked = data.is_liked; // 현재 사용자가 좋아요를 눌렀는지 여부
+            likeButton.textContent = isLiked ? '❤️' : '♡';
+            likeButton.classList.toggle('liked', isLiked);
+        }
+    } catch (error) {
+        console.error('좋아요 수 가져오기 실패:', error);
+    }
+}
+
+// 좋아요 버튼 클릭 이벤트
+likeButton.addEventListener('click', async () => {
+    try {
+        if (isLiked) {
+            // 좋아요 해제
+            const response = await fetch(`/api/unlike_book/${bookId}`, { method: 'POST' });
+            const data = await response.json();
+            if (data.success) {
+                likeCount--;
+                isLiked = false;
+                likeButton.textContent = '♡';
+                likeButton.classList.remove('liked');
+                likeCountElement.textContent = likeCount;
+            }
+        } else {
+            // 좋아요 추가
+            const response = await fetch(`/api/like_book/${bookId}`, { method: 'POST' });
+            const data = await response.json();
+            if (data.success) {
+                likeCount++;
+                isLiked = true;
+                likeButton.textContent = '❤️';
+                likeButton.classList.add('liked');
+                likeCountElement.textContent = likeCount;
+            }
+        }
+    } catch (error) {
+        console.error('좋아요 업데이트 실패:', error);
+    }
+});
 
 // 페이지 로딩 시 책 데이터 로드
 document.addEventListener('DOMContentLoaded', loadBooks);

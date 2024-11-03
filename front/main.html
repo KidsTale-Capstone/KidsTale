@@ -66,11 +66,9 @@
         <div id="bookModal" class="modal">
             <div class="modal-content">
 
-                <div class="close-button" onclick="closeModal()">
-                    <img src="img/close_button.png" alt="닫기 버튼">
-                </div>
+                <div class="close-button" onclick="closeModal()">✖</div>
 
-                <div class="modal-body">
+                <div class="modal-upper-section">
                     <!-- 왼쪽 책 표지 이미지 -->
                     <div class="book-cover">
                         <img src="" alt="책 표지" />
@@ -83,19 +81,25 @@
                         <p><strong>장르:</strong> 장르</p>
                         <p><strong>키워드:</strong></p>
                         <div id="keywords">
-                            <!-- 키워드가 3개 이상일 경우 줄바꿈 -->
-                            키워드1, 키워드2, 키워드3 <br />
-                            키워드4, 키워드5
+                            <button class="keyword-button">키워드1</button>
+                            <button class="keyword-button">키워드2</button>
+                            <button class="keyword-button">키워드3</button>
+                            <!-- JavaScript에서 동적으로 추가되는 키워드 버튼도 이 형식으로 표시됩니다. -->
                         </div>
                     </div>
-
-                    <!-- 책 읽기 버튼 섹션 -->
-                    <div class="read-button-section">
-                        <!-- 책 읽기 버튼 -->
-                        <button id="reading-book" class="go-to-button">책 읽기</button>
-                    </div>
-
                 </div>
+
+                <!-- 하단 버튼 섹션 -->
+                <div class="read-button-section">
+                    <!-- 좋아요 버튼 및 좋아요 수 -->
+                    <div class="like-section">
+                        <button id="like-button" class="like-button">♡</button>
+                        <span id="like-count">0</span>
+                    </div>
+                    <!-- 책 읽기 버튼 -->
+                    <button id="reading-book" class="go-to-button">책 읽기</button>
+                </div>
+
             </div>
         </div>
 

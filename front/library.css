@@ -201,6 +201,11 @@ body, html {
     margin: 5px 0;
 }
 
+.book-keyword {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .keywords {
     display: flex;
     flex-wrap: wrap; /* 키워드가 넘칠 경우 줄바꿈 */
@@ -221,7 +226,7 @@ body, html {
 
 .button-container {
     position: absolute;
-    bottom: 10px;
+    top: 160px;
     right: 10px;
     display: flex;
     gap: 10px;
