@@ -1,100 +1,75 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KidsTale Main Page</title>
-    <link rel="stylesheet" href="main.css"> <!-- 외부 CSS 파일 연결 -->
-</head>
-<body>
-    <!-- 로고 섹션 -->
-    <div class="logo-section">
-        <img src="img/logo.png" alt="KidsTale Logo" onclick="window.location.href='main.html'">
-    </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>KidsTale</title>
+        <link rel="stylesheet" href="main.css"> <!-- 외부 CSS 파일 연결 -->
+    </head>
 
-    <div class="logout">
-        <a href="login.html">로그아웃</a>
-    </div>
+    <body>
+        <!-- 로고 섹션 -->
+        <div class="logo-section">
+            <img src="img/logo.png" alt="KidsTale Logo" onclick="window.location.href='main.html'">
+        </div>
 
-    <!-- 메뉴 바 섹션 -->
-    <nav class="menu-bar">
-        <ul>
-            <li><a href="library.html">책 보관함</a></li>
-            <li><a href="create_book.html">동화 만들기</a></li>
-            <li><a href="my_page.html">마이페이지</a></li>
-        </ul>
-    </nav>
+        <div class="logout">
+            <a href="login.html">로그아웃</a>
+        </div>
 
-    <!-- 메뉴바 아래 섹션 -->
-    <!-- 진행 그래프 섹션 -->
-    <div class="content-section-1">
-        <div class="container">
-            <!-- 사용자 이름과 목표 문구 -->
-            <h2 id="user-name"> OOO 작가님,</h2>
-            <p>이번달 목표까지 <span id="remaining-books"> 권</span></p>
+        <!-- 메뉴 바 섹션 -->
+        <nav class="menu-bar">
+            <ul>
+                <li><a href="library.html">책 보관함</a></li>
+                <li><a href="create_book.html">동화 만들기</a></li>
+                <li><a href="my_page.html">마이페이지</a></li>
+            </ul>
+        </nav>
 
-            <!-- 프로그레스 바와 고양이 이미지 -->
-            <div class="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
-                <img src="img/cat.png" alt="Cat" id="cat-img">
-            </div>
+        <!-- 메뉴바 아래 섹션 -->
+        <!-- 진행 그래프 섹션 -->
+        <div class="content-section-1">
+            <div class="container">
+                <!-- 사용자 이름과 목표 문구 -->
+                <h2 id="user-name"> OOO 작가님,</h2>
+                <p>이번달 목표까지 <span id="remaining-books"> 권</span></p>
 
-            <!-- 목표 수치와 달성도 -->
-            <div class="progress-info">
-                <span>0%</span>
-                <!-- <span id="progress-middle">50%</span> -->
-                <span id="progress-percentage"></span>
-                <span>100%</span>
+                <!-- 프로그레스 바와 고양이 이미지 -->
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                    <img src="img/cat.png" alt="Cat" id="cat-img">
+                </div>
+
+                <!-- 목표 수치와 달성도 -->
+                <div class="progress-info">
+                    <span>0%</span>
+                    <!-- <span id="progress-middle">50%</span> -->
+                    <span id="progress-percentage"></span>
+                    <span>100%</span>
+                </div>
             </div>
         </div>
-    </div>
 
-
-        <!-- 책 리스트 섹션 -->
+        <!-- 명예의 책 전당 섹션 -->
         <div class="content-section-2">
-            <div class="book-container">
-                <!-- 왼쪽 화살표 -->
-                <div class="left-button">
-                    <button id="left-btn" onclick="moveLeft()">
-                        <img src="img/left.png" alt="왼쪽 화살표">
-                    </button>
-                </div>
-                
-                <div class="box">
-                    <!-- 슬라이드 컨테이너 -->
-                    <div class="slider-container">
-                        <!-- 책 리스트 -->
-                        <div class="book-list" id="book-list">
-                            <!-- 사용자의 DB에서 책을 추가 -->
-                            <div class="book-item" onclick="openModal()">책 제목1</div>
-                            <div class="book-item" onclick="openModal()">책 제목2</div>
-                            <div class="book-item" onclick="openModal()">책 제목3</div>
-    
-                            <div class="book-item" onclick="openModal()">책 제목4</div>
-                            <div class="book-item" onclick="openModal()">책 제목5</div>
-                            <div class="book-item" onclick="openModal()">책 제목6</div>
-                        </div>
+            <h2>명예의 책 전당</h2>
+            <div class="carousel-container">
+                <button class="carousel-button" id="prev-btn">&#10094;</button>
+                    <div class="carousel" id="carousel">
+                        <!-- 책 데이터가 들어오는 곳 -->
                     </div>
-                </div>
-    
-                <!-- 오른쪽 화살표 -->
-                <div class="right-button">
-                    <button class="arrow" id="right-btn" onclick="moveRight()">
-                        <img src="img/right.png" alt="오른쪽 화살표">
-                    </button>
-                </div>
-                
+                <button class="carousel-button" id="next-btn">&#10095;</button>
             </div>
         </div>
-    
+
         <!-- 모달 창: 책 세부 정보 창 -->
         <div id="bookModal" class="modal">
             <div class="modal-content">
-    
+
                 <div class="close-button" onclick="closeModal()">
                     <img src="img/close_button.png" alt="닫기 버튼">
                 </div>
-    
+
                 <div class="modal-body">
                     <!-- 왼쪽 책 표지 이미지 -->
                     <div class="book-cover">
@@ -113,17 +88,17 @@
                             키워드4, 키워드5
                         </div>
                     </div>
-    
+
                     <!-- 책 읽기 버튼 섹션 -->
                     <div class="read-button-section">
                         <!-- 책 읽기 버튼 -->
                         <button id="reading-book" class="go-to-button">책 읽기</button>
                     </div>
-    
+
                 </div>
             </div>
         </div>
 
-    <script src="script_main.js"></script> <!-- JavaScript 파일 연결 -->
-</body>
+        <script src="script_main.js"></script> <!-- JavaScript 파일 연결 -->
+    </body>
 </html>

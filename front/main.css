@@ -132,9 +132,11 @@ p {
     left: 50%; /* 초기값을 20%로 설정 (dynamic updates will occur later) */
 }
 
-/* 나의 책 섹션 */
+/* =============================  명예의 책 섹션 ==================================== */
+
 .content-section-2 {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 60vh;
@@ -142,107 +144,43 @@ p {
     margin-bottom: 30px;
 }
 
-.content-section-2 .box {
-    width: 950px;
-    height: 400px;
-    display: flex;
-    align-items: center;
-    background-color: #f0f0f0;
-}
-
-.book-container h2 {
-    font-size: 40px;
-    color: #7a6fa5;
-    margin-bottom: 15px;
-}
-
-/* 슬라이더 컨테이너에 너비를 설정하고, 오버플로우를 숨김 처리 */
-.slider-container {
+.carousel-container {
+    overflow-x: scroll; /* 가로 스크롤 활성화 */
+    scroll-snap-type: x mandatory; /* 가로 방향 스냅 설정 */
     display: flex;
     justify-content: center;
-    margin: 20px auto; /* 중앙 정렬 */
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    width: 810px;
-    /* background-color: #f0f0f0; */
-    border-radius: 10px;
+    scroll-behavior: smooth; /* 부드러운 스크롤 */
+    max-width: 1000px;
+    padding: 20px;
 }
 
-/* 책 리스트 */
-.book-list {
+.carousel {
     display: flex;
-    transition: transform 0.5s ease;
 }
 
-/* book-item 설정 */
-.book-item {
-    width: 240px;
-    height: 300px;
-    margin: 25px 15px;
-    text-align: center;
-    border-radius: 5px;
-    flex-shrink: 0; /* 책 아이템이 줄어들지 않도록 설정 */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 아이템 그림자 */
+.carousel-item {
+    flex: 0 0 50%; /* 각 아이템이 컨테이너의 50% 차지 */
+    scroll-snap-align: start; /* 스냅할 위치 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
 }
 
-/*.book-item img {
-    width: 240px;
-    height: auto;
-    border-radius: 5px;
-    object-fit: fill; 
-}*/
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-.book-item img {
-    width: 100%; /* book-item의 너비에 맞춤 */
-    height: 100%; /* book-item의 높이에 맞춤 */
-    object-fit: cover; /* 비율을 유지하면서 박스를 채우도록 설정 */
-    border-radius: 5px; /* 선택 사항: 둥근 모서리 */
+.carousel-button {
+    display: none;
 }
 
 
-
-.book-item h3, .book-item p {
-    display: none; /* 슬라이더에서는 제목, 지은이, 장르, 키워드를 숨김 */
-}
-
-/* =================== 화살표 버튼 =================== */
-.left-button {
-    position: absolute;
-    transform: translateY(550%);
-    cursor: pointer;
-    margin-left: 15px;
-}
-
-.right-button {
-    position: absolute; /* fixed에서 absolute로 수정 */
-    top: 50%; /* 슬라이더 높이의 중앙에 위치 */
-    transform: translateY(900%);
-    margin-left: 895px;
-    cursor: pointer;
-}
-
-#left-btn {
-    background-color: transparent;
-    border: none;
-}
-
-#right-btn {
-    background-color: transparent;
-    border: none;
-}
-
-.left-button img {
-    width: 30px;
-    height: 30px;
-}
-
-.right-button img {
-    width: 30px;
-    height: 30px;
-}
-
-/* =================== 모달 창 스타일 =================== */
+/* ================================== 모달 창 스타일 ============================== */
 .modal {
     display: none; /* 모달은 기본적으로 숨김 */
     align-items: center;

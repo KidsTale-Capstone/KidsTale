@@ -68,12 +68,6 @@ function updateUserData(userName, userGoal, userCurrent) {
         progressPercentageElement.style.left = `calc(${progressPercentage}% - 10px)`;  // 위치 업데이트
     }
 
-    // // 고양이 이미지 위치 업데이트 (진행도에 맞게, 바 끝에 고정)
-    // document.getElementById("cat-img").style.left = `calc(${progressPercentage}% - 25px)`;
-
-    // // Update percentage positions
-    // document.getElementById("progress-percentage").style.left = `calc(${progressPercentage}% - 10px)`;
-
     // 프로그레스 바의 너비 업데이트
     progressBarElement.style.width = `${progressPercentage}%`;  // 바 너비 업데이트
     // 고양이 이미지 위치 업데이트 (진행도에 맞게)
@@ -87,102 +81,50 @@ window.onload = function() {
     fetchUserData();  // 페이지가 로드되면 사용자 데이터를 가져오는 함수 호출
 };
 
-let currentIndex = 0; // 현재 페이지 인덱스
-const itemsPerPage = 3; // 한 페이지에 보여질 책의 개수
-const bookList = document.getElementById('book-list');
-const itemWidth = 200; // 책의 너비 (CSS에서 설정한 값)
-const marginWidth = 70; // 책과 책 사이의 마진 (각각 좌우 마진 합산 값)
-const totalItemWidth = itemWidth + marginWidth; // 책 아이템과 마진을 포함한 총 너비
-let totalItems = 0; // 책의 총 개수
+// =============================================== 명예의 책 섹션 =================================================
 
-// // 책 데이터를 서버에서 불러와 슬라이더에 책 표지를 표시
-// async function loadBooks() {
-//     try {
-
-//         const token = localStorage.getItem('token'); // 로컬 스토리지에서 JWT 토큰을 가져오기
-
-//         if (!token) {
-//             console.error('토큰이 없습니다. 다시 로그인하세요.');
-//             return; // 토큰이 없으면 더 이상 진행하지 않음
-//         }
-
-//         const response = await fetch(`/main/get_all_book`, {
-//             headers: {
-//                 'Authorization': `Bearer ${token}`, // Authorization 헤더에 JWT 토큰 추가
-//             }
-//         });
-//         const data = await response.json();
-
-//         if (data.message) {
-//             document.getElementById('book-list').innerHTML = `<p>${data.message}</p>`;
-//             return;
-//         }
-
-//         totalItems = data.length; // totalItems 업데이트
-
-//         bookList.innerHTML = ''; // 기존 리스트 초기화
-
-//         data.forEach(book => {
-//             const bookItem = document.createElement('div');
-//             bookItem.classList.add('book-item');
-
-//             bookItem.innerHTML = `
-//                 <img src="${book.cover}" alt="${book.title} 표지">
-//             `;
-
-//             bookItem.onclick = () => openBookModal(book); // 클릭 시 모달 열기
-
-//             // bookItem에 id_book 추가 
-//             bookItem.setAttribute('data-id', book.bookId);
-
-//             bookList.appendChild(bookItem);
-//         });
-//     } catch (error) {
-//         console.error('책 데이터를 불러오는 중 오류 발생:', error);
-//     }
-// }
+const bookList = document.getElementById('carousel');
+const itemsPerPage = 2; // 한 번에 보여줄 아이템 수
+let totalItems = 0;
+let currentIndex = 0;
 
 // 책 데이터를 서버에서 불러와 슬라이더에 책 표지를 표시
 async function loadBooks() {
     try {
-        const token = localStorage.getItem('token'); // 로컬 스토리지에서 JWT 토큰을 가져오기
+        const token = localStorage.getItem('token');
 
         if (!token) {
             console.error('토큰이 없습니다. 다시 로그인하세요.');
-            return; // 토큰이 없으면 더 이상 진행하지 않음
+            return;
         }
 
         const response = await fetch(`/main/get_all_book`, {
             headers: {
-                'Authorization': `Bearer ${token}`, // Authorization 헤더에 JWT 토큰 추가
+                'Authorization': `Bearer ${token}`,
             }
         });
         const data = await response.json();
 
-        // data.data가 배열인지 확인 후 처리
         if (!data.success || !Array.isArray(data.data)) {
             console.error('책 데이터를 불러오는 중 오류가 발생했습니다.');
             return;
         }
 
-        const books = data.data; // 실제 책 데이터를 books 변수에 저장
-        totalItems = books.length; // totalItems 업데이트
+        const books = data.data;
+        totalItems = books.length;
 
-        const bookList = document.getElementById('book-list');
-        bookList.innerHTML = ''; // 기존 리스트 초기화
+        bookList.innerHTML = '';
 
         books.forEach(book => {
             const bookItem = document.createElement('div');
-            bookItem.classList.add('book-item');
+            bookItem.classList.add('carousel-item');
 
             bookItem.innerHTML = `
                 <img src="${book.cover}" alt="${book.title} 표지">
             `;
 
-            bookItem.onclick = () => openBookModal(book); // 클릭 시 모달 열기
+            bookItem.onclick = () => openBookModal(book);
 
-
-            // book.bookId와 book.ownerId가 정의되어 있는지 확인
             if (book.bookId && book.ownerId) {
                 bookItem.setAttribute('data-id', book.bookId);
                 bookItem.setAttribute('data-owner-id', book.ownerId);
@@ -192,35 +134,47 @@ async function loadBooks() {
 
             bookList.appendChild(bookItem);
         });
+
+        // books를 추가한 후에 totalPages 계산
+        // const items = document.querySelectorAll('.carousel-item');
+        // const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        // // 이전 및 다음 버튼 클릭 시 처리
+        // prevBtn.addEventListener('click', () => {
+        //     currentIndex = (currentIndex === 0) ? totalPages - 1 : currentIndex - 1;
+        //     updateCarousel();
+        // });
+
+        // nextBtn.addEventListener('click', () => {
+        //     currentIndex = (currentIndex === totalPages - 1) ? 0 : currentIndex + 1;
+        //     updateCarousel();
+        // });
+
+        // // 로드 후 첫 번째 슬라이드 업데이트
+        // updateCarousel();
+
     } catch (error) {
         console.error('책 데이터를 불러오는 중 오류 발생:', error);
     }
 }
 
+const carouselContainer = document.querySelector('.carousel-container');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const itemWidth = carouselContainer.clientWidth / 2; // 한 번에 두 개 아이템씩 보여줄 경우
 
-// 오른쪽 화살표 클릭 시
-function moveRight() {
-    if (currentIndex < Math.ceil(totalItems / itemsPerPage) - 1) { // 끝 페이지까지 이동할 수 있도록 조건 수정
-        currentIndex++;
-        updateSliderPosition();
-    }
-}
+prevBtn.addEventListener('click', () => {
+    carouselContainer.scrollLeft -= itemWidth;
+});
 
-// 왼쪽 화살표 클릭 시
-function moveLeft() {
-    if (currentIndex > 0) {
-        currentIndex--;
-        updateSliderPosition();
-    }
-}
+nextBtn.addEventListener('click', () => {
+    carouselContainer.scrollLeft += itemWidth;
+});
 
-// 슬라이더 위치 업데이트
-function updateSliderPosition() {
-    const offset = -(currentIndex * itemsPerPage * totalItemWidth); // 3권씩 이동
-    bookList.style.transform = `translateX(${offset}px)`;
-}
+// 초기화
+loadBooks();
 
-
+// ========================================== 모달 창 섹션 =============================================
 // 모달 열기 함수
 function openModal() {
     document.getElementById("bookModal").style.display = "flex";
