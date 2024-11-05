@@ -220,7 +220,8 @@ router.get('/:lang/tts', async (req, res) => {
         const client = new textToSpeech.TextToSpeechClient();
         const request = {
             input: { text },
-            voice: { languageCode: lang === 'eng' ? 'en-US' : 'ko-KR', name: lang === 'eng' ? 'en-US-Wavenet-D' : 'ko-KR-Wavenet-A' },
+            voice: { languageCode: lang === 'eng' ? 'en-US' : 'ko-KR', 
+            name: lang === 'eng' ? 'en-US-Wavenet-D' : 'ko-KR-Wavenet-C' },
             audioConfig: { audioEncoding: 'MP3' },
         };
 

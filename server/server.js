@@ -6,6 +6,9 @@ const { exec } = require('child_process');
 const app = express();
 const PORT = 3000;
 
+// 정적 파일 제공
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Body-parser 기능 (Express 내장)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -50,6 +53,9 @@ app.use('/only_keyword', onlykeywordRoutes);
 // 책 보관함 선택 라우트
 const libraryRoutes = require('./routes/library');
 app.use('/library', libraryRoutes);
+
+const mypageRoutes = require('./routes/my_page');
+app.use('/my_page', mypageRoutes);
 
 // Flask 서버 실행 함수
 function startFlaskServer() {

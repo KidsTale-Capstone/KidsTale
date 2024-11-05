@@ -121,9 +121,9 @@ router.delete('/delete_drawing', async (req, res) => {
     console.log('delete_id_drawing', id_drawing)
 
     const { data: existingData, error: fetchError } = await supabase
-    .from('drawing')
-    .select('*')
-    .eq('id_drawing', id_drawing);
+        .from('drawing')
+        .select('*')
+        .eq('id_drawing', id_drawing);
 
     if (fetchError || existingData.length === 0) {
         console.error('삭제할 데이터가 존재하지 않음:', fetchError);

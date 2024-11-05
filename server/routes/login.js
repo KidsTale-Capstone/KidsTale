@@ -31,6 +31,38 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: '비밀번호가 일치하지 않습니다.' });
     }
 
+    const today = new Date();
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    // attendance와 last_login 초기화 및 업데이트 로직 추가
+    let attendance = user.attendance || 0;  // null일 경우 0으로 설정
+    let lastLogin = user.last_login || '';
+
+    if (lastLogin) {
+      const lastLoginDate = new Date(lastLogin);
+      const dayDifference = Math.floor((today - lastLoginDate) / (1000 * 60 * 60 * 24));
+
+      if (dayDifference === 1) {
+        attendance += 1; // 연속 출석
+      } else {
+        attendance = 1; // 비연속 출석 시 초기화
+      }
+    } else {
+      // 첫 로그인 시 attendance를 1로 설정
+      attendance = 1;
+    }
+
+    // `attendance` 및 `last_login` 업데이트
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        attendance: attendance,
+        last_login: todayStr
+      })
+      .eq('id_user', user.id_user);
+
+    if (updateError) throw updateError;
+
     // JWT 생성 (유저 정보를 포함)
     const token = jwt.sign(
         { sub: user.id_user,
