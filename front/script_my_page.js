@@ -20,6 +20,7 @@ async function fetchUserInfo() {
             document.getElementById("userGoal").textContent = `${data.user.goal} 권`;
 
             // 사용자 뱃지 활성화
+            console.log("User Progress for Badges:", data.userProgress); // 데이터 확인
             activateBadges(data.userProgress);
 
         } else {
@@ -32,34 +33,45 @@ async function fetchUserInfo() {
 
 // 뱃지 활성화 함수
 function activateBadges(userProgress = {}) {
-    if (userProgress.firstAttendance && document.getElementById("badge1")) {
+    // 각 뱃지 활성화 상태를 콘솔에 출력하여 확인
+    if (userProgress.firstAttendance) {
+        console.log("Activating Badge 1 (First Attendance)");
         document.getElementById("badge1").classList.add("active");
     }
-    if (userProgress.tenDaysAttendance && document.getElementById("badge2")) {
+    if (userProgress.tenDaysAttendance) {
+        console.log("Activating Badge 2 (Ten Days Attendance)");
         document.getElementById("badge2").classList.add("active");
     }
-    if (userProgress.firstStoryCreated && document.getElementById("badge3")) {
+    if (userProgress.firstStoryCreated) {
+        console.log("Activating Badge 3 (First Story Created)");
         document.getElementById("badge3").classList.add("active");
     }
-    if (userProgress.fiftyStoriesCreated && document.getElementById("badge4")) {
+    if (userProgress.fiftyStoriesCreated) {
+        console.log("Activating Badge 4 (Fifty Stories Created)");
         document.getElementById("badge4").classList.add("active");
     }
-    if (userProgress.hundredStoriesCreated && document.getElementById("badge5")) {
+    if (userProgress.hundredStoriesCreated) {
+        console.log("Activating Badge 5 (Hundred Stories Created)");
         document.getElementById("badge5").classList.add("active");
     }
-    if (userProgress.oneBookEdited && document.getElementById("badge6")) {
+    if (userProgress.oneBookEdited) {
+        console.log("Activating Badge 6 (One Book Edited)");
         document.getElementById("badge6").classList.add("active");
     }
-    if (userProgress.allGenresCreated && document.getElementById("badge7")) {
+    if (userProgress.allGenresCreated) {
+        console.log("Activating Badge 7 (All Genres Created)");
         document.getElementById("badge7").classList.add("active");
     }
-    if (userProgress.firstLikes && document.getElementById("badge8")) {
+    if (userProgress.firstLikes) {
+        console.log("Activating Badge 8 (First Likes)");
         document.getElementById("badge8").classList.add("active");
     }
-    if (userProgress.secondLikes && document.getElementById("badge9")) {
+    if (userProgress.secondLikes) {
+        console.log("Activating Badge 9 (Second Likes)");
         document.getElementById("badge9").classList.add("active");
     }
-    if (userProgress.thirdLikes && document.getElementById("badge10")) {
+    if (userProgress.thirdLikes) {
+        console.log("Activating Badge 10 (Third Likes)");
         document.getElementById("badge10").classList.add("active");
     }
 }

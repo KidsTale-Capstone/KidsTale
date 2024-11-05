@@ -53,7 +53,7 @@ router.get('/get_info', async (req, res) => {
 
         userProgress.firstStoryCreated = storyCount > 0;
         userProgress.fiftyStoriesCreated = storyCount >= 50;
-        userProgress.hundredStoriesCreated = storyCount > 100;
+        userProgress.hundredStoriesCreated = storyCount >= 100;
 
         // 모든 장르 책 생성 여부 (중복 제거 후 8개인지 확인)
         const { data: genreData, error: genreError } = await supabase
@@ -92,9 +92,30 @@ router.get('/get_info', async (req, res) => {
         }
         userProgress.oneBookEdited = oneBookEdited;
 
-        userProgress.firstLikes = false,           // 좋아요 1등
-        userProgress.secondLikes = false,          // 좋아요 2등
-        userProgress.thirdLikes = true             // 좋아요 3등
+        // 동화 좋아요 순위 여부
+        const { data: rankedBooks, error: rankingError } = await supabase
+            .from('book')
+            .select('id_user, like')
+            .order('like', { ascending: false });
+
+        if (rankingError) throw rankingError;
+
+        userProgress.firstLikes = false;
+        userProgress.secondLikes = false;
+        userProgress.thirdLikes = false;
+
+        // 1, 2, 3등의 사용자에게만 뱃지 부여, 동점이 있을 경우 부여하지 않음
+        if (rankedBooks.length > 0 && rankedBooks[0].like !== rankedBooks[1]?.like) {
+            if (rankedBooks[0].id_user === userId) userProgress.firstLikes = true;
+        }
+
+        if (rankedBooks.length > 1 && rankedBooks[1].like !== rankedBooks[2]?.like) {
+            if (rankedBooks[1].id_user === userId) userProgress.secondLikes = true;
+        }
+
+        if (rankedBooks.length > 2 && rankedBooks[2].like !== rankedBooks[3]?.like) {
+            if (rankedBooks[2].id_user === userId) userProgress.thirdLikes = true;
+        }
 
         // 사용자 정보와 뱃지 조건 반환
         res.status(200).json({ success: true, user, userProgress });
@@ -160,7 +181,7 @@ router.post('/update_user', upload.single('profileImage'), async (req, res) => {
     }
 });
 
-router.delete('delete_user', async (req, res) => {
+router.delete('/delete_user', async (req, res) => {
     try {
         const userId = getUserIdFromToken(req);
         console.log('delete_user', userId);

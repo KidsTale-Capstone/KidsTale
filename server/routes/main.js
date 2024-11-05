@@ -85,14 +85,13 @@ router.get('/userdata', async (req, res) => {
 router.get('/get_all_book', async (req, res) => {
     try {
 
-        // drawing 테이블에서 모든 책 가져오기
-        const { data: drawings, error: drawingsError } = await supabase
-            .from('drawing')
-            .select('id_drawing, id_user, public_url');
+        // book 테이블에서 모든 책 가져오기, like 내림차순으로 정렬
+        const { data: books, error: booksError } = await supabase
+            .from('book')
+            .select('title_ko, id_select_kw, id_book, like')
+            .order('like', { ascending: false });
 
-        if (drawingsError) {
-            throw drawingsError;
-        }
+        if (booksError) throw booksError;
 
         // 사용자가 책을 하나도 갖고 있지 않은 경우 처리
         // if (!books || books.length === 0) {
@@ -101,7 +100,28 @@ router.get('/get_all_book', async (req, res) => {
         //     });
         // }
 
-        const bookData = await Promise.all(drawings.map(async (drawing) => {
+        const bookData = await Promise.all(books.map(async (book) => {
+
+            // select_kw table
+            const { data: keyword, error: keywordError } = await supabase
+                .from('select_kw')
+                .select('genre, select_kw, id_drawing')
+                .eq('id_select_kw', book.id_select_kw)
+                .single();
+
+            if (keywordError) {
+                throw keywordError;
+            }
+
+            // drawing table
+            const { data: drawing, error: drawingError } = await supabase
+                .from('drawing')
+                .select('id_user, public_url')
+                .eq('id_drawing', keyword.id_drawing)
+                .single();
+
+            if (drawingError) throw drawingError;
+
             // 각 책의 지은이 정보 가져오기
             const { data: author, error: authorError } = await supabase
                 .from('users')
@@ -113,32 +133,10 @@ router.get('/get_all_book', async (req, res) => {
                 throw authorError;
             }
 
-            // select_kw table
-            const { data: keyword, error: keywordError } = await supabase
-                .from('select_kw')
-                .select('genre, select_kw, id_select_kw')
-                .eq('id_drawing', drawing.id_drawing)
-                .single();
-
-            if (keywordError) {
-                throw keywordError;
-            }
-
-            // book table
-            const { data: book, error: bookError } = await supabase
-                .from('book')
-                .select('title_ko, id_select_kw, id_book, like')
-                .eq('id_select_kw', keyword.id_select_kw)
-                .single();
-
-            if (bookError) {
-                throw bookError;
-            }
-
             // select_kw의 실제 값을 확인
+            console.log('title', book.title_ko);
             console.log('select_kw:', keyword.select_kw);
             console.log('keyword.id_select_kw', keyword.id_select_kw);
-            console.log('title', book.title_ko);
             console.log('book.id_select_kw', book.id_select_kw);
 
             // 책 정보 결합
