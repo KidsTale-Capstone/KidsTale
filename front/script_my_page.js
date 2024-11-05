@@ -76,6 +76,39 @@ function activateBadges(userProgress = {}) {
     }
 }
 
+// 이미지 포맷을 JPEG로 변환하는 함수
+function convertImageToJpeg(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            const img = new Image();
+            img.src = event.target.result;
+
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+
+                // JPEG 포맷으로 변환
+                canvas.toBlob(function(blob) {
+                    const jpegFile = new File([blob], file.name.replace(/\..+$/, '.jpg'), { type: 'image/jpeg' });
+                    resolve(jpegFile); // 변환된 JPEG 파일 반환
+                }, 'image/jpeg', 0.8); // 세 번째 인자는 이미지 품질 (0.0 ~ 1.0)
+            };
+
+            img.onerror = function() {
+                reject(new Error('이미지를 로드할 수 없습니다.'));
+            };
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
 // 페이지 로드 시
 window.onload = fetchUserInfo;
 
@@ -86,6 +119,8 @@ window.onload = fetchUserInfo;
 //         document.getElementById("profileImage").src = newImage;
 //     }
 // });
+
+
 
 // 모달 열기
 document.getElementById("editButton").addEventListener("click", function () {
@@ -124,9 +159,14 @@ document.getElementById("saveChanges").addEventListener("click", async function 
     formData.append('age', newAge);
     formData.append('goal', newTarget);
 
-    // 프로필 이미지 파일이 있는 경우 추가
+    // 프로필 이미지 파일이 있는 경우 JPEG로 변환 후 추가
     if (profileImageInput) {
-        formData.append('profileImage', profileImageInput);
+        try {
+            const jpegFile = await convertImageToJpeg(profileImageInput);
+            formData.append('profileImage', jpegFile);
+        } catch (error) {
+            console.error("이미지 변환 오류:", error);
+        }
     }
 
     try {

@@ -3,7 +3,6 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { supabase } = require('../../supabaseClient');
 const multer = require('multer');
-const sharp = require('sharp');
 const upload = multer({ storage: multer.memoryStorage() });
 
 // JWT에서 사용자 ID를 추출하는 함수
@@ -146,14 +145,10 @@ router.post('/update_user', upload.single('profileImage'), async (req, res) => {
         if (req.file) {
             const safeFileName = sanitizeFileName(`${userId}/${Date.now()}_${req.file.originalname}`);
 
-            // 이미지 파일을 JPEG로 변환 (sharp 사용)
-            const jpegBuffer = await sharp(req.file.buffer)
-                .jpeg({ quality: 80 })
-                .toBuffer();
-
+            // 이미지 파일 업로드
             const { data, error: uploadError } = await supabase.storage
                 .from('user')
-                .upload(safeFileName, jpegBuffer, { contentType: 'image/jpeg' });
+                .upload(safeFileName, req.file.buffer, { contentType: 'image/jpeg' });
 
             if (uploadError) throw uploadError;
 
