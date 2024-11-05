@@ -170,14 +170,34 @@ function openModal() {
 // 모달 닫기 함수
 function closeModal() {
     document.getElementById("bookModal").style.display = "none";
+    bookId = null;
 }
 
-let isLiked = false; // 좋아요 상태
-let likeCount = 0; // 초기 좋아요 수
-const likeButton = document.getElementById('like-button');
-const likeCountElement = document.getElementById('like-count');
+// 서버에서 좋아요 수 가져오기
+async function fetchLikeCount(bookId) {
+    try {
+        const response = await fetch(`/main/get_book_like/${bookId}`);
+        const data = await response.json();
 
-// 책 모달 열기 함수 (책 정보를 가져올 때 좋아요 수도 함께 가져옵니다)
+        if (data.success) {
+            const likeCount = data.like; // 서버에서 받은 좋아요 수
+            likeCountElement.textContent = likeCount; // 좋아요 수 업데이트
+            isLiked = localStorage.getItem(`liked_${bookId}`) === 'true'; // 로컬 저장소에서 좋아요 상태 확인
+            likeButton.textContent = isLiked ? '❤️' : '♡';
+            likeButton.classList.toggle('liked', isLiked);
+        }
+    } catch (error) {
+        console.error('좋아요 수 가져오기 실패:', error);
+    }
+}
+
+// // 좋아요 상태 초기값
+// let bookId;
+// let isLiked = false; 
+// const likeButton = document.getElementById('like-button');
+// const likeCountElement = document.getElementById('like-count');
+
+// 책 모달 열기 함수
 async function openBookModal(book) {
     document.getElementById('bookModal').style.display = 'flex';
     document.querySelector('.book-cover img').src = book.cover;
@@ -185,13 +205,53 @@ async function openBookModal(book) {
     document.querySelector('.book-details p:nth-of-type(1)').textContent = `지은이: ${book.author}`;
     document.querySelector('.book-details p:nth-of-type(2)').textContent = `장르: ${book.genre}`;
 
-    // 좋아요 수 가져오기
-    await fetchLikeCount(book.id_book);
-    
+    // 현재 책의 ID를 bookId에 할당
+    bookId = book.bookId;
+
+    // 모달이 열릴 때 좋아요 버튼과 카운트를 가져옵니다
+    const likeButton = document.getElementById('like-button');
+    const likeCountElement = document.getElementById('like-count');
+
+    // 서버에서 최신 좋아요 수 가져오기
+    await fetchLikeCount(bookId);
+
+        // 좋아요 버튼 초기 상태 업데이트
+    isLiked = localStorage.getItem(`liked_${book.bookId}`) === 'true'; // 로컬 저장소에서 좋아요 상태 확인
+    likeButton.textContent = isLiked ? '❤️' : '♡';
+    likeButton.classList.toggle('liked', isLiked);
+    likeCountElement.textContent = book.like; // 서버에서 가져온 좋아요 수 업데이트
+
+    // 좋아요 버튼 클릭 이벤트 핸들러
+    likeButton.addEventListener('click', async () => {
+        try {
+            let response, data;
+
+            if (isLiked) {
+                // 좋아요 해제
+                response = await fetch(`/main/unlike_book/${bookId}`, { method: 'POST' });
+            } else {
+                // 좋아요 추가
+                response = await fetch(`/main/like_book/${bookId}`, { method: 'POST' });
+            }
+
+            data = await response.json();
+
+            if (data.success) {
+                const likeCount = data.like; // 서버에서 반환된 최신 좋아요 수로 업데이트
+                isLiked = !isLiked;
+                likeButton.textContent = isLiked ? '❤️' : '♡';
+                likeButton.classList.toggle('liked', isLiked);
+                likeCountElement.textContent = likeCount;
+                localStorage.setItem(`liked_${bookId}`, isLiked); // 로컬 저장소에 좋아요 상태 저장
+            }
+        } catch (error) {
+            console.error('좋아요 업데이트 실패:', error);
+        }
+    });
+
     // 키워드 처리
     const keywordDiv = document.getElementById('keywords');
     keywordDiv.innerHTML = ''; // 기존 내용을 초기화
-
     book.keywords.forEach(keyword => {
         const keywordButton = document.createElement('button');
         keywordButton.classList.add('keyword-button');
@@ -201,71 +261,18 @@ async function openBookModal(book) {
 
     // 책 읽기 버튼에 id_book 값 저장 후 이동
     const readButton = document.getElementById('reading-book');
-    readButton.setAttribute('data-book-id', book.id_book); // book의 id_book 설정
+    readButton.setAttribute('data-book-id', book.bookId); // book의 id_book 설정
     readButton.onclick = function () {
         // bookId를 로컬 스토리지에 저장
         localStorage.setItem('id_book', book.bookId); 
         localStorage.setItem('id_owner', book.ownerId); // 책 소유자 ID 저장
-        
-        // book_ko.html로 이동 (여기서도 'bookId'를 로그로 출력하여 제대로 저장되었는지 확인)
-        console.log("bookId 저장 확인: ", book.bookId);
-        console.log("ownerId 저장 확인: ", book.ownerId);
 
         // main.html에서 book.html로 이동하기 전에 특정 값 저장
         localStorage.setItem('hideModifyButton', 'true');
-
         window.location.href = 'book_ko.html'; // 페이지 이동
     };
-
 }
 
-// 서버에서 좋아요 수 가져오기
-async function fetchLikeCount(bookId) {
-    try {
-        const response = await fetch(`/api/get_like_count/${bookId}`);
-        const data = await response.json();
-        if (data.success) {
-            likeCount = data.like_count;
-            likeCountElement.textContent = likeCount;
-            isLiked = data.is_liked; // 현재 사용자가 좋아요를 눌렀는지 여부
-            likeButton.textContent = isLiked ? '❤️' : '♡';
-            likeButton.classList.toggle('liked', isLiked);
-        }
-    } catch (error) {
-        console.error('좋아요 수 가져오기 실패:', error);
-    }
-}
-
-// 좋아요 버튼 클릭 이벤트
-likeButton.addEventListener('click', async () => {
-    try {
-        if (isLiked) {
-            // 좋아요 해제
-            const response = await fetch(`/api/unlike_book/${bookId}`, { method: 'POST' });
-            const data = await response.json();
-            if (data.success) {
-                likeCount--;
-                isLiked = false;
-                likeButton.textContent = '♡';
-                likeButton.classList.remove('liked');
-                likeCountElement.textContent = likeCount;
-            }
-        } else {
-            // 좋아요 추가
-            const response = await fetch(`/api/like_book/${bookId}`, { method: 'POST' });
-            const data = await response.json();
-            if (data.success) {
-                likeCount++;
-                isLiked = true;
-                likeButton.textContent = '❤️';
-                likeButton.classList.add('liked');
-                likeCountElement.textContent = likeCount;
-            }
-        }
-    } catch (error) {
-        console.error('좋아요 업데이트 실패:', error);
-    }
-});
 
 // 페이지 로딩 시 책 데이터 로드
 document.addEventListener('DOMContentLoaded', loadBooks);
