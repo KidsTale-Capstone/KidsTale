@@ -37,9 +37,9 @@
 
                 <div class="info-box">
                     <h3>회원정보</h3>
-                    <p><strong>이름:</strong> <span id="userName">홍길동</span></p>
-                    <p><strong>나이:</strong> <span id="userAge">25살</span></p>
-                    <p><strong>목표 책 수:</strong> <span id="userGoal">10 권</span></p>
+                    <p><strong>이름:</strong> <span id="userName"></span></p>
+                    <p><strong>나이:</strong> <span id="userAge"></span></p>
+                    <p><strong>목표 책 수:</strong> <span id="userGoal"></span></p>
                     <button id="editButton">회원정보 수정</button>
                 </div>
             </div>
@@ -64,17 +64,17 @@
         
                     <div class="form-group">
                         <label for="editName">이름</label>
-                        <input type="text" id="editName" value="홍길동" />
+                        <input type="text" id="editName" value="" />
                     </div>
                     
                     <div class="form-group">
                         <label for="editAge">나이</label>
-                        <input type="text" id="editAge" value="25" />
+                        <input type="text" id="editAge" value="" />
                     </div>
                     
                     <div class="form-group">
                         <label for="editTarget">목표 책 수</label>
-                        <input type="text" id="editTarget" value="10" />
+                        <input type="text" id="editTarget" value="" />
                     </div>
                 </form>
 
@@ -90,26 +90,56 @@
             <div class="badge-section">
                 <h2>나의 활동 뱃지</h2>
                 <div class="badge-row">
-                    <img id="badge1" src="img/badges/01_one_day_attend.png" alt="첫번째 출석" class="badge">
-                    <img id="badge2" src="img/badges/02_ten_days_attend.png" alt="10번 연속 출석" class="badge">
+                    <div class="badge-container">
+                        <img id="badge1" src="img/badges/01_one_day_attend.png" alt="첫번째 출석" class="badge">
+                        <span class="badge-tooltip">첫 출석을 달성하셨습니다!</span>
+                    </div>
+                    <div class="badge-container">
+                        <img id="badge2" src="img/badges/02_ten_days_attend.png" alt="10번 연속 출석" class="badge">
+                        <span class="badge-tooltip">10일 연속 출석을 달성하셨습니다!</span>
+                    </div>
                 </div>
                 <div class="badge-row">
-                    <img id="badge3" src="img/badges/03_1st_book.png" alt="첫번째 동화 생성" class="badge">
-                    <img id="badge4" src="img/badges/04_50th_books.png" alt="50번째 동화 생성" class="badge">
-                    <img id="badge5" src="img/badges/05_100th_books.png" alt="100번째 동화 생성" class="badge">
+                    <div class="badge-container">
+                        <img id="badge3" src="img/badges/03_1st_book.png" alt="첫번째 동화 생성" class="badge">
+                        <span class="badge-tooltip">첫 번째 동화를 생성하셨습니다!</span>
+                    </div>
+                    <div class="badge-container">
+                        <img id="badge4" src="img/badges/04_50th_books.png" alt="50번째 동화 생성" class="badge">
+                        <span class="badge-tooltip">50번째 동화를 생성하셨습니다!</span>
+                    </div>
+                    <div class="badge-container">
+                        <img id="badge5" src="img/badges/05_100th_books.png" alt="100번째 동화 생성" class="badge">
+                        <span class="badge-tooltip">100번째 동화를 생성하셨습니다!</span>
+                    </div>
                 </div>
                 <div class="badge-row">
-                    <img id="badge6" src="img/badges/06_edit_all.png" alt="책 한권 수정 완료" class="badge">
-                    <img id="badge7" src="img/badges/07_all_genres.png" alt="모든 장르 책 생성" class="badge">
+                    <div class="badge-container">
+                        <img id="badge6" src="img/badges/06_edit_all.png" alt="책 한권 수정 완료" class="badge">
+                        <span class="badge-tooltip">책 한 권을 수정 완료하셨습니다!</span>
+                    </div>
+                    <div class="badge-container">
+                        <img id="badge7" src="img/badges/07_all_genres.png" alt="모든 장르 책 생성" class="badge">
+                        <span class="badge-tooltip">모든 장르 책을 생성하셨습니다!</span>
+                    </div>
                 </div>
                 <div class="badge-row">
-                    <img id="badge8" src="img/badges/08_1st_likes.png" alt="좋아요 1등" class="badge">
-                    <img id="badge9" src="img/badges/09_2nd_likes.png" alt="좋아요 2등" class="badge">
-                    <img id="badge10" src="img/badges/10_3rd_likes.png" alt="좋아요 3등" class="badge">
+                    <div class="badge-container">
+                        <img id="badge8" src="img/badges/08_1st_likes.png" alt="좋아요 1등" class="badge">
+                        <span class="badge-tooltip">좋아요 1등을 달성하셨습니다!</span>
+                    </div>
+                    <div class="badge-container">
+                        <img id="badge9" src="img/badges/09_2nd_likes.png" alt="좋아요 2등" class="badge">
+                        <span class="badge-tooltip">좋아요 2등을 달성하셨습니다!</span>
+                    </div>
+                    <div class="badge-container">
+                        <img id="badge10" src="img/badges/10_3rd_likes.png" alt="좋아요 3등" class="badge">
+                        <span class="badge-tooltip">좋아요 3등을 달성하셨습니다!</span>
+                    </div>
                 </div>
             </div>
         </div>
-
+        
     </div>
     
 
