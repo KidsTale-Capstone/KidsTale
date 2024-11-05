@@ -23,8 +23,13 @@ async function fetchUserData() {
             return;
         }
 
+        // 서버에서 받아온 사용자 데이터를 콘솔에 출력하여 확인
+        console.log("Fetched User Data:", result.data);
+
         // 서버에서 받아온 사용자 데이터를 DOM에 반영
         const { name, goal, current_books } = result.data;
+        // goal 값 확인
+        console.log("User Goal:", goal);
         updateUserData(name, goal, current_books);
 
     } catch (error) {
@@ -46,7 +51,7 @@ function updateUserData(userName, userGoal, userCurrent) {
         remainingBooksElement.innerText = "축하합니다! 목표 달성에 성공했어요!";
     } else {
         const remainingBooks = userGoal - userCurrent;
-        remainingBooksElement.innerText = `${remainingBooks}권 남았어요!`;
+        remainingBooksElement.innerText = `이번달 목표까지 ${remainingBooks}권 남았어요!`;
     }
 
 
