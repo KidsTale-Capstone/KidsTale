@@ -174,7 +174,7 @@ function closeModal() {
 }
 
 // 서버에서 좋아요 수 가져오기
-async function fetchLikeCount(bookId) {
+async function fetchLikeCount(bookId, likeCountElement, likeButton) {
     try {
         const response = await fetch(`/main/get_book_like/${bookId}`);
         const data = await response.json();
@@ -213,16 +213,10 @@ async function openBookModal(book) {
     const likeCountElement = document.getElementById('like-count');
 
     // 서버에서 최신 좋아요 수 가져오기
-    await fetchLikeCount(bookId);
-
-        // 좋아요 버튼 초기 상태 업데이트
-    isLiked = localStorage.getItem(`liked_${book.bookId}`) === 'true'; // 로컬 저장소에서 좋아요 상태 확인
-    likeButton.textContent = isLiked ? '❤️' : '♡';
-    likeButton.classList.toggle('liked', isLiked);
-    likeCountElement.textContent = book.like; // 서버에서 가져온 좋아요 수 업데이트
+    await fetchLikeCount(bookId, likeCountElement, likeButton);
 
     // 좋아요 버튼 클릭 이벤트 핸들러
-    likeButton.addEventListener('click', async () => {
+    likeButton.onclick = async () => {
         try {
             let response, data;
 
@@ -247,7 +241,7 @@ async function openBookModal(book) {
         } catch (error) {
             console.error('좋아요 업데이트 실패:', error);
         }
-    });
+    };
 
     // 키워드 처리
     const keywordDiv = document.getElementById('keywords');
