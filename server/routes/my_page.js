@@ -157,14 +157,18 @@ router.post('/update_user', upload.single('profileImage'), async (req, res) => {
 
             if (uploadError) throw uploadError;
 
+            console.log("Uploaded image path:", data.path);
+
             // 업로드된 파일의 URL 가져오기
-            const { publicURL, error: urlError } = supabase.storage
+            const urlResponse = supabase
+                .storage
                 .from('user')
                 .getPublicUrl(data.path);
 
-            if (urlError) throw urlError;
+            // console.log("Complete URL response:", urlResponse); // 전체 객체를 출력하여 확인
 
-            profileImageUrl = publicURL;
+            profileImageUrl = urlResponse.data.publicUrl; // publicUrl에 접근
+            // console.log("Public URL for profile image:", profileImageUrl);
         }
 
         const { error } = await supabase

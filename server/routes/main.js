@@ -105,7 +105,7 @@ router.get('/get_all_book', async (req, res) => {
             // select_kw table
             const { data: keyword, error: keywordError } = await supabase
                 .from('select_kw')
-                .select('genre, select_kw, id_drawing')
+                .select('genre, select_kw, id_drawing, id_select_kw')
                 .eq('id_select_kw', book.id_select_kw)
                 .single();
 
