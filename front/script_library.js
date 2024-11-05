@@ -43,7 +43,7 @@ function renderBooks() {
     if (books.length === 0) {
         const noBooksMessage = document.createElement('div');
 
-        title.style.display = 'none';
+        // title.style.display = 'none';
         prevButton.style.display = 'none';
         nextButton.style.display = 'none';
 
