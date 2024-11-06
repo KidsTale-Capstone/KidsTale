@@ -154,11 +154,76 @@ p {
     padding: 20px;
 }
 
+/* 공통 순위 배지 스타일 */
+.book-rank {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 50px;
+    height: 50px;
+    color: white;
+    font-weight: 900;
+    border-radius: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 1등 배지 스타일 */
+.rank-1 {
+    background-color: gold;
+    text-align: center;
+    font-size: 20px;
+    line-height: 50px;
+    border: 2px solid #ffffff;
+}
+
+/* 2등 배지 스타일 */
+.rank-2 {
+    background-color: silver; /* 은색 배경 */
+    text-align: center;
+    font-size: 20px;
+    line-height: 50px;
+    border: 2px solid #ffffff;
+}
+
+/* 3등 배지 스타일 */
+.rank-3 {
+    background-color: #cd7f32; /* 청동색 배경 */
+    text-align: center;
+    font-size: 20px;
+    line-height: 50px;
+    border: 2px solid #ffffff;
+}
+
 .carousel {
     display: flex;
 }
 
+/* 캐러셀 스크롤바 */
+#carousel::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+/* 캐러셀 스크롤바 트랙 */
+#carousel::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+}
+
+/* 캐러셀 스크롤바 핸들 */
+#carousel::-webkit-scrollbar-thumb {
+    background-color: #888888;
+    border-radius: 10px;
+    border: 2px solid #f0f0f0;
+}
+
+/* 캐러셀 스크롤바 핸들 호버 효과 */
+#carousel::-webkit-scrollbar-thumb:hover {
+    background-color: #555555;
+}
+
 .carousel-item {
+    position: relative;
     flex: 0 0 50%; /* 각 아이템이 컨테이너의 50% 차지 */
     scroll-snap-align: start; /* 스냅할 위치 */
     display: flex;

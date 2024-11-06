@@ -120,25 +120,37 @@ async function loadBooks() {
 
         bookList.innerHTML = '';
 
-        books.forEach(book => {
+        books.forEach((book, index) => {
             const bookItem = document.createElement('div');
             bookItem.classList.add('carousel-item');
-
+        
+            // 첫 세 개의 책에만 순위 배지를 추가, 순위에 따라 다른 클래스 적용
+            let rankBadge = '';
+            if (index === 0) {
+                rankBadge = `<div class="book-rank rank-1">1등</div>`;
+            } else if (index === 1) {
+                rankBadge = `<div class="book-rank rank-2">2등</div>`;
+            } else if (index === 2) {
+                rankBadge = `<div class="book-rank rank-3">3등</div>`;
+            }
+        
             bookItem.innerHTML = `
+                ${rankBadge}
                 <img src="${book.cover}" alt="${book.title} 표지">
             `;
-
+        
             bookItem.onclick = () => openBookModal(book);
-
+        
             if (book.bookId && book.ownerId) {
                 bookItem.setAttribute('data-id', book.bookId);
                 bookItem.setAttribute('data-owner-id', book.ownerId);
             } else {
                 console.warn("bookId 또는 ownerId가 없습니다:", book);
             }
-
+        
             bookList.appendChild(bookItem);
         });
+        
 
     } catch (error) {
         console.error('책 데이터를 불러오는 중 오류 발생:', error);
