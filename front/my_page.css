@@ -96,9 +96,10 @@ body, html {
 }
 
 .profile-picture img {
-    width: 180px;
-    height: 180px;
-    object-fit: contain;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: fill;
 }
 
 .email {
@@ -161,7 +162,7 @@ body, html {
 .modal-content {
     position: relative; /* 닫기 버튼 위치 조정을 위한 기준 */
     background: #fff;
-    padding: 40px;
+    padding: 30px 40px;
     border-radius: 8px;
     width: 80%;
     max-width: 450px;
@@ -173,18 +174,18 @@ body, html {
     text-align: center;
     font-size: 25px;
     color: #333;
-    margin-bottom: 45px;
+    margin-bottom: 30px;
 }
 
+/* 프로필 사진 미리보기 전용 스타일 */
 .profile-preview {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
 }
 
 .profile-preview img {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
+    margin-left: 180px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #ddd;
@@ -201,7 +202,6 @@ body, html {
 .form-group {
     display: flex;
     align-items: center;
-    justify-content: center;
     width: 100%; /* form-group을 폼 전체 너비로 설정 */
 }
 
@@ -209,7 +209,6 @@ body, html {
     flex: 0 0 100px; /* 레이블 너비를 고정 */
     font-size: 14px;
     color: #666;
-    text-align: left; /* 레이블 텍스트를 왼쪽 정렬 */
     padding-right: 10px;
 }
 
@@ -231,12 +230,33 @@ body, html {
     outline: none;
 }
 
-.profile-preview img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ddd;
+/* 토글 컨테이너 스타일 */
+.toggle-container {
+    display: flex;
+    gap: 10px;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+
+    border-radius: 20px;
+    background-color: #ddd;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+input[type="radio"] {
+    display: none; /* 라디오 버튼 숨기기 */
+}
+
+input[type="radio"]:checked + .toggle-label {
+    background-color: #a392ec;
+    color: #fff;
 }
 
 /* 버튼 스타일 */
@@ -257,7 +277,7 @@ body, html {
 .button-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 #saveChanges {

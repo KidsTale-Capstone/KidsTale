@@ -31,7 +31,7 @@
         <div class="content-section-1">
             <div class="profile-section">
                 <div class="profile-picture">
-                    <img src="img/default_profile.png" alt="프로필 사진" id="profileImage" />
+                    <img src="" alt="프로필 사진" id="profileImage" />
                 </div>
                 <p class="email" id="userEmail">email@example.com</p>
 
@@ -40,6 +40,7 @@
                     <p><strong>이름:</strong> <span id="userName"></span></p>
                     <p><strong>나이:</strong> <span id="userAge"></span></p>
                     <p><strong>목표 책 수:</strong> <span id="userGoal"></span></p>
+                    <p><strong>오디오북 음성:</strong> 남성</p>
                     <button id="editButton">회원정보 수정</button>
                 </div>
             </div>
@@ -50,13 +51,12 @@
             <div class="modal-content">
                 <span class="close-button" id="closeModal">&times;</span>
                 <h2>회원정보 수정</h2>
+
+                <div class="profile-preview">
+                    <img src="img/default_profile.png" alt="프로필 사진 미리보기" id="profilePreview">
+                </div>
+
                 <form id="editForm">
-                    <div class="form-group">
-                        <div class="profile-preview">
-                            <img src="img/default_profile.png" alt="프로필 사진 미리보기" id="profilePreview">
-                        </div>
-                    </div>
-                    
                     <div class="form-group">
                         <label for="profileImageInput">프로필</label>
                         <input type="file" id="profileImageInput" accept="image/*">
@@ -75,6 +75,17 @@
                     <div class="form-group">
                         <label for="editTarget">목표 책 수</label>
                         <input type="text" id="editTarget" value="" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>오디오북 음성</label>
+                        <div class="toggle-container">
+                            <input type="radio" id="maleVoice" name="voice" value="남성" checked>
+                            <label for="maleVoice" class="toggle-label">남성</label>
+                            
+                            <input type="radio" id="femaleVoice" name="voice" value="여성">
+                            <label for="femaleVoice" class="toggle-label">여성</label>
+                        </div>
                     </div>
                 </form>
 
