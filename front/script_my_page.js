@@ -18,7 +18,7 @@ async function fetchUserInfo() {
             document.getElementById("userName").textContent = data.user.name;
             document.getElementById("userAge").textContent = `${data.user.age}살`;
             document.getElementById("userGoal").textContent = `${data.user.goal}권`;
-            document.getElementById("userVoice").textContent = `${data.user.voice}`;
+            // document.getElementById("userVoice").textContent = `${data.user.voice}`;
 
             document.getElementById("profileImageInput").addEventListener("change", function (event) {
                 const file = event.target.files[0];
