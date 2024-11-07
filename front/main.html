@@ -4,13 +4,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>KidsTale</title>
-        <link rel="stylesheet" href="main.css"> <!-- 외부 CSS 파일 연결 -->
+        <link rel="stylesheet" href="main.css">
     </head>
 
     <body>
         <!-- 로고 섹션 -->
         <div class="logo-section">
-            <img src="img/logo.png" alt="KidsTale Logo" onclick="window.location.href='main.html'">
+            <img src="img/new_logo.png" alt="KidsTale Logo" onclick="window.location.href='main.html'">
         </div>
 
         <div class="logout">
@@ -52,15 +52,27 @@
 
         <!-- 명예의 책 전당 섹션 -->
         <div class="content-section-2">
+            <h2>- 명예의 책 전당 -</h2>
+            <div class="curtain curtain-left"></div>
+            <div class="carousel-container">
+                <button class="carousel-button" id="prev-btn">&#10094;</button>
+                    <div class="carousel" id="carousel">
+                    </div>
+                <button class="carousel-button" id="next-btn">&#10095;</button>
+            </div>
+            <div class="curtain curtain-right"></div>
+            <div class="shelf"></div>
+        </div>
+
+        <!-- <div class="content-section-2">
             <h2>명예의 책 전당</h2>
             <div class="carousel-container">
                 <button class="carousel-button" id="prev-btn">&#10094;</button>
                     <div class="carousel" id="carousel">
-                        <!-- 책 데이터가 들어오는 곳 -->
                     </div>
                 <button class="carousel-button" id="next-btn">&#10095;</button>
             </div>
-        </div>
+        </div> -->
 
         <!-- 모달 창: 책 세부 정보 창 -->
         <div id="bookModal" class="modal">
