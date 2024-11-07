@@ -1,8 +1,10 @@
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css');
+
 /* 기본적인 스타일 설정 */
 body, html {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'NanumSquareRoundEB';
     background-color: white;
 }
 
@@ -14,11 +16,10 @@ a {
 .logo-section {
     text-align: center;
     padding-top: 50px;
-    margin-bottom: 30px;
 }
 
 .logo-section img {
-    max-width: 200px; /* 로고 크기 설정 */
+    max-width: 300px; /* 로고 크기 설정 */
 }
 
 /* 로그아웃 */
@@ -30,7 +31,7 @@ a {
 .logout a {
     color: #7d4ac9;
     text-decoration: none;
-    font-weight: bold;
+    font-family: 'NanumSquareRoundB';
 }
 
 /* 메뉴 바 */
@@ -53,14 +54,15 @@ a {
 }
 
 .menu-bar ul li a {
+    display: inline-block; /* transform이 적용되도록 설정 */
+    transition: transform 0.3s ease; /* 부드러운 확대 효과 */
     color: white;
     text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 20px;
 }
 
 .menu-bar ul li a:hover {
-    text-decoration: underline;
+    transform: scale(1.1);
 }
 
 /* 메뉴바 아래 섹션 */
@@ -92,6 +94,7 @@ a {
     font-size: 20px;
     color: #666;
     margin-bottom: 20px;
+    font-family: 'NanumSquareRoundB';
 }
 
 /* 이미지(표지) 박스 스타일 */
@@ -112,11 +115,13 @@ a {
     margin-bottom: 20px;
     text-align: justify;
     font-size: 20px;
+    font-family: 'NanumSquareRoundB';
 }
 
 #content-text {
     font-size: 2.5em;
     margin-top: 20px;
+    font-family: 'NanumSquareRoundB';
 }
 
 /* 페이지 넘김 버튼 */
@@ -160,12 +165,13 @@ a {
 .audio-button {
     padding: 10px 20px;
     margin-right: 15px;
-    background-color: #7d4ac9;
+    background-color: #9370db;
     color: white;
     border: none;
     border-radius: 20px;
     font-size: 1em;
     cursor: pointer;
+    font-family: 'NanumSquareRoundB';
 }
 
 .audio-button:hover {
@@ -176,12 +182,13 @@ a {
 .modify-button {
     padding: 10px 20px;
     margin-right: 15px;
-    background-color: #7d4ac9;
+    background-color: #9370db;
     color: white;
     border: none;
     border-radius: 20px;
     font-size: 1em;
     cursor: pointer;
+    font-family: 'NanumSquareRoundB';
 }
 
 .modify-button:hover {
@@ -191,12 +198,13 @@ a {
 /* 언어 변경 버튼 */
 .language-button {
     padding: 10px 20px;
-    background-color: #7d4ac9;
+    background-color: #9370db;
     color: white;
     border: none;
     border-radius: 20px;
     font-size: 1em;
     cursor: pointer;
+    font-family: 'NanumSquareRoundB';
 }
 
 .language-button:hover {
@@ -206,12 +214,13 @@ a {
 /* 책 보관함 가기 버튼 */
 .go-to-button {
     padding: 10px 20px;
-    background-color: #7d4ac9;
+    background-color: #9370db;
     color: white;
     border: none;
     border-radius: 20px;
     font-size: 1em;
     cursor: pointer;
+    font-family: 'NanumSquareRoundB';
 }
 
 .go-to-button:hover {
@@ -259,13 +268,14 @@ a {
     margin-top: 20px;
     margin-bottom: 20px;
     justify-content: flex-end;
+    font-family: 'NanumSquareRoundB';
 }
 
 /* 취소 버튼 */
 #cancel-edit {
     display: none;
     padding: 10px 20px;
-    background-color: #7d4ac9;
+    background-color: #9370db;
     color: white;
     border: none;
     border-radius: 20px;
@@ -283,7 +293,7 @@ a {
 #complete-edit {
     display: none;
     padding: 10px 20px;
-    background-color: #7d4ac9;
+    background-color: #9370db;
     color: white;
     border: none;
     border-radius: 20px;

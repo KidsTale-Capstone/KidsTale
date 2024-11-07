@@ -1,20 +1,25 @@
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css');
+
 /* 기본적인 스타일 설정 */
 body, html {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'NanumSquareRoundEB';
     background-color: white;
+}
+
+a {
+    text-decoration-line: none;
 }
 
 /* 로고 섹션 */
 .logo-section {
     text-align: center;
     padding-top: 50px;
-    margin-bottom: 30px;
 }
 
 .logo-section img {
-    max-width: 200px; /* 로고 크기 설정 */
+    max-width: 300px; /* 로고 크기 설정 */
 }
 
 /* 로그아웃 */
@@ -26,7 +31,7 @@ body, html {
 .logout a {
     color: #7d4ac9;
     text-decoration: none;
-    font-weight: bold;
+    font-family: 'NanumSquareRoundB';
 }
 
 /* 메뉴 바 */
@@ -49,21 +54,22 @@ body, html {
 }
 
 .menu-bar ul li a {
+    display: inline-block; /* transform이 적용되도록 설정 */
+    transition: transform 0.3s ease; /* 부드러운 확대 효과 */
     color: white;
     text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 20px;
 }
 
 .menu-bar ul li a:hover {
-    text-decoration: underline;
+    transform: scale(1.1);
 }
 
 /* 메뉴바 아래 섹션 */
 .content-section-1 {
     display: block;
     padding-left: 300px;
-    margin-top: 40px;
+    margin-top: 60px;
 }
 
 .container {
@@ -126,7 +132,8 @@ h3 {
     color: #7d4ac9;
     cursor: pointer;
     text-align: center;
-    font-size: 16px
+    font-size: 16px;
+    font-family: 'NanumSquareRound';
 }
 
 .keyword-button:hover {
@@ -187,6 +194,7 @@ h3 {
     border-radius: 20px;
     cursor: pointer;
     font-size: 16px;
+    font-family: 'NanumSquareRound';
 }
 
 .genre-button:hover {
@@ -216,6 +224,7 @@ button {
     border-radius: 30px;
     cursor: pointer;
     font-size: 16px;
+    font-family: 'NanumSquareRound';
 }
 
 button:hover {

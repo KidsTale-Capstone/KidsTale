@@ -163,18 +163,10 @@ function convertImageToJpeg(file) {
 // 페이지 로드 시
 window.onload = fetchUserInfo;
 
-// // 프로필 사진 클릭 시 이미지 변경
-// document.getElementById("profileImage").addEventListener("click", function () {
-//     const newImage = prompt("새 프로필 사진의 URL을 입력하세요:");
-//     if (newImage) {
-//         document.getElementById("profileImage").src = newImage;
-//     }
-// });
-
-
-
 // 모달 열기
 document.getElementById("editButton").addEventListener("click", function () {
+    const currentProfileImage = document.getElementById("profileImage").src;
+    document.getElementById("profilePreview").src = currentProfileImage;
     document.getElementById("editModal").style.display = "flex";
 });
 

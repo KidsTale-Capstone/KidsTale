@@ -1,20 +1,25 @@
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css');
+
 /* 기본적인 스타일 설정 */
 body, html {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'NanumSquareRoundEB';
     background-color: white;
+}
+
+a {
+    text-decoration-line: none;
 }
 
 /* 로고 섹션 */
 .logo-section {
     text-align: center;
     padding-top: 50px;
-    margin-bottom: 30px;
 }
 
 .logo-section img {
-    max-width: 200px; /* 로고 크기 설정 */
+    max-width: 300px; /* 로고 크기 설정 */
 }
 
 /* 로그아웃 */
@@ -26,7 +31,7 @@ body, html {
 .logout a {
     color: #7d4ac9;
     text-decoration: none;
-    font-weight: bold;
+    font-family: 'NanumSquareRoundB';
 }
 
 /* 메뉴 바 */
@@ -49,21 +54,22 @@ body, html {
 }
 
 .menu-bar ul li a {
+    display: inline-block; /* transform이 적용되도록 설정 */
+    transition: transform 0.3s ease; /* 부드러운 확대 효과 */
     color: white;
     text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 20px;
 }
 
 .menu-bar ul li a:hover {
-    text-decoration: underline;
+    transform: scale(1.1);
 }
 
 /* 메뉴바 아래 섹션 */
 .content-section-1 {
     display: block;
     padding-left: 300px;
-    margin-top: 40px;
+    margin-top: 60px;
 }
 
 .container {
@@ -99,12 +105,19 @@ h2 {
     margin-right: 60px;
     padding: 10px 20px;
     background-color: white;
-    border: 2px solid #7d4ac9;
+    border: 2px solid #9370db;
     border-radius: 20px;
-    color: #7d4ac9;
+    color: #9370db;
     cursor: pointer;
     text-align: center;
-    font-size: 16px
+    font-size: 16px;
+    font-family: 'NanumSquareRoundB';
+}
+
+.keyword-button:hover {
+    background-color: #7d4ac9;
+    border: 2px solid #7d4ac9;
+    color: white;
 }
 
 /* 선택된 키워드 버튼 스타일 */
@@ -112,11 +125,6 @@ h2 {
     background-color: #7d4ac9; /* 선택 시 배경색 변경 */
     color: white; /* 선택 시 텍스트 색상 변경 */
     border-color: #7d4ac9; /* 선택 시 테두리 색상 변경 */
-}
-
-.keyword-button:hover {
-    background-color: #7d4ac9;
-    color: white;
 }
 
 /* 추가하기 버튼 스타일 */
@@ -146,10 +154,17 @@ h2 {
     height: 50px;
 }
 
-h2 {
+.content-section-1 h2 {
     font-size: 35px;
     color: #7a6fa5;
     margin-bottom: 20px;
+}
+
+#genre-title {
+    font-size: 35px;
+    color: #7a6fa5;
+    margin-top: 60px;
+    margin-bottom: 50px;
 }
 
 /* 각 줄을 감싸는 div */
@@ -165,16 +180,18 @@ h2 {
     width: 150px;
     height: 50px;
     background-color: white;
-    border: 2px solid #7d4ac9;
-    color: #7d4ac9;
+    border: 2px solid #9370db;
+    color: #9370db;
     padding: 10px 20px;
     border-radius: 20px;
     cursor: pointer;
     font-size: 16px;
+    font-family: 'NanumSquareRoundB';
 }
 
 .genre-button:hover {
     background-color: #7d4ac9;
+    border: 2px solid #7d4ac9;
     color: white;
 }
 
@@ -199,6 +216,7 @@ h2 {
     border-radius: 30px;
     cursor: pointer;
     font-size: 16px;
+    font-family: 'NanumSquareRoundB';
 }
 
 .next-button-group button:hover {
