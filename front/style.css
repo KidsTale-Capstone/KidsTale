@@ -1,3 +1,5 @@
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css');
+
 /* 기본적인 스타일 설정 */
 body, html {
     margin: 0;
@@ -40,6 +42,8 @@ body, html {
 /* 로그인 폼 상자 스타일 */
 .login-box {
     width: 350px;
+    display: flex;
+    flex-direction: column;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -47,13 +51,17 @@ body, html {
 }
 
 .login-box h2 {
+    font-family: 'NanumSquareRoundEB';
     font-size: 24px;
     margin-bottom: 10px;
 }
 
 .login-box p {
+    margin-top: 0;
+    margin-bottom: 25px;
     font-size: 14px;
     color: #666;
+    font-family: 'NanumSquareRoundL';
 }
 
 .login-box input {
@@ -72,6 +80,8 @@ body, html {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 14px;
+    font-family: 'NanumSquareRoundB';
 }
 
 .login-box button:hover {
@@ -138,6 +148,7 @@ a {
     margin-bottom: 20px;
     font-weight: 500;
     text-align: left;
+    font-family: 'NanumSquareRoundEB';
 }
 
 .signup-form input {
@@ -146,6 +157,7 @@ a {
     margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    font-family: 'NanumSquareRound';
 }
 
 .signup-form button {
@@ -156,6 +168,7 @@ a {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-family: 'NanumSquareRoundB';
 }
 
 .signup-form button:hover {
