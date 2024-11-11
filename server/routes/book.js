@@ -226,7 +226,8 @@ router.get('/:lang/tts', async (req, res) => {
         if (existingAudio && existingAudio.length > 0) {
             const audioPath = existingAudio[0].path;
             const existingVersionNum = parseInt(audioPath.split('_').pop().replace('.mp3', ''), 10); // 경로에서 version_num 추출
-    
+            const storedVoicePreference = existingAudio[0].voice_preference;
+
             console.log('기존 오디오 경로:', audioPath, 'version_num:', existingVersionNum, 'voice_preference:', storedVoicePreference);
 
             // 저장된 음성 설정이 동일하고 version_num도 동일한 경우 기존 경로 반환
@@ -251,7 +252,7 @@ router.get('/:lang/tts', async (req, res) => {
         const request = {
             input: { text },
             voice: { languageCode: lang === 'eng' ? 'en-US' : 'ko-KR', 
-            name:voiceName },
+            name: voiceName },
             audioConfig: { audioEncoding: 'MP3' },
         };
 

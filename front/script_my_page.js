@@ -12,13 +12,14 @@ async function fetchUserInfo() {
         console.log("Fetched User Info:", data);
 
         if (data.success) {
+            const user = data.user;
+
             // 사용자 정보 표시
             document.getElementById("profileImage").src = data.user.profileImage || '/img/default_profile.png';
             document.getElementById("userEmail").textContent = data.user.email;
             document.getElementById("userName").textContent = data.user.name;
             document.getElementById("userAge").textContent = `${data.user.age}살`;
             document.getElementById("userGoal").textContent = `${data.user.goal}권`;
-            // document.getElementById("userVoice").textContent = `${data.user.voice}`;
 
             document.getElementById("profileImageInput").addEventListener("change", function (event) {
                 const file = event.target.files[0];
@@ -31,16 +32,22 @@ async function fetchUserInfo() {
                 }
             });
 
-            // 오디오북 음성 설정 표시
-            const voiceSetting = data.user.voice || '남성';
-            document.getElementById("userVoice").textContent = `오디오북 음성: ${voiceSetting}`;
+            // 수정 모달 기본 값 설정
+            document.getElementById("editName").value = user.name || '';
+            document.getElementById("editAge").value = user.age || '';
+            document.getElementById("editTarget").value = user.goal || '';
+            document.getElementById("profilePreview").src = user.profileImage || '/img/default_profile.png';
 
-            // 수정 모달의 토글 버튼 설정
+
+            // voice_preference에 따라 라디오 버튼 선택
+            const voiceSetting = user.voice_preference === 'male' ? '남성' : '여성';
+            document.getElementById("userVoice").textContent = voiceSetting;
             if (voiceSetting === '남성') {
                 document.getElementById("maleVoice").checked = true;
             } else if (voiceSetting === '여성') {
                 document.getElementById("femaleVoice").checked = true;
             }
+
 
             // 사용자 뱃지 활성화
             console.log("User Progress for Badges:", data.userProgress); // 데이터 확인
@@ -51,34 +58,6 @@ async function fetchUserInfo() {
         }
     } catch (error) {
         console.error('Error fetching user info:', error);
-    }
-}
-
-// 오디오북 음성 설정 저장하기
-async function saveUserSettings() {
-    const selectedVoice = document.querySelector('input[name="voice"]:checked').value;
-    
-    try {
-        const response = await fetch('/my_page/update_info', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: JSON.stringify({
-                voice: selectedVoice,
-            }),
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            alert('회원 정보가 성공적으로 업데이트되었습니다.');
-            fetchUserInfo(); // 업데이트된 정보를 다시 가져와 화면에 반영
-        } else {
-            alert('회원 정보 업데이트에 실패했습니다.');
-        }
-    } catch (error) {
-        console.error('Error updating user info:', error);
     }
 }
 
@@ -194,13 +173,16 @@ document.getElementById("saveChanges").addEventListener("click", async function 
     const newAge = document.getElementById("editAge").value;
     const newTarget = document.getElementById("editTarget").value;
     const profileImageInput = document.getElementById("profileImageInput").files[0];
+    const selectedVoice = document.querySelector('input[name="voice"]:checked').value;
+    const voicePreference = selectedVoice === '남성' ? 'male' : 'female'; // 서버로 보낼 값 변환
 
-    console.log("수정된 정보:", { newName, newAge, newTarget });
+    console.log("수정된 정보:", { newName, newAge, newTarget, voicePreference });
 
     const formData = new FormData();
     formData.append('name', newName);
     formData.append('age', newAge);
     formData.append('goal', newTarget);
+    formData.append('voice_preference', voicePreference);
 
     // 프로필 이미지 파일이 있는 경우 JPEG로 변환 후 추가
     if (profileImageInput) {

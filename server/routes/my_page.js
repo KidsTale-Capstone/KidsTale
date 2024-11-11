@@ -28,7 +28,7 @@ router.get('/get_info', async (req, res) => {
         // users table
         const { data: user, error: userError } = await supabase
             .from('users')
-            .select('email, name, age, goal, profileImage, attendance')
+            .select('email, name, age, goal, profileImage, attendance, voice_preference')
             .eq('id_user', userId)
             .single();
 
@@ -138,7 +138,7 @@ router.post('/update_user', upload.single('profileImage'), async (req, res) => {
 
     try {
         const userId = getUserIdFromToken(req);
-        const { name, age, goal } = req.body;
+        const { name, age, goal, voice_preference } = req.body;
         let profileImageUrl = null;
 
         // 프로필 이미지가 업로드된 경우
@@ -168,7 +168,7 @@ router.post('/update_user', upload.single('profileImage'), async (req, res) => {
 
         const { error } = await supabase
             .from('users')
-            .update({ name, age, goal, profileImage: profileImageUrl })
+            .update({ name, age, goal, profileImage: profileImageUrl, voice_preference, })
             .eq('id_user', userId);
 
         if (error) throw error;
