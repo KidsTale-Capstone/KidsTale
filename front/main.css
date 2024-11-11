@@ -136,219 +136,138 @@ p {
 
 /* =============================  명예의 책 섹션 ==================================== */
 
-/* .content-section-2 {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 60vh;
-    margin-top: 30px;
-    margin-bottom: 40px;
-} */
-
 .content-section-2 {
-    position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 480px;
-    max-width: 1000px; /* 스테이지 컨테이너의 최대 너비 */
-    background-color: #222; /* 어두운 배경으로 무대 느낌 */
-    /* padding: 20px; */
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* 그림자 추가 */
-    overflow: hidden;
-    margin-top: 100px;
-    margin-left: 260px;
+    align-items: center;
+    margin-top: 80px;
     margin-bottom: 40px;
 }
 
-.content-section-2 h2 {
-    height: 20px;
-    font-size: 40px;
-    color: #e0c111;
-    margin-top: 35px;
-}
-
-.carousel-container {
-    overflow-x: scroll; 
-    scroll-snap-type: x mandatory; 
-    display: flex;
-    justify-content: center;
-    scroll-behavior: smooth; 
+/* 도서관 스타일 컨테이너 */
+.library-container {
+    width: 90%;
     max-width: 1000px;
-    padding: 20px;
-    flex: 1;
-    max-width: 800px; /* 캐러셀 최대 너비 */
-    width: 85%;
-    margin: 0 20px; /* 커튼과의 간격 */
-    overflow-x: scroll;
-    background-color: #fff; /* 흰색 배경 */
+    margin: 40px;
+    background-color: #f8f1e4; /* 밝은 베이지 색 배경 */
+    padding: 40px 40px 20px 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 팻말 스타일 */
+.sign {
+    display: inline-block;
+    position: relative;
+    width: 250px;
+    background-color: #d2a679; /* 나무 느낌 색상 */
+    color: #ffffff;
+    font-size: 34px;
+    font-weight: bold;
+    padding: 18px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 캐러셀 그림자 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
 }
 
-/* 커튼 스타일 */
-.curtain {
-    position: absolute;
-    top: 0;
-    width: 80px; /* 커튼의 너비 */
-    height: 95%;
-    background: linear-gradient(
-        to right,
-        #b22222 10%,
-        #8b0000 20%,
-        #b22222 30%,
-        #8b0000 40%,
-        #b22222 50%,
-        #8b0000 60%,
-        #b22222 70%,
-        #8b0000 80%,
-        #b22222 90%
-    ); /* 빨간색과 어두운 빨간색으로 주름 표현 */
-    z-index: 1;
-}
-
-/* 왼쪽 커튼 */
-.curtain-left {
-    left: 0;
-    border-top-right-radius: 10px; /* 모서리 둥글게 */
-    border-bottom-right-radius: 10px;
-}
-
-/* 오른쪽 커튼 */
-.curtain-right {
-    right: 0;
-    border-top-left-radius: 10px; /* 모서리 둥글게 */
-    border-bottom-left-radius: 10px;
-}
-
-/* 커튼 주름 효과 */
-.curtain::before {
+/* 삼각형 모양의 아래쪽 장식 */
+.sign::after {
     content: '';
-    display: block;
-    height: 100%;
-    width: 5px;
-    background-color: #8b0000; /* 어두운 빨간색으로 주름 효과 */
-    margin: 0 5px;
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 10px solid #d2a679;
 }
 
-/* 나무 선반 스타일 */
+/* 책장 */
 .shelf {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+/* 선반 스타일 */
+.shelf::after {
+    content: '';
     position: absolute;
     bottom: 0;
-    width: 100%; /* 스테이지의 전체 너비에 맞춤 */
-    height: 30px; /* 선반 높이 */
-    background-color: #8b4513; /* 나무색 배경 */
-    border-top: 4px solid #5a3220; /* 어두운 나무색 테두리 */
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* 그림자로 입체감 추가 */
-    z-index: 2; /* 커튼보다 뒤에 위치 */
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: #8b4513; /* 나무색 */
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.carousel-container {
-    overflow-x: scroll; /* 가로 스크롤 활성화 */
-    scroll-snap-type: x mandatory; /* 가로 방향 스냅 설정 */
-    display: flex;
-    justify-content: center;
-    scroll-behavior: smooth; /* 부드러운 스크롤 */
-    max-width: 800px;
-    max-height: 350px;
-    padding: 20px;
-    background-color: #222;
+/* 책 스타일 */
+.book {
+    position: relative; /* 배지 위치를 조정할 수 있도록 설정 */
+    width: 30%;
+    height: 180px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+
+.book img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 책 이미지 맞춤 */
+    border-radius: 5px;
+}
+
+.book:hover {
+    transform: translateY(-10px); /* 마우스를 올렸을 때 위로 살짝 올라가는 효과 */
 }
 
 /* 공통 순위 배지 스타일 */
 .book-rank {
     position: absolute;
-    top: 45px;
-    left: 15px;
-    width: 45px;
-    height: 45px;
+    top: 5px;
+    left: 5px;
     color: white;
-    font-weight: 900;
-    border-radius: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 10px; /* 충분히 넓은 패딩으로 동그라미 크기 조정 */
+    border-radius: 50%; 
+    width: 30px; /* 배지의 너비 */
+    height: 30px; /* 배지의 높이 */
+    line-height: 30px; /* 텍스트가 가운데에 오도록 설정 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
+
 
 /* 1등 배지 스타일 */
 .rank-1 {
     background-color: gold;
     text-align: center;
-    font-size: 20px;
-    line-height: 45px;
-    border: 2px solid #ffffff;
+    font-size: 18px;
+    border: 1px solid #ffffff;
 }
 
 /* 2등 배지 스타일 */
 .rank-2 {
     background-color: silver; /* 은색 배경 */
     text-align: center;
-    font-size: 20px;
-    line-height: 45px;
-    border: 2px solid #ffffff;
+    font-size: 18px;
+    border: 1px solid #ffffff;
 }
 
 /* 3등 배지 스타일 */
 .rank-3 {
     background-color: #cd7f32; /* 청동색 배경 */
     text-align: center;
-    font-size: 20px;
-    line-height: 45px;
-    border: 2px solid #ffffff;
+    font-size: 18px;
+    border: 1px solid #ffffff;
 }
-
-.carousel {
-    display: flex;
-    align-items: flex-start;
-}
-
-/* 캐러셀 스크롤바 */
-#carousel::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-/* 캐러셀 스크롤바 트랙 */
-#carousel::-webkit-scrollbar-track {
-    background-color: #f0f0f0;
-    border-radius: 10px;
-}
-
-/* 캐러셀 스크롤바 핸들 */
-#carousel::-webkit-scrollbar-thumb {
-    background-color: #888888;
-    border-radius: 10px;
-    border: 2px solid #f0f0f0;
-}
-
-/* 캐러셀 스크롤바 핸들 호버 효과 */
-#carousel::-webkit-scrollbar-thumb:hover {
-    background-color: #555555;
-}
-
-.carousel-item {
-    height: 300px;
-    position: relative;
-    flex: 0 0 50%; /* 각 아이템이 컨테이너의 50% 차지 */
-    scroll-snap-align: start; /* 스냅할 위치 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-}
-
-.carousel-item img {
-    width: 100%;
-    height: 80%;
-    border-radius: 10px;
-    box-shadow: -1px 0px 15px 6px #c7c2a4;
-}
-
-.carousel-button {
-    display: none;
-}
-
 
 /* ================================== 모달 창 스타일 ============================== */
 /* 모달 창 전체 배경 */
@@ -404,12 +323,13 @@ p {
 
 .modal-upper-section {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
 }
 
 /* 책 표지 스타일 */
 .book-cover {
     display: flex;
+    margin-top: 20px;
     width: 450px;
     height: 350px;
     border-radius: 8px;

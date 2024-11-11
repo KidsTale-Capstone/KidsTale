@@ -42,8 +42,6 @@ async function fetchUserData() {
 function updateUserData(userName, userGoal, userCurrent) {
     // 사용자 이름 및 목표 도서 업데이트
     document.getElementById("user-name").innerText = `${userName} 작가님,`;
-    // const remainingBooks = userGoal - userCurrent;
-    // document.getElementById("remaining-books").innerText = `${userGoal - userCurrent}권`;
 
     // 목표 달성 여부에 따라 남은 책 수나 축하 메시지를 업데이트
     const remainingBooksElement = document.getElementById("remaining-books");
@@ -86,14 +84,12 @@ window.onload = function() {
     fetchUserData();  // 페이지가 로드되면 사용자 데이터를 가져오는 함수 호출
 };
 
-// =============================================== 명예의 책 전당 섹션 =================================================
+// =================================== 책 둘러보기 섹션 =======================================
 
 const bookList = document.getElementById('carousel');
-const itemsPerPage = 2; // 한 번에 보여줄 아이템 수
-let totalItems = 0;
-let currentIndex = 0;
+const maxBooksToShow = 9; // 최대 표시할 책 수
 
-// 책 데이터를 서버에서 불러와 슬라이더에 책 표지를 표시
+// 책 데이터를 서버에서 불러와 책을 표시
 async function loadBooks() {
     try {
         const token = localStorage.getItem('token');
@@ -115,16 +111,25 @@ async function loadBooks() {
             return;
         }
 
-        const books = data.data;
+        // 책 데이터에서 최대 9권만 가져오기
+        const books = data.data.slice(0, maxBooksToShow);
         totalItems = books.length;
 
-        bookList.innerHTML = '';
+        bookList.innerHTML = ''; // 기존 리스트 초기화
 
         books.forEach((book, index) => {
+            // 새로운 행 생성 (3권씩 나눠서 표시)
+            if (index % 3 === 0) {
+                const row = document.createElement('div');
+                row.classList.add('shelf');
+                bookList.appendChild(row);
+            }
+
+            // 책 항목 생성
             const bookItem = document.createElement('div');
-            bookItem.classList.add('carousel-item');
-        
-            // 첫 세 개의 책에만 순위 배지를 추가, 순위에 따라 다른 클래스 적용
+            bookItem.classList.add('book');
+
+            // 첫 세 개의 책에만 순위 배지를 추가
             let rankBadge = '';
             if (index === 0) {
                 rankBadge = `<div class="book-rank rank-1">1등</div>`;
@@ -133,45 +138,27 @@ async function loadBooks() {
             } else if (index === 2) {
                 rankBadge = `<div class="book-rank rank-3">3등</div>`;
             }
-        
+
             bookItem.innerHTML = `
                 ${rankBadge}
                 <img src="${book.cover}" alt="${book.title} 표지">
             `;
-        
+
             bookItem.onclick = () => openBookModal(book);
-        
-            if (book.bookId && book.ownerId) {
-                bookItem.setAttribute('data-id', book.bookId);
-                bookItem.setAttribute('data-owner-id', book.ownerId);
-            } else {
-                console.warn("bookId 또는 ownerId가 없습니다:", book);
-            }
-        
-            bookList.appendChild(bookItem);
+
+            // 현재 행에 책 항목 추가
+            bookList.lastChild.appendChild(bookItem);
         });
-        
 
     } catch (error) {
         console.error('책 데이터를 불러오는 중 오류 발생:', error);
     }
 }
 
-const carouselContainer = document.querySelector('.carousel-container');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-const itemWidth = carouselContainer.clientWidth / 2; // 한 번에 두 개 아이템씩 보여줄 경우
-
-prevBtn.addEventListener('click', () => {
-    carouselContainer.scrollLeft -= itemWidth;
-});
-
-nextBtn.addEventListener('click', () => {
-    carouselContainer.scrollLeft += itemWidth;
-});
-
 // 초기화
-loadBooks();
+document.addEventListener('DOMContentLoaded', () => {
+    loadBooks();
+});
 
 // ========================================== 모달 창 섹션 =============================================
 // 모달 열기 함수

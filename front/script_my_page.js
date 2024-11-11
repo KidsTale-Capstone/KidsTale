@@ -102,7 +102,7 @@ function activateBadges(userProgress = {}) {
     }
     if (userProgress.thirdLikes) {
         console.log("Activating Badge 10 (Third Likes)");
-        document.getElementById("badge10").classList.add("active");
+        document.getElementById("badge10").classList.add(" active");
     }
 }
 
