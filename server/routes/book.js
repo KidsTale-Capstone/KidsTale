@@ -180,6 +180,24 @@ router.get('/:lang/tts', async (req, res) => {
 
     try {
 
+        // JWT에서 사용자 ID 추출
+        const userId = getUserIdFromToken(req);
+
+        // 사용자 음성 설정 가져오기
+        const { data: userData, error: userError } = await supabase
+            .from('users')
+            .select('voice_preference')
+            .eq('id_user', userId)
+            .single();
+
+        if (userError || !userData) {
+            console.error('사용자 음성 설정 가져오기 실패:', userError);
+            return res.status(500).json({ success: false, message: '사용자 음성 설정을 가져오지 못했습니다.' });
+        }
+
+        // 음성 설정 값 확인
+        const voicePreference = userData.voice_preference
+
         const { data: pageData, error: pageError } = await supabase
             .from('pages')
             .select('version_num')
@@ -192,11 +210,11 @@ router.get('/:lang/tts', async (req, res) => {
             throw new Error('페이지 데이터 가져오기 중 오류가 발생했습니다.');
         }
         const versionNum = pageData.version_num;
-        console.log('version_num', versionNum);
 
+        // 기존 TTS 데이터 확인
         const { data: existingAudio, error } = await supabase
             .from('book_tts')
-            .select('path')
+            .select('path, voice_preference')
             .eq('id_book', bookId)
             .eq('page_index', pageIndex)
             .eq('page_lang', lang)
@@ -209,19 +227,31 @@ router.get('/:lang/tts', async (req, res) => {
             const audioPath = existingAudio[0].path;
             const existingVersionNum = parseInt(audioPath.split('_').pop().replace('.mp3', ''), 10); // 경로에서 version_num 추출
     
-            console.log('기존 오디오 경로:', audioPath, 'version_num:', existingVersionNum);
-    
-                // 기존 오디오의 version_num이 현재와 같으면 기존 오디오 경로 반환
-            if (existingVersionNum === versionNum) {
+            console.log('기존 오디오 경로:', audioPath, 'version_num:', existingVersionNum, 'voice_preference:', storedVoicePreference);
+
+            // 저장된 음성 설정이 동일하고 version_num도 동일한 경우 기존 경로 반환
+            if (existingVersionNum === versionNum && storedVoicePreference === voicePreference) {
                 return res.json({ success: true, audioPath: audioPath });
             }
+
         }
+
+        // 음성 설정에 따라 음성 이름 설정
+        const voiceName =
+            lang === 'eng'
+                ? voicePreference === 'male'
+                    ? 'en-US-Wavenet-B' // 남성 영어 음성
+                    : 'en-US-Wavenet-F' // 여성 영어 음성
+                : voicePreference === 'male'
+                ? 'ko-KR-Wavenet-C' // 남성 한국어 음성
+                : 'ko-KR-Wavenet-B'; // 여성 한국어 음성
+
         // 새 오디오 생성
         const client = new textToSpeech.TextToSpeechClient();
         const request = {
             input: { text },
             voice: { languageCode: lang === 'eng' ? 'en-US' : 'ko-KR', 
-            name: lang === 'eng' ? 'en-US-Wavenet-D' : 'ko-KR-Wavenet-C' },
+            name:voiceName },
             audioConfig: { audioEncoding: 'MP3' },
         };
 
@@ -256,7 +286,8 @@ router.get('/:lang/tts', async (req, res) => {
             id_book: bookId,
             page_index: pageIndex,
             page_lang: lang,
-            path: publicURL
+            path: publicURL,
+            voice_preference: voicePreference
         })
         .select();
 
