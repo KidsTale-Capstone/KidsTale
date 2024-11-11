@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="eng">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,33 +35,67 @@
             <!-- 업로드된 사진(표지) 박스 -->
             <div id="image-box">
                 <img id="book-cover" src="" alt="책 표지 이미지">
-                <!-- <p>업로드한 사진(표지)</p> -->
             </div>
-
+            
             <!-- 내용 페이지 -->
             <div id="content-page" class="book-page" style="display: block;">
-                <p id="page-text">여기에 동화의 내용이 표시됩니다.</p>
+                <p>책 내용</p>
+            </div>
+        </div>
+
+        <!-- 수정하기 기능: 버튼 클릭시에 바뀜 -->
+        <div id="edit-section" style="display: none;">
+            <!-- <input type="file" id="new-image" accept="image/*"> -->
+            <div id='image-box'>
+                <img id="image-preview" src="" alt="미리 보기 이미지" style="display: none;">
+            </div>
+            
+            <input type="file" id="new-image" accept="image/*" onchange="previewImage()">
+            <textarea id="edit-content" rows="10" cols="50"></textarea>
+            <div class="button">
+                <button id="cancel-edit" style="display: none;" onclick="cancelEdit()">Cancel Edit</button>
+                <button id="complete-edit" style="display: none;" onclick="completeEdit()">Complete Edit</button>
             </div>
         </div>
 
         <!-- 페이지 넘김 버튼 -->
         <div class="navigation-left">
-            <button id="prev-page" onclick="prevPage()"><img id="left" src="img/left.png" alt="왼쪽 화살표"></button>
+            <button class="btn" id="prev-page" onclick="prevPage()"><img id="left" src="img/left.png" alt="왼쪽 화살표"></button>
         </div>
 
+        <!-- 다음 페이지 버튼을 누르면 자동으로 저장됨 -->
         <div class="navigation-right">
-            <button id="next-page" onclick="nextPage()"><img id="right" src="img/right.png" alt="오른쪽 화살표"></button>
+            <button class="btn" id="next-page" onclick="nextPage()"><img id="right" src="img/right.png" alt="오른쪽 화살표"></button>
         </div>
     </div>
 
-    
+    <!-- 오디오북 $ 수정하기 & 언어변경 버튼 -->
+    <div class="button-container" id="buttons">
 
+        <a href="#">
+            <button id="audio-book-all" class="audio-button">전체듣기</button>
+        </a>
 
-    <!-- 언어 변경 버튼 -->
-    <div class="language-container">
-        <a href="book_ko.html">
+        <a href="book_eng.html">
             <button id="change-language" class="language-button">한글책</button>
         </a>
+
+        <a href="#">
+            <button id="audio-book" class="audio-button">Audio Book</button>
+        </a>
+
+        <a href="#">
+            <button id="modify-content" class="modify-button">Modify</button>
+        </a>
+
+        <a href="library.html">
+            <button id="go-library" class="go-to-button">책 보관함</button>
+        </a>
+
+    </div>
+
+    <div class="page-index">
+        <p id="page"></p>
     </div>
 
     <!-- 스크립트 파일 연결 -->

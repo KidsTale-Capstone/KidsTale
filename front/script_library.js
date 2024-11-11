@@ -1,4 +1,3 @@
-// 예시 데이터
 const prevButton = document.getElementById('prev-page');
 const nextButton = document.getElementById('next-page');
 const title = document.getElementById('title');
@@ -113,6 +112,7 @@ function renderKeywords(keywords) {
 function readBook(book) {
     localStorage.setItem('id_book', book.bookId);
     localStorage.setItem('id_owner', book.userId); // 소유자 ID 저장
+    localStorage.setItem('hideModifyButton', 'false');
     window.location.href = 'book_ko.html'; // 책 읽기 페이지로 이동
 }
 
