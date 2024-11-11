@@ -185,29 +185,36 @@ function closeModal() {
     bookId = null;
 }
 
-// 서버에서 좋아요 수 가져오기
 async function fetchLikeCount(bookId, likeCountElement, likeButton) {
+    const token = localStorage.getItem('token');
     try {
-        const response = await fetch(`/main/get_book_like/${bookId}`);
+        const response = await fetch(`/main/get_book_like/${bookId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
         const data = await response.json();
 
         if (data.success) {
-            const likeCount = data.like; // 서버에서 받은 좋아요 수
-            likeCountElement.textContent = likeCount; // 좋아요 수 업데이트
-            isLiked = localStorage.getItem(`liked_${bookId}`) === 'true'; // 로컬 저장소에서 좋아요 상태 확인
-            likeButton.textContent = isLiked ? '❤️' : '♡';
-            likeButton.classList.toggle('liked', isLiked);
+            const { isLiked, like } = data;
+            likeCountElement.textContent = like; // 좋아요 수 업데이트
+            likeButton.textContent = isLiked ? '❤️' : '♡'; // 버튼 상태 업데이트
+            likeButton.classList.toggle('liked', isLiked); // 클래스 업데이트
+
+            // fetchLikeCount가 isLiked 값을 반환
+            return isLiked;
+        } else {
+            throw new Error('좋아요 상태를 가져오지 못했습니다.');
         }
     } catch (error) {
         console.error('좋아요 수 가져오기 실패:', error);
+        return false; // 기본값으로 false 반환
     }
 }
 
-// // 좋아요 상태 초기값
-// let bookId;
-// let isLiked = false; 
-// const likeButton = document.getElementById('like-button');
-// const likeCountElement = document.getElementById('like-count');
+
 
 // 책 모달 열기 함수
 async function openBookModal(book) {
@@ -217,38 +224,39 @@ async function openBookModal(book) {
     document.querySelector('.book-details p:nth-of-type(1)').textContent = `지은이: ${book.author}`;
     document.querySelector('.book-details p:nth-of-type(2)').textContent = `장르: ${book.genre}`;
 
-    // 현재 책의 ID를 bookId에 할당
-    bookId = book.bookId;
+    // 현재 책의 ID를 bookId로 설정
+    const bookId = book.bookId;
 
     // 모달이 열릴 때 좋아요 버튼과 카운트를 가져옵니다
     const likeButton = document.getElementById('like-button');
     const likeCountElement = document.getElementById('like-count');
 
-    // 서버에서 최신 좋아요 수 가져오기
-    await fetchLikeCount(bookId, likeCountElement, likeButton);
+    // 서버에서 좋아요 상태와 수 가져오기
+    let isLiked = await fetchLikeCount(bookId, likeCountElement, likeButton);
 
     // 좋아요 버튼 클릭 이벤트 핸들러
     likeButton.onclick = async () => {
+        const token = localStorage.getItem('token');
         try {
-            let response, data;
-
-            if (isLiked) {
-                // 좋아요 해제
-                response = await fetch(`/main/unlike_book/${bookId}`, { method: 'POST' });
-            } else {
-                // 좋아요 추가
-                response = await fetch(`/main/like_book/${bookId}`, { method: 'POST' });
-            }
-
-            data = await response.json();
-
+            // 좋아요 추가/해제 API 호출
+            const response = await fetch(`/main/${isLiked ? 'unlike_book' : 'like_book'}/${bookId}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            const data = await response.json();
+    
             if (data.success) {
-                const likeCount = data.like; // 서버에서 반환된 최신 좋아요 수로 업데이트
-                isLiked = !isLiked;
+                // 서버에서 최신 상태를 받아와 업데이트
+                isLiked = !isLiked; // 서버 동기화를 기반으로 상태 변경
                 likeButton.textContent = isLiked ? '❤️' : '♡';
                 likeButton.classList.toggle('liked', isLiked);
-                likeCountElement.textContent = likeCount;
-                localStorage.setItem(`liked_${bookId}`, isLiked); // 로컬 저장소에 좋아요 상태 저장
+                likeCountElement.textContent = data.like; // 최신 좋아요 수 업데이트
+            } else {
+                console.error('좋아요 업데이트 실패:', data.message);
             }
         } catch (error) {
             console.error('좋아요 업데이트 실패:', error);

@@ -162,30 +162,56 @@ router.get('/get_all_book', async (req, res) => {
 
 router.get('/get_book_like/:bookId', async (req, res) => {
     const { bookId } = req.params;
+    const userId = getUserIdFromToken(req); // JWT에서 사용자 ID 추출
 
     try {
-        const { data, error } = await supabase
+        // 좋아요 상태 확인
+        const { data: likeStatus } = await supabase
+            .from('book_likes')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('book_id', bookId)
+            .single();
+
+        // 좋아요 수 가져오기
+        const { data: bookData, error: bookError } = await supabase
             .from('book')
             .select('like')
             .eq('id_book', bookId)
             .single();
 
-        if (error) throw error;
+        if (bookError) throw bookError;
 
-        res.status(200).json({ success: true, like: data.like });
+        res.status(200).json({
+            success: true,
+            isLiked: !!likeStatus, // 좋아요 상태 반환
+            like: bookData.like,  // 좋아요 수 반환
+        });
     } catch (error) {
-        console.error('좋아요 수 가져오기 실패:', error);
-        res.status(500).json({ success: false, message: '좋아요 수 가져오기 실패' });
+        console.error('좋아요 상태 확인 중 오류:', error);
+        res.status(500).json({ success: false, message: '좋아요 상태 확인 실패' });
     }
 });
 
 
-// 좋아요 추가 라우트
 router.post('/like_book/:bookId', async (req, res) => {
     const { bookId } = req.params;
+    const userId = getUserIdFromToken(req); // JWT에서 사용자 ID 추출
 
     try {
-        // 현재 좋아요 수 가져오기
+        // 사용자가 이미 좋아요를 눌렀는지 확인
+        const { data: existingLike, error: existingLikeError } = await supabase
+            .from('book_likes')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('book_id', bookId)
+            .single();
+
+        if (existingLike) {
+            return res.status(400).json({ success: false, message: '이미 좋아요를 누른 책입니다.' });
+        }
+
+        // 좋아요 수 증가
         const { data: bookData, error: fetchError } = await supabase
             .from('book')
             .select('like')
@@ -194,7 +220,6 @@ router.post('/like_book/:bookId', async (req, res) => {
 
         if (fetchError) throw fetchError;
 
-        // 좋아요 수 증가
         const newLikeCount = (bookData.like || 0) + 1;
 
         // 좋아요 수 업데이트
@@ -206,19 +231,38 @@ router.post('/like_book/:bookId', async (req, res) => {
 
         if (updateError) throw updateError;
 
-        res.status(200).json({ success: true, like: data[0].like });
+        // 사용자와 책 간의 좋아요 관계 저장
+        const { error: insertError } = await supabase
+            .from('book_likes')
+            .insert({ user_id: userId, book_id: bookId });
+
+        if (insertError) throw insertError;
+
+        res.status(200).json({ success: true, like: newLikeCount });
     } catch (error) {
         console.error('좋아요 추가 오류:', error);
         res.status(500).json({ success: false, message: '좋아요 추가 실패' });
     }
 });
 
-// 좋아요 해제 라우트
 router.post('/unlike_book/:bookId', async (req, res) => {
     const { bookId } = req.params;
+    const userId = getUserIdFromToken(req); // JWT에서 사용자 ID 추출
 
     try {
-        // 현재 좋아요 수 가져오기
+        // 사용자가 해당 책에 좋아요를 눌렀는지 확인
+        const { data: existingLike, error: existingLikeError } = await supabase
+            .from('book_likes')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('book_id', bookId)
+            .single();
+
+        if (!existingLike) {
+            return res.status(400).json({ success: false, message: '좋아요를 누르지 않은 책입니다.' });
+        }
+
+        // 좋아요 수 감소
         const { data: bookData, error: fetchError } = await supabase
             .from('book')
             .select('like')
@@ -227,7 +271,6 @@ router.post('/unlike_book/:bookId', async (req, res) => {
 
         if (fetchError) throw fetchError;
 
-        // 좋아요 수 감소, 최소값 0으로 설정
         const newLikeCount = Math.max((bookData.like || 0) - 1, 0);
 
         // 좋아요 수 업데이트
@@ -239,12 +282,22 @@ router.post('/unlike_book/:bookId', async (req, res) => {
 
         if (updateError) throw updateError;
 
-        res.status(200).json({ success: true, like: data[0].like });
+        // 좋아요 관계 삭제
+        const { error: deleteError } = await supabase
+            .from('book_likes')
+            .delete()
+            .eq('user_id', userId)
+            .eq('book_id', bookId);
+
+        if (deleteError) throw deleteError;
+
+        res.status(200).json({ success: true, like: newLikeCount });
     } catch (error) {
         console.error('좋아요 해제 오류:', error);
         res.status(500).json({ success: false, message: '좋아요 해제 실패' });
     }
 });
+
 
 
 module.exports = router;
