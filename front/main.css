@@ -65,7 +65,7 @@ body, html {
 /* 1. 그래프 바 섹션 */
 .content-section-1 {
     display: flex;
-    padding-left: 260px;
+    justify-content: center;
     margin-top: 40px;
 }
 
