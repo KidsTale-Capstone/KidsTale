@@ -163,16 +163,23 @@ p {
 /* 팻말 스타일 */
 .sign {
     display: inline-block;
-    position: relative;
-    width: 250px;
     background-color: #d2a679; /* 나무 느낌 색상 */
     color: #ffffff;
     font-size: 34px;
     font-weight: bold;
-    padding: 18px;
+    padding: 10px 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     text-align: center;
+    margin-bottom: 15px;
+    position: relative; /* 자식 요소 위치 조정 가능 */
+}
+
+/* 왕관 아이콘 스타일 */
+.crown-icon {
+    width: 45px; /* 왕관 이미지 크기 */
+    height: auto;
+    vertical-align: bottom; /* 텍스트와 수직 정렬 */
 }
 
 /* 삼각형 모양의 아래쪽 장식 */
