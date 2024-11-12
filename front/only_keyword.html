@@ -26,30 +26,30 @@
     </nav>
 
     <!-- 메뉴바 아래 섹션 -->
-    <!-- 추출된 키워드와 장르 선택하는 페이지 -->
+    <!-- 키워드를 직접 입력하고 장르 선택하는 페이지 -->
     <div class="content-section-1">
-
-        <!-- 키워드 입력 타이틀 -->
-        <h2>키워드를 입력해 주세요!</h2>
-        <!-- 키워드 입력 필드 컨테이너 -->
-        <div id="keyword-container" class="keyword-container">
+        <div class="container">
+            <h2>키워드를 입력해 주세요!</h2>
 
             <!-- 키워드 버튼 줄 -->
-            <div class="keyword-row">
+            <div id="keyword-container" class="keyword-container">
+                <div class="keyword-row">
+                </div>
             </div>
 
-        </div>
-
-        <!-- 추가 버튼 -->
-        <div class="add-button-container">
-            <button id="add-keyword" class="add-button" onclick="addKeyword()">
-                <img src="img/add_button.png" alt="Add" />
-            </button>
+            <!-- 추가 버튼 -->
+            <div class="add-button-container">
+                <button id="add-keyword" class="add-button" onclick="addKeyword()">
+                    <img src="img/add_button.png" alt="Add" />
+                </button>
+            </div>
         </div>
         
+        
         <!-- 장르 선택 -->
-        <h2 id="genre-title">원하는 장르를 선택해 주세요!</h2>
+        
         <div class="container">
+            <h2 id="genre-title">원하는 장르를 선택해 주세요!</h2>
             <div class="genre-row">
                 <button class="genre-button" onclick="toggleGenre(this)">모험</button>
                 <button class="genre-button" onclick="toggleGenre(this)">추리</button>

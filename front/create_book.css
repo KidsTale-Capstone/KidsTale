@@ -68,9 +68,10 @@ a {
 /* 메뉴바 아래 섹션 */
 /* 그림 업로드 섹션 */
 .content-section-1 {
-    display: block;
-    padding-left: 300px;
-    margin-top: 60px;
+    display: flex;
+    margin-top: 40px;
+    flex-direction: column;
+    align-items: center;
 }
 
 .container {

@@ -69,7 +69,7 @@ a {
 .content-section-1 {
     display: flex;
     justify-content: space-evenly;
-    margin-top: 35px;
+    margin-top: 40px;
 }
 
 /* 책 컨테이너 */
@@ -128,7 +128,7 @@ a {
 /* 왼쪽 화살표 버튼 */
 .navigation-left {
     position: absolute;
-    left: 300px; /* 화면의 왼쪽에서 약간 떨어진 위치 */
+    left: 400px; /* 화면의 왼쪽에서 약간 떨어진 위치 */
     top: 70%; /* 세로 가운데 정렬 */
     transform: translateY(-50%);
 }
@@ -136,7 +136,7 @@ a {
 /* 오른쪽 화살표 버튼 */
 .navigation-right {
     position: absolute;
-    right: 300px; /* 화면의 오른쪽에서 약간 떨어진 위치 */
+    right: 400px; /* 화면의 오른쪽에서 약간 떨어진 위치 */
     top: 70%; /* 세로 가운데 정렬 */
     transform: translateY(-50%);
 }
@@ -155,7 +155,7 @@ a {
 /* 수정하기 & 언어변경 버튼 div 스타일 */
 .button-container {
     display: flex;
-    margin-right: 320px;
+    margin-right: 400px;
     margin-top: 20px;
     margin-bottom: 20px;
     justify-content: flex-end;
