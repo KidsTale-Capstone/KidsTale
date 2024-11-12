@@ -26,6 +26,11 @@
     </nav>
 
     <div class="content-section-1">
+        <!-- 페이지 이전 버튼 -->
+        <div class="navigation-left">
+            <button class="btn" id="prev-page" onclick="prevPage()"><img id="left" src="img/left.png" alt="왼쪽 화살표"></button>
+        </div>
+
         <!-- 책 컨테이너 -->
         <div id="book-container">
             <!-- 책 제목 및 저자 표시 -->
@@ -56,11 +61,6 @@
                 <button id="cancel-edit" style="display: none;" onclick="cancelEdit()">Cancel Edit</button>
                 <button id="complete-edit" style="display: none;" onclick="completeEdit()">Complete Edit</button>
             </div>
-        </div>
-
-        <!-- 페이지 넘김 버튼 -->
-        <div class="navigation-left">
-            <button class="btn" id="prev-page" onclick="prevPage()"><img id="left" src="img/left.png" alt="왼쪽 화살표"></button>
         </div>
 
         <!-- 다음 페이지 버튼을 누르면 자동으로 저장됨 -->

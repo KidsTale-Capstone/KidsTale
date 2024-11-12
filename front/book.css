@@ -68,7 +68,7 @@ a {
 /* 메뉴바 아래 섹션 */
 .content-section-1 {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     margin-top: 40px;
 }
 
@@ -126,18 +126,16 @@ a {
 /* 페이지 넘김 버튼 */
 /* 왼쪽 화살표 버튼 */
 .navigation-left {
-    position: absolute;
-    left: 400px; /* 화면의 왼쪽에서 약간 떨어진 위치 */
-    top: 70%; /* 세로 가운데 정렬 */
-    transform: translateY(-50%);
+    display: flex;
+    margin-top: 5%;
+    margin-right: 2%;
 }
 
 /* 오른쪽 화살표 버튼 */
 .navigation-right {
-    position: absolute;
-    right: 400px; /* 화면의 오른쪽에서 약간 떨어진 위치 */
-    top: 70%; /* 세로 가운데 정렬 */
-    transform: translateY(-50%);
+    display: flex;
+    margin-top: 5%;
+    margin-left: 2%;
 }
 
 .btn {
@@ -154,10 +152,11 @@ a {
 /* 수정하기 & 언어변경 버튼 div 스타일 */
 .button-container {
     display: flex;
-    margin-right: 400px;
+    width: 700px;
     margin-top: 20px;
     margin-bottom: 20px;
     justify-content: flex-end;
+    margin: 0 auto;
 }
 
 /* 전체 재생 & 각 페이지 듣기 */
@@ -180,7 +179,6 @@ a {
 /* 수정하기 버튼 */
 .modify-button {
     padding: 10px 20px;
-    margin-right: 15px;
     background-color: #9370db;
     color: white;
     border: none;
@@ -213,6 +211,7 @@ a {
 /* 책 보관함 가기 버튼 */
 .go-to-button {
     padding: 10px 20px;
+    margin-left: 15px;
     background-color: #9370db;
     color: white;
     border: none;

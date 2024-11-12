@@ -26,6 +26,11 @@
     </nav>
 
     <div class="content-section-1">
+        <!-- 페이지 이전 버튼 -->
+        <div class="navigation-left">
+            <button class="btn" id="prev-page" onclick="prevPage()"><img id="left" src="img/left.png" alt="왼쪽 화살표"></button>
+        </div>
+
         <!-- 책 컨테이너 -->
         <div id="book-container">
             <!-- 책 제목 및 저자 표시 -->
@@ -58,11 +63,6 @@
             </div>
         </div>
 
-        <!-- 페이지 넘김 버튼 -->
-        <div class="navigation-left">
-            <button class="btn" id="prev-page" onclick="prevPage()"><img id="left" src="img/left.png" alt="왼쪽 화살표"></button>
-        </div>
-
         <!-- 다음 페이지 버튼을 누르면 자동으로 저장됨 -->
         <div class="navigation-right">
             <button class="btn" id="next-page" onclick="nextPage()"><img id="right" src="img/right.png" alt="오른쪽 화살표"></button>
@@ -82,7 +82,7 @@
         </a>
 
         <a href="#">
-            <button id="audio-book" class="audio-button">듣기</button>
+            <button id="audio-book" class="audio-button">오디오북</button>
         </a>
 
         <a href="#">

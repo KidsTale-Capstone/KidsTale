@@ -134,7 +134,7 @@ async function playTTS(pageContent, bookId, lang) {
             // 오디오 재생이 끝났을 때 버튼을 다시 '듣기'로 변경
             currentAudio.onended = () => {
                 isPlaying = false;
-                audioButton.innerText = "듣기"; // 재생 완료 후 버튼 상태 변경
+                audioButton.innerText = "오디오북"; // 재생 완료 후 버튼 상태 변경
                 currentAudio = null;
             };
 
@@ -187,7 +187,7 @@ function displayPage(pageIndex) {
                 currentAudio.currentTime = 0; // 재생 위치 초기화
                 currentAudio = null; // 오디오 객체 초기화
                 isPlaying = false;
-                audioButton.innerText = "듣기"; // 버튼을 다시 '듣기'로 변경
+                audioButton.innerText = "오디오북"; // 버튼을 다시 '듣기'로 변경
             } else {
                 // 오디오가 재생 중이 아니면 playTTS 호출
                 console.log("TTS 요청 준비 중...");
