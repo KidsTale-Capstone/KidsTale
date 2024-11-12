@@ -79,7 +79,8 @@ router.get('/keywords', async (req, res) => {
                     keyword !== '목' &&
                     keyword !== '얼굴' &&
                     keyword !== '피트' &&
-                    keyword !== '소유'
+                    keyword !== '소유' &&
+                    keyword !== '무기'
                 )
         )];
 
