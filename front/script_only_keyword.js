@@ -101,7 +101,11 @@ function toggleGenre(button) {
 }
 
 // 다음 버튼 클릭 시 데이터 확인 후 페이지 이동
-async function goToNextPage() {
+async function showLoading() {
+
+    const loadingScreen = document.getElementById('loading');
+    loadingScreen.style.display = 'flex';  // 로딩 화면 표시
+    
     // selectedGenres 배열에서 선택된 첫 번째 장르 가져오기
     const selectedGenre = selectedGenres[0]; 
 
