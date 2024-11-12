@@ -243,3 +243,24 @@ document.getElementById("deleteAccount").addEventListener("click", async functio
         }
     }
 });
+
+document.getElementById("contactButton").addEventListener("click", function() {
+    document.getElementById("contactModal").style.display = "flex";
+});
+
+document.getElementById("closeContactModal").addEventListener("click", function() {
+    document.getElementById("contactModal").style.display = "none";
+});
+
+document.getElementById("submitContact").addEventListener("click", function() {
+    const title = document.getElementById("contactTitle").value;
+    const content = document.getElementById("contactContent").value;
+
+    if (title && content) {
+        alert("관리자에게 성공적으로 전송되었습니다");
+        document.getElementById("contactForm").reset(); // 폼 초기화
+        document.getElementById("contactModal").style.display = "none"; // 모달 닫기
+    } else {
+        alert("모든 필드를 작성해 주세요.");
+    }
+});

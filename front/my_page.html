@@ -158,9 +158,29 @@
 
     <!-- 문의하기 탈퇴하기 버튼 -->
     <div class="footer-buttons">
-        <button class="qa-button">문의하기 Q&A</button>
+        <button id="contactButton" class="qa-button">문의하기 Q&A</button>
     </div>
     
+    <!-- 문의하기 모달 -->
+    <div class="qa-modal" id="contactModal">
+        <div class="qa-modal-content">
+            <span class="close-button" id="closeContactModal">&times;</span>
+            <h2>문의하기</h2>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="contactTitle">제목</label>
+                    <input type="text" id="contactTitle" placeholder="제목을 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactContent">내용</label>
+                    <textarea id="contactContent" placeholder="내용을 입력하세요" required></textarea>
+                </div>
+                <div class="submit-button">
+                    <button type="button" id="submitContact">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
     <script src="script_my_page.js"></script> <!-- JavaScript 파일 연결 -->
 </body>
