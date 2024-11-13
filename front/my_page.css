@@ -68,6 +68,7 @@ a {
 /* 메뉴바 아래 두 섹션 */
 .entire-section {
     display: flex;
+    justify-content: center;
     flex-direction: row;
 }
 
@@ -404,7 +405,7 @@ input[type="radio"]:checked + .toggle-label {
     justify-content: flex-end;
     margin-top: 20px;
     margin-bottom: 20px;
-    margin-right: 110px;
+    margin-right: 320px;
 }
 
 .qa-button {
